@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zeker — Tu sitio listo en una reunión</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'Segoe UI', 'sans-serif'],
+          },
+          letterSpacing: {
+            tightest: '-0.04em',
+          },
+        },
+      },
+    };
+  </script>
+</head>
+<body class="relative min-h-screen bg-white antialiased">
+
+  <canvas id="field" aria-hidden="true" class="fixed inset-0 z-0 h-full w-full pointer-events-none max-sm:hidden"></canvas>
+  <div id="bg-overlay" aria-hidden="true" class="fixed inset-0 z-[2] pointer-events-none bg-white/70 max-sm:bg-white"></div>
+
+  <nav class="sticky top-0 z-30 border-b border-slate-200 bg-white/80 backdrop-blur">
+    <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-5">
+      <a href="index.html" class="text-xl font-bold tracking-tight text-slate-900">
+        ZE<span class="text-red-600">K</span>ER
+      </a>
+      <div class="flex items-center gap-4 sm:gap-6">
+        <a href="precios.html" class="hidden text-sm font-semibold text-slate-600 hover:text-slate-900 sm:inline">Precios</a>
+        <a
+          href="https://wa.me/34676012946?text=Hola%2C%20me%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20Zeker"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="rounded-full border border-emerald-600 px-4 py-2.5 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-50 sm:px-5"
+        >
+          WhatsApp
+        </a>
+        <a
+          href="#"
+          class="js-reservar rounded-full bg-indigo-600 text-white px-4 py-2.5 text-sm font-semibold shadow-sm hover:bg-indigo-500 transition sm:px-5"
+        >
+          Reservar
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="relative z-10 mx-auto max-w-4xl px-6 pt-24 pb-16 text-center sm:pt-32 sm:pb-20">
+    <p class="text-base font-semibold text-indigo-600 sm:text-lg">Tu negocio digital</p>
+    <h1 class="mt-5 text-5xl font-extrabold leading-[1.05] tracking-tightest text-slate-900 sm:text-7xl">
+      <span class="text-indigo-600">Tan fácil</span><br class="hidden sm:block" />Tan rápido
+    </h1>
+    <p class="mx-auto mt-7 max-w-2xl text-xl text-slate-600 sm:text-2xl">
+      Una reunión. Tu Web lista.
+    </p>
+
+    <div class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+      <a
+        href="#"
+        class="js-reservar inline-block w-full max-w-xs rounded-full bg-indigo-600 text-white px-8 py-4 text-lg font-semibold shadow-md hover:bg-indigo-500 transition sm:w-auto"
+      >
+        Reservar
+      </a>
+      <a
+        href="https://wa.me/34676012946?text=Hola%2C%20me%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20Zeker"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-block w-full max-w-xs rounded-full border-2 border-emerald-600 bg-white px-8 py-4 text-lg font-semibold text-emerald-700 transition hover:bg-emerald-50 sm:w-auto"
+      >
+        WhatsApp
+      </a>
+    </div>
+    <p class="mt-4 text-base text-slate-600">
+      Gratis · 30 min · presencial o video
+    </p>
+    <p class="mx-auto mt-3 max-w-lg text-base text-slate-500">
+      La tecnología que acelera tu negocio.
+    </p>
+  </header>
+
+  <main class="relative z-10 mx-auto max-w-5xl px-6 pb-24">
+
+    <!-- Nuestra promesa -->
+    <section class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="rounded-2xl border border-slate-200 bg-white/80 p-5 text-center backdrop-blur-sm">
+        <p class="text-2xl" aria-hidden="true">🔓</p>
+        <p class="mt-2 font-semibold text-slate-900">Sin permanencia</p>
+        <p class="mt-1 text-sm text-slate-600">Cancela cuando quieras</p>
+      </div>
+      <div class="rounded-2xl border border-slate-200 bg-white/80 p-5 text-center backdrop-blur-sm">
+        <p class="text-2xl" aria-hidden="true">💶</p>
+        <p class="mt-2 font-semibold text-slate-900">Precio claro</p>
+        <p class="mt-1 text-sm text-slate-600">IVA incluido</p>
+      </div>
+      <div class="rounded-2xl border border-slate-200 bg-white/80 p-5 text-center backdrop-blur-sm">
+        <p class="text-2xl" aria-hidden="true">🤝</p>
+        <p class="mt-2 font-semibold text-slate-900">Hablamos directamente</p>
+        <p class="mt-1 text-sm text-slate-600">Sin tecnicismos</p>
+      </div>
+      <div class="rounded-2xl border border-slate-200 bg-white/80 p-5 text-center backdrop-blur-sm">
+        <p class="text-2xl" aria-hidden="true">📱</p>
+        <p class="mt-2 font-semibold text-slate-900">Presencial o video</p>
+        <p class="mt-1 text-sm text-slate-600">30 minutos</p>
+      </div>
+    </section>
+
+    <!-- Así será tu reunión -->
+    <section class="mt-16 rounded-3xl border border-slate-200 bg-white/80 p-8 backdrop-blur-sm sm:p-12">
+      <h2 class="text-center text-3xl font-extrabold tracking-tightest text-slate-900 sm:text-4xl">
+        Así será tu reunión
+      </h2>
+      <p class="mx-auto mt-4 max-w-2xl text-center text-lg text-slate-600">
+        30 min. Sin compromiso.
+      </p>
+      <ol class="mx-auto mt-10 grid max-w-3xl gap-8 sm:grid-cols-3">
+        <li class="text-center">
+          <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-indigo-600 text-lg font-bold text-white">1</span>
+          <p class="mt-4 font-semibold text-slate-900">Nos cuentas tu negocio</p>
+          <p class="mt-2 text-slate-600">Qué haces y qué quieres mostrar.</p>
+        </li>
+        <li class="text-center">
+          <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-indigo-600 text-lg font-bold text-white">2</span>
+          <p class="mt-4 font-semibold text-slate-900">Construimos tu sitio</p>
+          <p class="mt-2 text-slate-600">En directo, mientras hablamos.</p>
+        </li>
+        <li class="text-center">
+          <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-indigo-600 text-lg font-bold text-white">3</span>
+          <p class="mt-4 font-semibold text-slate-900">Lo revisas y decides</p>
+          <p class="mt-2 text-slate-600">Te encaja → publicamos. Sin compromiso.</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- Paso 1 -->
+    <section class="grid items-center gap-10 py-12 sm:py-16 md:grid-cols-2 md:gap-16">
+      <div>
+        <p class="text-base font-semibold text-indigo-600">Paso 1</p>
+        <h2 class="mt-3 text-4xl font-extrabold leading-tight tracking-tightest text-slate-900 sm:text-5xl">
+          Háblanos de tu negocio.
+        </h2>
+        <p class="mt-5 text-lg text-slate-600 sm:text-xl">
+          Cuéntanos tu negocio en una reunión. Sales con tu sitio listo para publicar.
+        </p>
+        <a
+          href="#"
+          class="js-reservar mt-6 inline-flex items-center gap-1.5 text-lg font-semibold text-indigo-600 hover:text-indigo-500"
+        >
+          Reservar →
+        </a>
+      </div>
+      <div class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl">
+        <img
+          src="assets/meeting-idea-to-website.png"
+          alt="Una reunión entre dos personas en la que la idea del cliente se convierte en un sitio web en vivo"
+          class="h-auto w-full"
+          loading="lazy"
+        />
+      </div>
+    </section>
+
+    <!-- Paso 2 -->
+    <section class="grid items-center gap-10 py-12 sm:py-16 md:grid-cols-2 md:gap-16">
+      <div class="order-last rounded-3xl border border-slate-200 bg-white p-8 shadow-xl md:order-first">
+        <p class="text-sm font-semibold uppercase tracking-wide text-indigo-600">Plan</p>
+        <div class="mt-3 flex items-end gap-1">
+          <span class="text-sm font-semibold text-slate-500 pb-2">desde</span>
+          <span class="text-5xl font-extrabold tracking-tightest text-slate-900">€49</span>
+          <span class="pb-1 text-slate-500">/mes</span>
+        </div>
+        <ul class="mt-6 space-y-3 text-slate-600">
+          <li class="flex items-center gap-3"><span class="text-indigo-600">✓</span> Sitio en vivo 24/7</li>
+          <li class="flex items-center gap-3"><span class="text-indigo-600">✓</span> Mantenimiento y cambios</li>
+          <li class="flex items-center gap-3"><span class="text-indigo-600">✓</span> Soporte incluido</li>
+        </ul>
+        <a
+          href="precios.html"
+          class="mt-8 flex h-12 w-full items-center justify-center rounded-full bg-indigo-600 text-base font-semibold text-white transition hover:bg-indigo-500"
+        >
+          Ver planes
+        </a>
+      </div>
+      <div>
+        <p class="text-base font-semibold text-indigo-600">Paso 2</p>
+        <h2 class="mt-3 text-4xl font-extrabold leading-tight tracking-tightest text-slate-900 sm:text-5xl">
+          Elige tu plan.
+        </h2>
+        <p class="mt-5 text-lg text-slate-600 sm:text-xl">
+          Elige plan y cuota. Lo cerramos en la reunión.
+        </p>
+      </div>
+    </section>
+
+    <!-- Declaración: no hay tercer paso -->
+    <section class="py-20 text-center sm:py-28">
+      <h2 class="mx-auto max-w-4xl text-5xl font-extrabold leading-[1.05] tracking-tightest text-slate-900 sm:text-6xl">
+        No hay un tercer paso.
+      </h2>
+      <p class="mx-auto mt-6 max-w-2xl text-xl text-slate-600 sm:text-2xl">
+        ¿Así de fácil? Sí.<br>¿Así de rápido? También.
+      </p>
+    </section>
+
+    <!-- ¿Es para ti? -->
+    <section class="rounded-3xl border border-slate-200 bg-white/80 p-8 backdrop-blur-sm sm:p-12">
+      <h2 class="text-center text-3xl font-extrabold tracking-tightest text-slate-900 sm:text-4xl">
+        ¿Es para ti?
+      </h2>
+      <ul class="mx-auto mt-8 grid max-w-3xl gap-4 sm:grid-cols-2">
+        <li class="flex gap-3 rounded-2xl border border-slate-100 bg-white p-4">
+          <span class="text-indigo-600 shrink-0">✓</span>
+          <span class="text-slate-700">Negocio local que quiere estar en internet</span>
+        </li>
+        <li class="flex gap-3 rounded-2xl border border-slate-100 bg-white p-4">
+          <span class="text-indigo-600 shrink-0">✓</span>
+          <span class="text-slate-700">Clientes de boca en boca, sin presencia online</span>
+        </li>
+        <li class="flex gap-3 rounded-2xl border border-slate-100 bg-white p-4">
+          <span class="text-indigo-600 shrink-0">✓</span>
+          <span class="text-slate-700">Web cara que nunca terminó</span>
+        </li>
+        <li class="flex gap-3 rounded-2xl border border-slate-100 bg-white p-4">
+          <span class="text-indigo-600 shrink-0">✓</span>
+          <span class="text-slate-700">Quieres web, pero aún no la tienes</span>
+        </li>
+      </ul>
+      <p class="mx-auto mt-8 max-w-2xl text-center text-lg text-slate-600">
+        Tú el negocio. Nosotros la Web.
+      </p>
+    </section>
+
+    <!-- FAQ -->
+    <section class="py-12 sm:py-16">
+      <h2 class="text-center text-4xl font-extrabold tracking-tightest text-slate-900 sm:text-5xl">
+        Preguntas frecuentes
+      </h2>
+      <div class="mx-auto mt-10 max-w-3xl divide-y divide-slate-200 overflow-hidden rounded-3xl border border-slate-200 bg-white/80 backdrop-blur-sm">
+        <details class="group p-6 sm:p-8" open>
+          <summary class="flex cursor-pointer items-center justify-between text-lg font-semibold text-slate-900 sm:text-xl">
+            ¿Cuánto tarda en estar listo mi sitio?
+            <span class="ml-4 text-indigo-600 transition group-open:rotate-45">+</span>
+          </summary>
+          <p class="mt-4 text-lg text-slate-600">
+            En la misma reunión. Lo construimos mientras hablamos.
+          </p>
+        </details>
+        <details class="group p-6 sm:p-8">
+          <summary class="flex cursor-pointer items-center justify-between text-lg font-semibold text-slate-900 sm:text-xl">
+            ¿Qué tengo que aportar yo?
+            <span class="ml-4 text-indigo-600 transition group-open:rotate-45">+</span>
+          </summary>
+          <p class="mt-4 text-lg text-slate-600">
+            Tu visión del negocio. Nosotros lo llevamos online. Presencial o video.
+          </p>
+        </details>
+        <details class="group p-6 sm:p-8">
+          <summary class="flex cursor-pointer items-center justify-between text-lg font-semibold text-slate-900 sm:text-xl">
+            ¿Tengo que traer textos, fotos o logo?
+            <span class="ml-4 text-indigo-600 transition group-open:rotate-45">+</span>
+          </summary>
+          <p class="mt-4 text-lg text-slate-600">
+            No es requisito. Con lo que tengas empezamos; lo demás lo vemos en la reunión.
+          </p>
+        </details>
+        <details class="group p-6 sm:p-8">
+          <summary class="flex cursor-pointer items-center justify-between text-lg font-semibold text-slate-900 sm:text-xl">
+            ¿Qué pasa si no me encaja el resultado?
+            <span class="ml-4 text-indigo-600 transition group-open:rotate-45">+</span>
+          </summary>
+          <p class="mt-4 text-lg text-slate-600">
+            Lo revisas antes de publicar. Sin compromiso hasta que decidas.
+          </p>
+        </details>
+        <details class="group p-6 sm:p-8">
+          <summary class="flex cursor-pointer items-center justify-between text-lg font-semibold text-slate-900 sm:text-xl">
+            ¿Cómo funcionan los precios?
+            <span class="ml-4 text-indigo-600 transition group-open:rotate-45">+</span>
+          </summary>
+          <p class="mt-4 text-lg text-slate-600">
+            Plan mensual, IVA incluido. Sin permanencia ni alta.
+            <a href="precios.html" class="font-semibold text-indigo-600 hover:text-indigo-500">Ver precios →</a>
+          </p>
+        </details>
+        <details class="group p-6 sm:p-8">
+          <summary class="flex cursor-pointer items-center justify-between text-lg font-semibold text-slate-900 sm:text-xl">
+            ¿Qué es un dominio y cuánto cuesta?
+            <span class="ml-4 text-indigo-600 transition group-open:rotate-45">+</span>
+          </summary>
+          <p class="mt-4 text-lg text-slate-600">
+            La dirección de tu sitio (ej. tunegocio.es). ~10–15 €/año, aparte del plan. Lo gestionamos contigo si lo necesitas.
+          </p>
+        </details>
+      </div>
+    </section>
+
+    <!-- Cierre: CTA -->
+    <section class="mt-8 rounded-3xl border border-indigo-200 bg-indigo-50/80 backdrop-blur-sm px-6 py-16 text-center sm:py-20">
+      <h2 class="mx-auto max-w-2xl text-4xl font-extrabold tracking-tightest text-slate-900 sm:text-5xl">
+        ¿Empezamos?
+      </h2>
+      <p class="mx-auto mt-5 max-w-xl text-xl text-slate-600">
+        Reserva cita o escríbenos. Presencial o video.
+      </p>
+      <div class="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <a
+          href="#"
+          class="js-reservar inline-block w-full max-w-xs rounded-full bg-indigo-600 text-white px-8 py-4 text-lg font-semibold shadow-md hover:bg-indigo-500 transition sm:w-auto"
+        >
+          Reservar
+        </a>
+        <a
+          href="https://wa.me/34676012946?text=Hola%2C%20me%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20Zeker"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-block w-full max-w-xs rounded-full border-2 border-emerald-600 bg-white px-8 py-4 text-lg font-semibold text-emerald-700 transition hover:bg-emerald-50 sm:w-auto"
+        >
+          WhatsApp
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modal Reservar: búsqueda de logo + partículas (https://codepen.io/matteobruni/pen/dyGprLo) -->
+  <script src="https://cdn.jsdelivr.net/npm/pathseg@1.2.0/pathseg.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@1.18.3/dist/tsparticles.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/imagetracerjs@1.2.6/imagetracer_v1.2.6.js"></script>
+  <script src="assets/reservar.js"></script>
+
+  <!-- Animación: campo de ruido de colores (perlin.js) -->
+  <!-- Basado en https://codepen.io/matteobruni/pen/vYLjrOg -->
+  <script src="https://cdn.jsdelivr.net/gh/josephg/noisejs@master/perlin.js"></script>
+  <script>
+    let noiseZ;
+    let size;
+    let columns;
+    let rows;
+    let w;
+    let h;
+    let field;
+    const canvasField = document.getElementById("field");
+    const ctxField = canvasField.getContext("2d");
+
+    function setup() {
+      size = 20;
+      noiseZ = 0;
+      reset();
+      window.addEventListener("resize", reset);
+    }
+
+    function initField() {
+      field = new Array(columns);
+      for (let x = 0; x < columns; x++) {
+        field[x] = new Array(columns);
+        for (let y = 0; y < rows; y++) {
+          field[x][y] = [0, 0];
+        }
+      }
+    }
+
+    function calculateField() {
+      for (let x = 0; x < columns; x++) {
+        for (let y = 0; y < rows; y++) {
+          const angle = noise.simplex3(x / 50, y / 50, noiseZ) * Math.PI * 2;
+          const length = noise.simplex3(x / 100 + 40000, y / 100 + 40000, noiseZ);
+          field[x][y][0] = angle;
+          field[x][y][1] = length;
+        }
+      }
+    }
+
+    function reset() {
+      const pxRatio = window.devicePixelRatio || 1;
+      w = canvasField.offsetWidth * pxRatio;
+      h = canvasField.offsetHeight * pxRatio;
+      canvasField.width = w;
+      canvasField.height = h;
+      noise.seed(Math.random());
+      columns = Math.floor(w / size) + 1;
+      rows = Math.floor(h / size) + 1;
+      initField();
+    }
+
+    function drawField(ctx) {
+      ctx.clearRect(0, 0, canvasField.width, canvasField.height);
+      for (let x = 0; x < columns; x++) {
+        for (let y = 0; y < rows; y++) {
+          const angle = field[x][y][0];
+          const length = field[x][y][1];
+          ctx.save();
+          ctx.translate(x * size, y * size);
+          ctx.rotate(angle);
+          ctx.strokeStyle = `hsla(${(angle * 180) / Math.PI}, 100%, 50%, 0.65)`;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(0, size * length);
+          ctx.stroke();
+          ctx.restore();
+        }
+      }
+    }
+
+    function animate() {
+      if (window.matchMedia("(max-width: 639px)").matches) return;
+      calculateField();
+      noiseZ += 0.005;
+      drawField(ctxField);
+      requestAnimationFrame(animate);
+    }
+
+    setup();
+    animate();
+  </script>
+
+</body>
+</html>
