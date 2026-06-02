@@ -549,10 +549,56 @@
     const url = buildCalendlyUrl(resolvedName);
 
     const delay = logoLoaded ? 5000 : 0;
-    window.setTimeout(() => {
+
+    let animationDone = false;
+    let calendlyReady = false;
+    let overlay = null;
+
+    const tryReveal = () => {
+      if (!animationDone || !calendlyReady) return;
       closeModal();
-      Calendly.initPopupWidget({ url });
+      if (overlay) {
+        overlay.style.opacity = "";
+        overlay.style.pointerEvents = "";
+      }
       submitBtn.disabled = false;
+    };
+
+    // Hide the overlay the moment Calendly adds it to the DOM
+    // Use opacity+pointer-events instead of visibility so the iframe isn't throttled
+    const domObserver = new MutationObserver(() => {
+      const el = document.querySelector(".calendly-overlay");
+      if (el && el !== overlay) {
+        overlay = el;
+        overlay.style.cssText += ";opacity:0!important;pointer-events:none!important;transition:none!important;";
+      }
+    });
+    domObserver.observe(document.body, { childList: true, subtree: false });
+
+    // Calendly fires this message when the booking UI is fully rendered
+    const onCalendlyMessage = (e) => {
+      if (e.data?.event === "calendly.event_type_viewed" || e.data?.event === "calendly.profile_page_viewed") {
+        window.removeEventListener("message", onCalendlyMessage);
+        domObserver.disconnect();
+        calendlyReady = true;
+        tryReveal();
+      }
+    };
+    window.addEventListener("message", onCalendlyMessage);
+
+    // Safety fallback: reveal at most 1s after animation ends if Calendly never signals ready
+    window.setTimeout(() => {
+      window.removeEventListener("message", onCalendlyMessage);
+      domObserver.disconnect();
+      calendlyReady = true;
+      tryReveal();
+    }, delay + 1000);
+
+    Calendly.initPopupWidget({ url });
+
+    window.setTimeout(() => {
+      animationDone = true;
+      tryReveal();
     }, delay);
   }
 
