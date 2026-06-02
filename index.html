@@ -27,14 +27,14 @@
 <body class="relative min-h-screen bg-white antialiased">
 
   <canvas id="field" aria-hidden="true" class="fixed inset-0 z-0 h-full w-full pointer-events-none max-sm:hidden"></canvas>
-  <div id="bg-overlay" aria-hidden="true" class="fixed inset-0 z-[2] pointer-events-none bg-white/70 max-sm:bg-white"></div>
+  <div id="bg-overlay" aria-hidden="true" class="fixed inset-0 z-[2] pointer-events-none max-sm:bg-white"></div>
 
-  <nav class="sticky top-0 z-30 border-b border-slate-200 bg-white/80 backdrop-blur">
+  <nav id="nav-el" class="sticky top-0 z-30 border-b border-slate-200 bg-white/80 backdrop-blur">
     <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-5">
-      <a href="index.html" class="text-xl font-bold tracking-tight text-slate-900">
+      <a id="nav-logo" href="index.html" class="text-xl font-bold tracking-tight text-slate-900">
         ZE<span class="text-red-600">K</span>ER
       </a>
-      <div class="flex items-center gap-4 sm:gap-6">
+      <div id="nav-items" class="flex items-center gap-4 sm:gap-6">
         <a href="precios.html" class="hidden text-sm font-semibold text-slate-600 hover:text-slate-900 sm:inline">Precios</a>
         <a
           href="https://wa.me/34676012946?text=Hola%2C%20me%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20Zeker"
@@ -54,40 +54,54 @@
     </div>
   </nav>
 
-  <header class="relative z-10 mx-auto max-w-4xl px-6 pt-24 pb-16 text-center sm:pt-32 sm:pb-20">
-    <p class="text-base font-semibold text-indigo-600 sm:text-lg">Tu negocio digital</p>
-    <h1 class="mt-5 text-5xl font-extrabold leading-[1.05] tracking-tightest text-slate-900 sm:text-7xl">
-      <span class="text-indigo-600">Tan fácil</span><br class="hidden sm:block" />Tan rápido
-    </h1>
-    <p class="mx-auto mt-7 max-w-2xl text-xl text-slate-600 sm:text-2xl">
-      Una reunión. Tu Web lista.
-    </p>
-
-    <div class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-      <a
-        href="#"
-        class="js-reservar inline-block w-full max-w-xs rounded-full bg-indigo-600 text-white px-8 py-4 text-lg font-semibold shadow-md hover:bg-indigo-500 transition sm:w-auto"
-      >
-        Reservar
-      </a>
-      <a
-        href="https://wa.me/34676012946?text=Hola%2C%20me%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20Zeker"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-block w-full max-w-xs rounded-full border-2 border-emerald-600 bg-white px-8 py-4 text-lg font-semibold text-emerald-700 transition hover:bg-emerald-50 sm:w-auto"
-      >
-        WhatsApp
-      </a>
+  <header id="hero-header" class="relative z-10 mx-auto max-w-4xl px-6 pt-24 pb-16 text-center sm:pt-32 sm:pb-20">
+    <p id="hero-above" class="text-base font-semibold text-indigo-600 sm:text-lg" style="will-change:transform;transition:transform 0.8s cubic-bezier(0.4,0,0.2,1);">Tu negocio digital</p>
+    <div id="hero-split" class="mt-5">
+      <div id="hero-line-top" style="will-change:transform;transition:transform 0.8s cubic-bezier(0.4,0,0.2,1);">
+        <p class="text-5xl font-extrabold leading-[1.05] tracking-tightest text-indigo-600 sm:text-7xl">Tan fácil</p>
+      </div>
+      <div id="hero-logo-slot" style="height:0;overflow:hidden;transition:height 0.8s cubic-bezier(0.4,0,0.2,1);position:relative;border-radius:1.5rem;">
+        <div id="hero-logo-particles" style="position:absolute;top:0;left:0;right:0;bottom:120px;"></div>
+        <div id="hero-logo-text" style="position:absolute;left:0;right:0;bottom:0;z-index:30;display:flex;flex-direction:column;align-items:center;padding-bottom:2.5rem;text-align:center;pointer-events:none;transition:opacity 0.3s ease;">
+          <p id="reservar-company-label" style="font-size:0.875rem;font-weight:500;color:rgb(199 210 254/0.9);"></p>
+          <p style="font-size:1.5rem;font-weight:700;letter-spacing:0.025em;color:white;">Cargando<span class="reservar-dots">...</span></p>
+        </div>
+      </div>
+      <div id="hero-line-bottom" style="will-change:transform;transition:transform 0.8s cubic-bezier(0.4,0,0.2,1);">
+        <p class="text-5xl font-extrabold leading-[1.05] tracking-tightest text-slate-900 sm:text-7xl">Tan rápido</p>
+      </div>
     </div>
-    <p class="mt-4 text-base text-slate-600">
-      Gratis · 30 min · presencial o video
-    </p>
-    <p class="mx-auto mt-3 max-w-lg text-base text-slate-500">
-      La tecnología que acelera tu negocio.
-    </p>
+    <div id="hero-below" style="will-change:transform;transition:transform 0.8s cubic-bezier(0.4,0,0.2,1);">
+      <p class="mx-auto mt-7 max-w-2xl text-xl text-slate-600 sm:text-2xl">
+        Una reunión. Tu Web lista.
+      </p>
+
+      <div class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <a
+          href="#"
+          class="js-reservar inline-block w-full max-w-xs rounded-full bg-indigo-600 text-white px-8 py-4 text-lg font-semibold shadow-md hover:bg-indigo-500 transition sm:w-auto"
+        >
+          Reservar
+        </a>
+        <a
+          href="https://wa.me/34676012946?text=Hola%2C%20me%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20Zeker"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-block w-full max-w-xs rounded-full border-2 border-emerald-600 bg-white px-8 py-4 text-lg font-semibold text-emerald-700 transition hover:bg-emerald-50 sm:w-auto"
+        >
+          WhatsApp
+        </a>
+      </div>
+      <p class="mt-4 text-base text-slate-600">
+        Gratis · 30 min · presencial o video
+      </p>
+      <p class="mx-auto mt-3 max-w-lg text-base text-slate-500">
+        La tecnología que acelera tu negocio.
+      </p>
+    </div>
   </header>
 
-  <main class="relative z-10 mx-auto max-w-5xl px-6 pb-24">
+  <main id="main-content" class="relative z-10 mx-auto max-w-5xl px-6 pb-24" style="will-change:transform;transition:transform 0.8s cubic-bezier(0.4,0,0.2,1);">
 
     <!-- Nuestra promesa -->
     <section class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

@@ -3,53 +3,53 @@
   const SIMPLE_ICONS_BASE = "https://cdn.jsdelivr.net/npm/simple-icons@11.14.0/icons";
   const MASK_SIZE = 1000;
   let particlesContainer = null;
+  let scrollGuard = null;
+
+  function startScrollGuard() {
+    if (scrollGuard) return;
+    scrollGuard = new MutationObserver(() => {
+      if (document.body.style.overflow === "hidden") document.body.style.overflow = "";
+      if (document.body.classList.contains("overflow-hidden")) document.body.classList.remove("overflow-hidden");
+    });
+    scrollGuard.observe(document.body, { attributes: true, attributeFilter: ["style", "class"] });
+  }
+
+  function stopScrollGuard() {
+    if (scrollGuard) { scrollGuard.disconnect(); scrollGuard = null; }
+  }
 
   const modalHtml = `
     <div id="reservar-modal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="reservar-title">
       <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" data-reservar-close></div>
-      <div class="relative flex min-h-full items-center justify-center">
-        <div class="w-full h-full mx-auto">
-          <div id="reservar-form-panel" class="relative p-8 sm:p-10 max-w-2xl mx-auto bg-white">
-            <button type="button" class="absolute right-4 top-4 rounded-full p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600" data-reservar-close aria-label="Cerrar">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-              </svg>
+      <div class="relative flex min-h-full items-center justify-center p-4">
+        <div id="reservar-form-panel" class="relative p-8 sm:p-10 max-w-2xl w-full mx-auto bg-white rounded-3xl shadow-xl">
+          <button type="button" class="absolute right-4 top-4 rounded-full p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600" data-reservar-close aria-label="Cerrar">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </button>
+          <p class="text-sm font-semibold text-indigo-600">Reserva gratuita · 30 min</p>
+          <h2 id="reservar-title" class="mt-2 text-2xl font-extrabold tracking-tight text-slate-900">¿Cómo se llama tu negocio?</h2>
+          <p class="mt-2 text-slate-600">Buscamos tu marca en internet para personalizar la experiencia.</p>
+          <form id="reservar-form" class="mt-6">
+            <label for="reservar-company" class="sr-only">Nombre de la empresa o negocio</label>
+            <input
+              id="reservar-company"
+              name="company"
+              type="text"
+              required
+              autocomplete="organization"
+              placeholder="Ej. Panadería La Esquina"
+              class="w-full rounded-2xl border border-slate-200 px-4 py-3.5 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+            />
+            <p id="reservar-error" class="mt-2 hidden text-sm text-red-600"></p>
+            <button
+              type="submit"
+              class="mt-4 w-full rounded-full bg-indigo-600 px-6 py-3.5 text-base font-semibold text-white shadow-sm transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              Continuar
             </button>
-            <p class="text-sm font-semibold text-indigo-600">Reserva gratuita · 30 min</p>
-            <h2 id="reservar-title" class="mt-2 text-2xl font-extrabold tracking-tight text-slate-900">¿Cómo se llama tu negocio?</h2>
-            <p class="mt-2 text-slate-600">Buscamos tu marca en internet para personalizar la experiencia.</p>
-            <form id="reservar-form" class="mt-6">
-              <label for="reservar-company" class="sr-only">Nombre de la empresa o negocio</label>
-              <input
-                id="reservar-company"
-                name="company"
-                type="text"
-                required
-                autocomplete="organization"
-                placeholder="Ej. Panadería La Esquina"
-                class="w-full rounded-2xl border border-slate-200 px-4 py-3.5 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
-              />
-              <p id="reservar-error" class="mt-2 hidden text-sm text-red-600"></p>
-              <button
-                type="submit"
-                class="mt-4 w-full rounded-full bg-indigo-600 px-6 py-3.5 text-base font-semibold text-white shadow-sm transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                Continuar
-              </button>
-            </form>
-          </div>
-          <div id="reservar-loading-panel" class="relative hidden h-screen w-screen bg-indigo-950">
-            <div id="reservar-particles" class="absolute inset-0"></div>
-            <div id="reservar-loading-ui" class="pointer-events-none relative z-10 pb-10 flex h-full flex-col items-center justify-end gap-2 text-center">
-              <div id="reservar-logo-wrap" class="mb-auto mt-auto hidden flex h-24 w-24 items-center justify-center">
-                <img id="reservar-logo-img" alt="" class="max-h-full max-w-full object-contain opacity-90" />
-              </div>
-              <p id="reservar-company-label" class="text-sm font-medium text-indigo-200/90"></p>
-              <p class="text-2xl font-bold tracking-wide text-white">
-                Cargando<span class="reservar-dots">...</span>
-              </p>
-            </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>
@@ -63,11 +63,7 @@
     style.textContent = `
       @keyframes reservar-dots { 0%, 20% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
       .reservar-dots { animation: reservar-dots 1.4s infinite; }
-      #reservar-form-panel { position: relative; }
-      #reservar-particles canvas { display: block; vertical-align: bottom; }
-      #reservar-loading-panel.reservar-has-mask #reservar-loading-ui { justify-content: flex-end; }
-      #reservar-loading-panel.reservar-has-mask #reservar-logo-wrap { display: none !important; }
-      #reservar-loading-panel.reservar-has-mask #reservar-particles { bottom: 100px; left: 24px; right: 24px; }
+      #hero-logo-particles canvas { display: block; }
     `;
     document.head.appendChild(style);
   }
@@ -78,13 +74,7 @@
 
   function openModal() {
     const modal = getModal();
-    const formPanel = document.getElementById("reservar-form-panel");
-    const loadingPanel = document.getElementById("reservar-loading-panel");
     const error = document.getElementById("reservar-error");
-
-    formPanel.classList.remove("hidden");
-    loadingPanel.classList.add("hidden");
-    loadingPanel.classList.remove("reservar-has-mask");
     document.getElementById("reservar-form").reset();
     error.classList.add("hidden");
     error.textContent = "";
@@ -94,8 +84,6 @@
   }
 
   function closeModal() {
-    destroyParticles();
-    resetLoadingVisuals();
     const modal = getModal();
     modal.classList.add("hidden");
     document.body.classList.remove("overflow-hidden");
@@ -103,30 +91,114 @@
 
   function destroyParticles() {
     if (typeof tsParticles === "undefined") return;
-    const existing = tsParticles.dom().find((c) => c.id === "reservar-particles");
+    const existing = tsParticles.dom().find((c) => c.id === "hero-logo-particles");
     if (existing) existing.destroy();
     particlesContainer = null;
   }
 
-  function resetLoadingVisuals() {
-    const logoWrap = document.getElementById("reservar-logo-wrap");
-    const logoImg = document.getElementById("reservar-logo-img");
-    const loadingPanel = document.getElementById("reservar-loading-panel");
-    logoWrap.classList.add("hidden");
-    logoImg.removeAttribute("src");
-    logoImg.alt = "";
-    loadingPanel.classList.remove("reservar-has-mask");
+  function animateHeroOpen() {
+    window.scrollTo(0, 0);
+
+    const navEl      = document.getElementById("nav-el");
+    const navLogo    = document.getElementById("nav-logo");
+    const navItems   = document.getElementById("nav-items");
+    const heroAbove  = document.getElementById("hero-above");
+    const lineTop    = document.getElementById("hero-line-top");
+    const slot       = document.getElementById("hero-logo-slot");
+    const lineBottom = document.getElementById("hero-line-bottom");
+    const heroBelow  = document.getElementById("hero-below");
+    const headerEl   = document.getElementById("hero-header");
+    const mainEl     = document.getElementById("main-content");
+    const fieldCanvas = document.getElementById("field");
+    const bgOverlay  = document.getElementById("bg-overlay");
+
+    if (!lineTop || !lineBottom || !slot) return;
+
+    const navHeight = navEl ? navEl.offsetHeight : 64;
+    const ease = "0.8s cubic-bezier(0.4,0,0.2,1)";
+
+    document.body.style.overflow = "hidden";
+    document.body.style.transition = `background-color ${ease}`;
+    document.body.style.backgroundColor = "#1e1b4b";
+
+    if (fieldCanvas) { fieldCanvas.style.transition = `opacity ${ease}`; fieldCanvas.style.opacity = "0"; }
+    if (bgOverlay)   { bgOverlay.style.transition   = `opacity ${ease}`; bgOverlay.style.opacity   = "0"; }
+
+    if (navEl)    { navEl.style.transition = `background-color ${ease}, border-color ${ease}`; navEl.style.backgroundColor = "transparent"; navEl.style.borderColor = "transparent"; }
+    if (navLogo)  { navLogo.style.transition = `color ${ease}`;       navLogo.style.color = "white"; }
+    if (navItems) { navItems.style.transition = "opacity 0.4s ease";  navItems.style.opacity = "0"; navItems.style.pointerEvents = "none"; }
+
+    if (headerEl) { headerEl.style.transition = `padding-top ${ease}, padding-bottom ${ease}`; headerEl.style.paddingTop = "0"; headerEl.style.paddingBottom = "0"; }
+
+    if (heroAbove) heroAbove.style.transform = "translateY(-100vh)";
+    lineTop.style.transform = "translateY(-100vh)";
+
+    // Fix slot to viewport so it's always centered regardless of document flow
+    slot.style.position   = "fixed";
+    slot.style.top        = `${navHeight}px`;
+    slot.style.left       = "0";
+    slot.style.right      = "0";
+    slot.style.zIndex     = "20";
+    slot.style.borderRadius = "0";
+    slot.style.height     = "0";
+    // Let the position change settle before expanding
+    requestAnimationFrame(() => {
+      slot.style.height = `calc(100vh - ${navHeight}px)`;
+    });
+
+    lineBottom.style.transform = "translateY(100vh)";
+    if (heroBelow) heroBelow.style.transform = "translateY(100vh)";
+    if (mainEl)    mainEl.style.transform    = "translateY(100vh)";
   }
 
-  function showFallbackLogo(imageUrl, alt) {
-    const logoWrap = document.getElementById("reservar-logo-wrap");
-    const logoImg = document.getElementById("reservar-logo-img");
-    logoImg.alt = alt;
-    logoImg.onerror = () => {
-      logoWrap.classList.add("hidden");
-    };
-    logoImg.src = imageUrl;
-    logoWrap.classList.remove("hidden");
+  function animateHeroClose() {
+    const navEl      = document.getElementById("nav-el");
+    const navLogo    = document.getElementById("nav-logo");
+    const navItems   = document.getElementById("nav-items");
+    const heroAbove  = document.getElementById("hero-above");
+    const lineTop    = document.getElementById("hero-line-top");
+    const slot       = document.getElementById("hero-logo-slot");
+    const lineBottom = document.getElementById("hero-line-bottom");
+    const heroBelow  = document.getElementById("hero-below");
+    const headerEl   = document.getElementById("hero-header");
+    const mainEl     = document.getElementById("main-content");
+    const fieldCanvas = document.getElementById("field");
+    const bgOverlay  = document.getElementById("bg-overlay");
+
+    // Hide text and clear overflow immediately
+    const logoText = document.getElementById("hero-logo-text");
+    if (logoText) logoText.style.opacity = "0";
+    document.body.style.overflow = "";
+    document.body.classList.remove("overflow-hidden");
+
+    document.body.style.backgroundColor = "";
+
+    if (fieldCanvas) fieldCanvas.style.opacity = "";
+    if (bgOverlay)   bgOverlay.style.opacity   = "";
+
+    if (navEl)    { navEl.style.backgroundColor = ""; navEl.style.borderColor = ""; }
+    if (navLogo)  navLogo.style.color = "";
+    if (navItems) { navItems.style.opacity = ""; navItems.style.pointerEvents = ""; }
+
+    if (headerEl) { headerEl.style.paddingTop = ""; headerEl.style.paddingBottom = ""; }
+
+    if (heroAbove) heroAbove.style.transform = "";
+    lineTop.style.transform    = "";
+    lineBottom.style.transform = "";
+    if (heroBelow) heroBelow.style.transform = "";
+    if (mainEl)    mainEl.style.transform    = "";
+
+    // Collapse slot then restore in-flow positioning
+    slot.style.height = "0";
+    setTimeout(() => {
+      slot.style.position     = "relative";
+      slot.style.top          = "";
+      slot.style.left         = "";
+      slot.style.right        = "";
+      slot.style.zIndex       = "";
+      slot.style.borderRadius = "";
+      if (logoText) logoText.style.opacity = "0"; // keep hidden while slot is collapsed
+    }, 850);
   }
 
   async function searchClearbit(query) {
@@ -138,14 +210,10 @@
 
   function matchClearbitResult(companyName, suggestions) {
     const normalized = companyName.toLowerCase().trim();
+    const firstWord = normalized.split(/\s+/)[0];
     return (
       suggestions.find((item) => item.name.toLowerCase() === normalized) ||
-      suggestions.find(
-        (item) =>
-          item.name.toLowerCase().includes(normalized.slice(0, 4)) ||
-          normalized.includes(item.name.toLowerCase().slice(0, 4))
-      ) ||
-      suggestions[0] ||
+      suggestions.find((item) => item.name.toLowerCase().includes(firstWord) || firstWord.includes(item.name.toLowerCase().split(/\s+/)[0])) ||
       null
     );
   }
@@ -272,7 +340,34 @@
       linefilter: true,
     });
 
-    return pathsFromSvgText(svgString) || pickMainPath(svgString);
+    // Keep only dark-colored paths (the logo) — discard light/white paths (the background rectangle)
+    const doc = new DOMParser().parseFromString(svgString, "image/svg+xml");
+    const svg = doc.querySelector("svg");
+    const viewBox = svg?.getAttribute("viewBox")?.split(/\s+/).map(Number);
+    const width = viewBox?.[2] || MASK_SIZE;
+    const height = viewBox?.[3] || MASK_SIZE;
+
+    const darkPaths = [...doc.querySelectorAll("path")].filter((p) => {
+      const style = p.getAttribute("style") || "";
+      const fill = p.getAttribute("fill") || "";
+      const colorStr = (style.match(/fill\s*:\s*([^;]+)/)?.[1] || fill).trim();
+      if (!colorStr) return true;
+      // rgb(r,g,b) format
+      const rgb = colorStr.match(/rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/i);
+      if (rgb) return (Number(rgb[1]) + Number(rgb[2]) + Number(rgb[3])) / 3 < 128;
+      // #rrggbb format
+      const hex = colorStr.replace("#", "");
+      if (hex.length === 6) {
+        const r = parseInt(hex.slice(0, 2), 16);
+        const g = parseInt(hex.slice(2, 4), 16);
+        const b = parseInt(hex.slice(4, 6), 16);
+        return (r + g + b) / 3 < 128;
+      }
+      return true;
+    }).map((p) => p.getAttribute("d")).filter(Boolean);
+
+    if (!darkPaths.length) return pickMainPath(svgString);
+    return { path: darkPaths.join(" "), width, height };
   }
 
   function drawInitials(ctx, companyName) {
@@ -468,7 +563,7 @@
         draw: { enable: true, lineColor: "#818cf8", lineWidth: 1 },
         move: { radius: 10 },
         inlineArrangement: "equidistant",
-        scale: 0.5,
+        scale: window.innerWidth < 640 ? 0.5 : 1.0,
         type: "inline",
         data: {
           path: pathData.path,
@@ -477,7 +572,7 @@
       };
     }
 
-    return tsParticles.load("reservar-particles", config).then((container) => {
+    return tsParticles.load("hero-logo-particles", config).then((container) => {
       particlesContainer = container;
     });
   }
@@ -492,8 +587,6 @@
     event.preventDefault();
     const companyInput = document.getElementById("reservar-company");
     const error = document.getElementById("reservar-error");
-    const formPanel = document.getElementById("reservar-form-panel");
-    const loadingPanel = document.getElementById("reservar-loading-panel");
     const companyLabel = document.getElementById("reservar-company-label");
     const submitBtn = event.target.querySelector('button[type="submit"]');
     const companyName = companyInput.value.trim();
@@ -503,15 +596,16 @@
     error.classList.add("hidden");
     submitBtn.disabled = true;
 
-    formPanel.classList.add("hidden");
-    loadingPanel.classList.remove("hidden");
-    resetLoadingVisuals();
+    // Close the form modal and open the hero animation
+    closeModal();
     companyLabel.textContent = companyName;
+    animateHeroOpen();
 
+    // Wait for the hero open animation to finish before rendering particles
+    await new Promise((resolve) => setTimeout(resolve, 850));
     await waitForLayout();
     await startParticles(null, false);
 
-    let usedMask = false;
     let logoLoaded = false;
     let resolvedName = companyName;
 
@@ -520,7 +614,6 @@
       resolvedName = result.companyName;
       companyLabel.textContent = resolvedName;
 
-      // Try SVG path first, then raster image, then initials — all go through the particle mask
       const maskSource = result.svgPath
         ? { pathData: result.svgPath, companyName: resolvedName }
         : { imageUrl: result.imageUrl, companyName: resolvedName };
@@ -528,26 +621,18 @@
       try {
         const particleMask = await buildParticleMask(maskSource);
         if (particleMask) {
-          loadingPanel.classList.add("reservar-has-mask");
           await waitForLayout();
           await startParticles(particleMask, true);
-          usedMask = true;
           logoLoaded = true;
         }
       } catch (e) {
         console.warn("Error building particle mask:", e);
-      }
-
-      if (!logoLoaded && result.imageUrl) {
-        showFallbackLogo(result.imageUrl, result.companyName);
-        logoLoaded = true;
       }
     } catch (e) {
       console.error("Error resolving logo path:", e);
     }
 
     const url = buildCalendlyUrl(resolvedName);
-
     const delay = logoLoaded ? 5000 : 0;
 
     let animationDone = false;
@@ -556,16 +641,21 @@
 
     const tryReveal = () => {
       if (!animationDone || !calendlyReady) return;
-      closeModal();
-      if (overlay) {
-        overlay.style.opacity = "";
-        overlay.style.pointerEvents = "";
-      }
+      destroyParticles();
+      animateHeroClose();
       submitBtn.disabled = false;
+      // Show Calendly after the hero closes, then guard scroll
+      setTimeout(() => {
+        if (overlay) {
+          overlay.style.opacity = "";
+          overlay.style.pointerEvents = "";
+        }
+        document.body.style.overflow = "";
+        document.body.classList.remove("overflow-hidden");
+        startScrollGuard();
+      }, 850);
     };
 
-    // Hide the overlay the moment Calendly adds it to the DOM
-    // Use opacity+pointer-events instead of visibility so the iframe isn't throttled
     const domObserver = new MutationObserver(() => {
       const el = document.querySelector(".calendly-overlay");
       if (el && el !== overlay) {
@@ -575,7 +665,6 @@
     });
     domObserver.observe(document.body, { childList: true, subtree: false });
 
-    // Calendly fires this message when the booking UI is fully rendered
     const onCalendlyMessage = (e) => {
       if (e.data?.event === "calendly.event_type_viewed" || e.data?.event === "calendly.profile_page_viewed") {
         window.removeEventListener("message", onCalendlyMessage);
@@ -586,7 +675,6 @@
     };
     window.addEventListener("message", onCalendlyMessage);
 
-    // Safety fallback: reveal at most 1s after animation ends if Calendly never signals ready
     window.setTimeout(() => {
       window.removeEventListener("message", onCalendlyMessage);
       domObserver.disconnect();
@@ -620,6 +708,15 @@
         event.preventDefault();
         openModal();
       });
+    });
+
+    // Restore scroll when Calendly popup is closed
+    window.addEventListener("message", (e) => {
+      if (e.data?.event === "calendly.popup_closed") {
+        document.body.style.overflow = "";
+        document.body.classList.remove("overflow-hidden");
+        setTimeout(stopScrollGuard, 300);
+      }
     });
   }
 
