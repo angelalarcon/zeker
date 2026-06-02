@@ -67,6 +67,7 @@
       #reservar-particles canvas { display: block; vertical-align: bottom; }
       #reservar-loading-panel.reservar-has-mask #reservar-loading-ui { justify-content: flex-end; }
       #reservar-loading-panel.reservar-has-mask #reservar-logo-wrap { display: none !important; }
+      #reservar-loading-panel.reservar-has-mask #reservar-particles { bottom: 100px; left: 24px; right: 24px; }
     `;
     document.head.appendChild(style);
   }
@@ -277,7 +278,7 @@
   function drawInitials(ctx, companyName) {
     const words = companyName.trim().split(/\s+/);
     const initials = words.map((w) => w[0]).join("").toUpperCase().slice(0, 2);
-    const fontSize = initials.length === 1 ? MASK_SIZE * 0.68 : MASK_SIZE * 0.52;
+    const fontSize = initials.length === 1 ? MASK_SIZE * 0.54 : MASK_SIZE * 0.42;
     ctx.font = `bold ${fontSize}px Arial, sans-serif`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
@@ -294,7 +295,7 @@
     ctx.fillStyle = "#000000";
 
     if (pathData?.path) {
-      const scale = (MASK_SIZE * 0.78) / Math.max(pathData.width, pathData.height);
+      const scale = (MASK_SIZE * 0.52) / Math.max(pathData.width, pathData.height);
       const w = pathData.width * scale;
       const h = pathData.height * scale;
       ctx.translate((MASK_SIZE - w) / 2, (MASK_SIZE - h) / 2);
@@ -307,7 +308,7 @@
     } else if (imageUrl) {
       try {
         const img = await loadImage(imageUrl);
-        const scale = Math.min((MASK_SIZE * 0.78) / img.width, (MASK_SIZE * 0.78) / img.height);
+        const scale = Math.min((MASK_SIZE * 0.52) / img.width, (MASK_SIZE * 0.52) / img.height);
         const w = img.width * scale;
         const h = img.height * scale;
         ctx.drawImage(img, (MASK_SIZE - w) / 2, (MASK_SIZE - h) / 2, w, h);
