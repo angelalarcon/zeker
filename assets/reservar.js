@@ -8,8 +8,8 @@
     <div id="reservar-modal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="reservar-title">
       <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" data-reservar-close></div>
       <div class="relative flex min-h-full items-center justify-center">
-        <div class="w-full h-full overflow-hidden bg-white mx-auto">
-          <div id="reservar-form-panel" class="relative p-8 sm:p-10">
+        <div class="w-full h-full mx-auto">
+          <div id="reservar-form-panel" class="relative p-8 sm:p-10 max-w-2xl mx-auto bg-white">
             <button type="button" class="absolute right-4 top-4 rounded-full p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600" data-reservar-close aria-label="Cerrar">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -121,6 +121,9 @@
     const logoWrap = document.getElementById("reservar-logo-wrap");
     const logoImg = document.getElementById("reservar-logo-img");
     logoImg.alt = alt;
+    logoImg.onerror = () => {
+      logoWrap.classList.add("hidden");
+    };
     logoImg.src = imageUrl;
     logoWrap.classList.remove("hidden");
   }
@@ -148,11 +151,6 @@
 
   function slugCandidates(name, domain) {
     const slugs = new Set();
-    if (domain) {
-      const host = domain.replace(/^www\./, "").split(".");
-      slugs.add(host[0]);
-      if (host.length > 2) slugs.add(host[host.length - 2]);
-    }
 
     const plain = name
       .normalize("NFD")
@@ -160,8 +158,18 @@
       .toLowerCase()
       .trim();
 
+    // First word of the name is the most likely Simple Icons slug (e.g. "Santander" from "Santander Bank")
+    const firstWord = plain.split(/\s+/)[0].replace(/[^a-z0-9]/g, "");
+    if (firstWord.length > 1) slugs.add(firstWord);
+
     slugs.add(plain.replace(/[^a-z0-9]+/g, ""));
     slugs.add(plain.replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""));
+
+    if (domain) {
+      const host = domain.replace(/^www\./, "").split(".");
+      slugs.add(host[0]);
+      if (host.length > 2) slugs.add(host[host.length - 2]);
+    }
 
     return [...slugs].filter((slug) => slug && slug.length > 1);
   }
@@ -201,14 +209,26 @@
     return null;
   }
 
-  function loadImage(url) {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.crossOrigin = "anonymous";
-      img.onload = () => resolve(img);
-      img.onerror = () => reject(new Error("No se pudo cargar la imagen"));
-      img.src = url;
-    });
+  async function fetchImageAsBlob(url) {
+    try {
+      const res = await fetch(url);
+      if (res.ok) return await res.blob();
+    } catch { /* ignore */ }
+    return null;
+  }
+
+  async function loadImage(url) {
+    const blob = await fetchImageAsBlob(url);
+    if (blob) {
+      const objectUrl = URL.createObjectURL(blob);
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => { URL.revokeObjectURL(objectUrl); resolve(img); };
+        img.onerror = () => { URL.revokeObjectURL(objectUrl); reject(new Error("img load failed")); };
+        img.src = objectUrl;
+      });
+    }
+    throw new Error("No se pudo cargar la imagen");
   }
 
   function toSilhouette(imageData) {
@@ -254,7 +274,17 @@
     return pathsFromSvgText(svgString) || pickMainPath(svgString);
   }
 
-  async function buildParticleMask({ pathData, imageUrl }) {
+  function drawInitials(ctx, companyName) {
+    const words = companyName.trim().split(/\s+/);
+    const initials = words.map((w) => w[0]).join("").toUpperCase().slice(0, 2);
+    const fontSize = initials.length === 1 ? MASK_SIZE * 0.68 : MASK_SIZE * 0.52;
+    ctx.font = `bold ${fontSize}px Arial, sans-serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(initials, MASK_SIZE / 2, MASK_SIZE / 2);
+  }
+
+  async function buildParticleMask({ pathData, imageUrl, companyName }) {
     const canvas = document.createElement("canvas");
     canvas.width = MASK_SIZE;
     canvas.height = MASK_SIZE;
@@ -275,11 +305,23 @@
         return null;
       }
     } else if (imageUrl) {
-      const img = await loadImage(imageUrl);
-      const scale = Math.min((MASK_SIZE * 0.78) / img.width, (MASK_SIZE * 0.78) / img.height);
-      const w = img.width * scale;
-      const h = img.height * scale;
-      ctx.drawImage(img, (MASK_SIZE - w) / 2, (MASK_SIZE - h) / 2, w, h);
+      try {
+        const img = await loadImage(imageUrl);
+        const scale = Math.min((MASK_SIZE * 0.78) / img.width, (MASK_SIZE * 0.78) / img.height);
+        const w = img.width * scale;
+        const h = img.height * scale;
+        ctx.drawImage(img, (MASK_SIZE - w) / 2, (MASK_SIZE - h) / 2, w, h);
+      } catch {
+        // Image failed (e.g. CORS on file://) — fall through to initials
+        ctx.fillRect(0, 0, MASK_SIZE, MASK_SIZE); // reset
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, MASK_SIZE, MASK_SIZE);
+        ctx.fillStyle = "#000000";
+        if (companyName) drawInitials(ctx, companyName);
+        else return null;
+      }
+    } else if (companyName) {
+      drawInitials(ctx, companyName);
     } else {
       return null;
     }
@@ -335,15 +377,23 @@
     return null;
   }
 
+  async function resolveBestLogoUrl(domain) {
+    if (!domain) return null;
+    // DuckDuckGo sends Access-Control-Allow-Origin: * — works from file:// without a proxy
+    return `https://icons.duckduckgo.com/ip3/${domain}.ico`;
+  }
+
   async function resolveLogoPath(companyName) {
     const suggestions = await searchClearbit(companyName);
     const match = matchClearbitResult(companyName, suggestions);
     const searchName = match?.name || companyName.replace(/\.(com|es|net|org|io)$/i, "").trim() || companyName;
     const inputDomain = extractDomainFromInput(companyName);
     const domain = inputDomain || match?.domain || null;
-    const slugs = slugCandidates(searchName, domain);
-    const imageUrl = domain ? `https://icon.horse/icon/${domain}` : null;
-    const svgPath = await fetchSimpleIconsPath(slugs);
+
+    const [svgPath, imageUrl] = await Promise.all([
+      fetchSimpleIconsPath(slugCandidates(searchName, domain)),
+      resolveBestLogoUrl(domain),
+    ]);
 
     return { companyName: searchName, svgPath, imageUrl };
   }
@@ -461,35 +511,46 @@
     await startParticles(null, false);
 
     let usedMask = false;
+    let logoLoaded = false;
+    let resolvedName = companyName;
+
     try {
       const result = await resolveLogoPath(companyName);
-      companyLabel.textContent = result.companyName;
+      resolvedName = result.companyName;
+      companyLabel.textContent = resolvedName;
 
-      let particleMask = null;
-      if (result.svgPath) {
-        particleMask = await buildParticleMask({ pathData: result.svgPath });
-      }
-      if (!particleMask && result.imageUrl) {
-        particleMask = await buildParticleMask({ imageUrl: result.imageUrl });
+      // Try SVG path first, then raster image, then initials — all go through the particle mask
+      const maskSource = result.svgPath
+        ? { pathData: result.svgPath, companyName: resolvedName }
+        : { imageUrl: result.imageUrl, companyName: resolvedName };
+
+      try {
+        const particleMask = await buildParticleMask(maskSource);
+        if (particleMask) {
+          loadingPanel.classList.add("reservar-has-mask");
+          await waitForLayout();
+          await startParticles(particleMask, true);
+          usedMask = true;
+          logoLoaded = true;
+        }
+      } catch (e) {
+        console.warn("Error building particle mask:", e);
       }
 
-      if (particleMask) {
-        loadingPanel.classList.add("reservar-has-mask");
-        await waitForLayout();
-        await startParticles(particleMask, true);
-        usedMask = true;
-      } else if (result.imageUrl) {
+      if (!logoLoaded && result.imageUrl) {
         showFallbackLogo(result.imageUrl, result.companyName);
-        await startParticles(null, false);
+        logoLoaded = true;
       }
-    } catch {
-      /* animación genérica */
+    } catch (e) {
+      console.error("Error resolving logo path:", e);
     }
 
-    const delay = usedMask ? 3500 : 2200;
+    const url = buildCalendlyUrl(resolvedName);
+
+    const delay = logoLoaded ? 5000 : 0;
     window.setTimeout(() => {
-      window.open(buildCalendlyUrl(companyLabel.textContent || companyName), "_blank", "noopener,noreferrer");
       closeModal();
+      Calendly.initPopupWidget({ url });
       submitBtn.disabled = false;
     }, delay);
   }
