@@ -114,6 +114,13 @@
 
     if (!lineTop || !lineBottom || !slot) return;
 
+    // Stop any lingering scroll guard before locking scroll
+    stopScrollGuard();
+
+    // Reset text opacity from previous animation
+    const logoText = document.getElementById("hero-logo-text");
+    if (logoText) logoText.style.opacity = "";
+
     const navHeight = navEl ? navEl.offsetHeight : 64;
     const ease = "0.8s cubic-bezier(0.4,0,0.2,1)";
 
@@ -633,7 +640,7 @@
     }
 
     const url = buildCalendlyUrl(resolvedName);
-    const delay = logoLoaded ? 5000 : 0;
+    const delay = logoLoaded ? 5000 : 2000;
 
     let animationDone = false;
     let calendlyReady = false;
@@ -722,4 +729,10 @@
 
   injectModal();
   bindEvents();
+
+  // Auto-open modal when arriving from another page with ?reservar=1
+  if (new URLSearchParams(location.search).get("reservar") === "1") {
+    // Wait for page to paint before opening
+    requestAnimationFrame(() => openModal());
+  }
 })();
