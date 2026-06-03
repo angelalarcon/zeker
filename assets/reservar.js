@@ -141,6 +141,7 @@
     lineTop.style.transform = "translateY(-100vh)";
 
     // Fix slot to viewport so it's always centered regardless of document flow
+    slot.style.backgroundColor = "#1e1b4b";
     slot.style.position   = "fixed";
     slot.style.top        = `${navHeight}px`;
     slot.style.left       = "0";
@@ -198,7 +199,8 @@
     // Collapse slot then restore in-flow positioning
     slot.style.height = "0";
     setTimeout(() => {
-      slot.style.position     = "relative";
+      slot.style.position        = "relative";
+      slot.style.backgroundColor = "";
       slot.style.top          = "";
       slot.style.left         = "";
       slot.style.right        = "";
@@ -501,13 +503,12 @@
     return { companyName: searchName, svgPath, imageUrl };
   }
 
-  function startParticles(pathData, useMask) {
-    destroyParticles();
-
+  function buildParticleConfig(pathData, useMask) {
     const config = {
       detectRetina: false,
       fpsLimit: 60,
-      background: { color: "#1e1b4b" },
+      // No background fill — the body/slot background provides the dark color
+      // so the canvas stays transparent and crossfades work correctly
       interactivity: {
         detectsOn: "canvas",
         events: {
@@ -579,6 +580,45 @@
       };
     }
 
+    return config;
+  }
+
+  async function crossfadeToMask(pathData) {
+    const heroEl = document.getElementById("hero-logo-particles");
+    const oldCanvas = heroEl ? heroEl.querySelector("canvas") : null;
+
+    // Step 1: fade out the floating particles canvas
+    if (oldCanvas) {
+      oldCanvas.style.transition = "opacity 0.6s ease";
+      oldCanvas.style.opacity = "0";
+      await new Promise((r) => setTimeout(r, 600));
+    }
+
+    // Step 2: destroy old instance, launch logo particles
+    destroyParticles();
+    const config = buildParticleConfig(pathData, true);
+    const container = await tsParticles.load("hero-logo-particles", config);
+    particlesContainer = container;
+
+    // Step 3: fade the new canvas in
+    const newCanvas = heroEl ? heroEl.querySelector("canvas") : null;
+    if (newCanvas) {
+      newCanvas.style.opacity = "0";
+      newCanvas.style.transition = "opacity 1.2s ease";
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        newCanvas.style.opacity = "1";
+      }));
+    }
+  }
+
+  function startParticles(pathData, useMask) {
+    // When switching to the logo mask, use a smooth crossfade instead of a hard cut
+    if (useMask && pathData && particlesContainer) {
+      return crossfadeToMask(pathData);
+    }
+
+    destroyParticles();
+    const config = buildParticleConfig(pathData, useMask);
     return tsParticles.load("hero-logo-particles", config).then((container) => {
       particlesContainer = container;
     });
