@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 420" fill="none">
+  <!-- sombra suelo -->
+  <ellipse cx="280" cy="398" rx="235" ry="14" fill="#E0E7FF"/>
+
+  <!-- mesa -->
+  <rect x="271" y="305" width="18" height="80" fill="#C7D2FE"/>
+  <ellipse cx="280" cy="386" rx="44" ry="9" fill="#A5B4FC"/>
+  <ellipse cx="280" cy="302" rx="95" ry="17" fill="#FFFFFF" stroke="#C7D2FE" stroke-width="4"/>
+  <!-- taza sobre la mesa -->
+  <rect x="236" y="276" width="18" height="15" rx="3" fill="#4F46E5"/>
+  <ellipse cx="245" cy="276" rx="9" ry="3" fill="#312E81"/>
+
+  <!-- ===== CLIENTE (restaurante) ===== -->
+  <!-- silla -->
+  <rect x="84" y="236" width="12" height="94" rx="6" fill="#4338CA"/>
+  <rect x="84" y="316" width="80" height="12" rx="6" fill="#4338CA"/>
+  <rect x="94" y="328" width="9" height="64" rx="4" fill="#4338CA"/>
+  <rect x="146" y="328" width="9" height="64" rx="4" fill="#4338CA"/>
+  <!-- piernas -->
+  <rect x="125" y="288" width="62" height="22" rx="11" fill="#312E81"/>
+  <rect x="170" y="292" width="20" height="92" rx="10" fill="#312E81"/>
+  <ellipse cx="186" cy="388" rx="17" ry="7" fill="#1E1B4B"/>
+  <!-- torso -->
+  <rect x="110" y="205" width="56" height="98" rx="26" fill="#818CF8"/>
+  <!-- delantal -->
+  <path d="M121 234 h36 v56 a9 9 0 0 1 -9 9 h-18 a9 9 0 0 1 -9 -9 Z" fill="#EEF2FF"/>
+  <!-- brazo apoyado en la mesa -->
+  <path d="M124 240 Q 152 266 196 290" stroke="#818CF8" stroke-width="15" stroke-linecap="round"/>
+  <circle cx="198" cy="290" r="8" fill="#FFFFFF"/>
+  <!-- brazo gesticulando -->
+  <path d="M156 232 Q 184 224 202 200" stroke="#818CF8" stroke-width="15" stroke-linecap="round"/>
+  <circle cx="204" cy="197" r="8" fill="#FFFFFF"/>
+  <!-- cabeza: pelo recogido con moño, coletero y flequillo barrido -->
+  <circle cx="117" cy="162" r="10" fill="#312E81"/>
+  <circle cx="125" cy="152" r="6.5" fill="#312E81"/>
+  <rect x="120" y="159" width="8" height="4.5" rx="2.2" fill="#818CF8" transform="rotate(-40 124 161)"/>
+  <circle cx="139" cy="172" r="24" fill="#312E81"/>
+  <circle cx="147" cy="186" r="20" fill="#FFFFFF"/>
+  <path d="M128 178 q2 -14 17 -16 q16 -2 21 12 q-9 -7 -20 -5 q-8 1 -11 7 q-3 5 -7 2 Z" fill="#312E81"/>
+  <path d="M129 185 q-4 7 -1 14" stroke="#312E81" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <circle cx="158" cy="182" r="2.6" fill="#312E81"/>
+  <path d="M162 192 q-5 4 -10 1" stroke="#312E81" stroke-width="2.4" stroke-linecap="round"/>
+
+  <!-- bocadillo de diálogo: restaurante -->
+  <rect x="40" y="38" width="130" height="97" rx="22" fill="#FFFFFF" stroke="#C7D2FE" stroke-width="4"/>
+  <path d="M118 132 L131 163 L143 130 Z" fill="#FFFFFF" stroke="#C7D2FE" stroke-width="4" stroke-linejoin="round"/>
+  <rect x="118" y="128" width="26" height="7" fill="#FFFFFF"/>
+  <!-- icono campana de plato -->
+  <path d="M75 100 a30 30 0 0 1 60 0 Z" fill="#4F46E5"/>
+  <circle cx="105" cy="64" r="5" fill="#4F46E5"/>
+  <rect x="66" y="100" width="78" height="8" rx="4" fill="#312E81"/>
+  <!-- vapor -->
+  <path d="M93 56 q3 -6 0 -12" stroke="#A5B4FC" stroke-width="3" stroke-linecap="round"/>
+  <path d="M117 56 q3 -6 0 -12" stroke="#A5B4FC" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- ===== TRABAJADOR ZEKER ===== -->
+  <!-- silla -->
+  <rect x="464" y="236" width="12" height="94" rx="6" fill="#4338CA"/>
+  <rect x="396" y="316" width="80" height="12" rx="6" fill="#4338CA"/>
+  <rect x="405" y="328" width="9" height="64" rx="4" fill="#4338CA"/>
+  <rect x="457" y="328" width="9" height="64" rx="4" fill="#4338CA"/>
+  <!-- piernas -->
+  <rect x="373" y="288" width="62" height="22" rx="11" fill="#312E81"/>
+  <rect x="370" y="292" width="20" height="92" rx="10" fill="#312E81"/>
+  <ellipse cx="374" cy="388" rx="17" ry="7" fill="#1E1B4B"/>
+  <!-- torso -->
+  <rect x="394" y="205" width="56" height="98" rx="26" fill="#4F46E5"/>
+  <!-- cabeza: tupé ondulado y nuca degradada -->
+  <circle cx="425" cy="174" r="23" fill="#312E81"/>
+  <circle cx="416" cy="186" r="20" fill="#FFFFFF"/>
+  <path d="M394 176 q0 -16 14 -20 q-5 9 1 13 q7 -9 19 -8 q14 1 18 12 q-12 -6 -24 -3 q-10 2 -15 9 q-7 -1 -13 -3 Z" fill="#312E81"/>
+  <path d="M444 188 q5 6 3 14 l-8 -4 Z" fill="#312E81"/>
+  <circle cx="405" cy="182" r="2.6" fill="#312E81"/>
+  <path d="M401 192 q5 4 10 1" stroke="#312E81" stroke-width="2.4" stroke-linecap="round"/>
+  <!-- brazos hacia la tablet -->
+  <path d="M400 230 Q 372 234 354 248" stroke="#4F46E5" stroke-width="15" stroke-linecap="round"/>
+  <path d="M398 258 Q 376 276 360 296" stroke="#4F46E5" stroke-width="15" stroke-linecap="round"/>
+  <!-- tablet -->
+  <g transform="rotate(-8 356 276)">
+    <rect x="330" y="240" width="52" height="72" rx="8" fill="#312E81"/>
+    <rect x="336" y="247" width="40" height="58" rx="4" fill="#EEF2FF"/>
+    <rect x="341" y="255" width="30" height="5" rx="2.5" fill="#A5B4FC"/>
+    <rect x="341" y="265" width="24" height="5" rx="2.5" fill="#A5B4FC"/>
+    <rect x="341" y="275" width="28" height="5" rx="2.5" fill="#A5B4FC"/>
+    <path d="M342 292 q4 -5 7 0 t7 0 t7 0" stroke="#4F46E5" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  </g>
+  <!-- manos y lápiz -->
+  <circle cx="352" cy="248" r="8" fill="#FFFFFF"/>
+  <circle cx="360" cy="297" r="8" fill="#FFFFFF"/>
+  <line x1="358" y1="295" x2="346" y2="281" stroke="#312E81" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- chispas -->
+  <path d="M300 180 l0 14 M293 187 l14 0" stroke="#A5B4FC" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="330" cy="150" r="4" fill="#C7D2FE"/>
+  <circle cx="240" cy="170" r="3.5" fill="#C7D2FE"/>
+</svg>

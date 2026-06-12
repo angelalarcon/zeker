@@ -223,6 +223,68 @@
       </p>
     </section>
 
+    <!-- Carousel: de la conversación a la web -->
+    <section class="relative left-1/2 mb-16 w-screen -translate-x-1/2" aria-label="Ejemplos: de la conversación a tu web">
+      <div id="carousel" class="relative overflow-hidden">
+        <div class="relative h-72 sm:h-96 lg:h-[30rem]">
+          <!-- capa de fondo: la web del negocio creándose -->
+          <div id="carousel-bg" class="absolute inset-0 flex will-change-transform transition-transform duration-[1100ms] ease-in-out delay-500">
+            <img src="assets/carousel/web-restaurante.svg" alt="" aria-hidden="true" class="h-full w-full shrink-0 object-cover object-[78%_50%]" loading="lazy" />
+            <img src="assets/carousel/web-transporte.svg" alt="" aria-hidden="true" class="h-full w-full shrink-0 object-cover object-[78%_50%]" loading="lazy" />
+            <img src="assets/carousel/web-taller.svg" alt="" aria-hidden="true" class="h-full w-full shrink-0 object-cover object-[78%_50%]" loading="lazy" />
+          </div>
+          <!-- capa frontal: la conversación -->
+          <div id="carousel-fg" class="absolute inset-0 flex will-change-transform transition-transform duration-[800ms] ease-in-out">
+            <div class="relative h-full w-full shrink-0">
+              <span class="absolute left-4 top-4 rounded-full bg-indigo-600 px-4 py-1.5 text-sm font-semibold text-white shadow-sm sm:left-[6%] sm:top-6 lg:left-[10%]">Restaurante</span>
+              <img
+                src="assets/carousel/personas-restaurante.svg"
+                alt="Dueña de un restaurante contando su negocio mientras un trabajador de Zeker toma nota en una tablet, con la web del restaurante creándose detrás"
+                class="absolute bottom-2 left-1 h-3/5 w-auto sm:bottom-4 sm:left-[6%] sm:h-3/4 lg:left-[10%]"
+                loading="lazy"
+              />
+            </div>
+            <div class="relative h-full w-full shrink-0">
+              <span class="absolute left-4 top-4 rounded-full bg-indigo-600 px-4 py-1.5 text-sm font-semibold text-white shadow-sm sm:left-[6%] sm:top-6 lg:left-[10%]">Empresa de transporte</span>
+              <img
+                src="assets/carousel/personas-transporte.svg"
+                alt="Dueño de una empresa de transporte contando su negocio mientras un trabajador de Zeker toma nota en una tablet, con la web de la empresa creándose detrás"
+                class="absolute bottom-2 left-1 h-3/5 w-auto sm:bottom-4 sm:left-[6%] sm:h-3/4 lg:left-[10%]"
+                loading="lazy"
+              />
+            </div>
+            <div class="relative h-full w-full shrink-0">
+              <span class="absolute left-4 top-4 rounded-full bg-indigo-600 px-4 py-1.5 text-sm font-semibold text-white shadow-sm sm:left-[6%] sm:top-6 lg:left-[10%]">Taller mecánico</span>
+              <img
+                src="assets/carousel/personas-taller.svg"
+                alt="Dueño de un taller mecánico contando su negocio mientras un trabajador de Zeker toma nota en una tablet, con la web del taller creándose detrás"
+                class="absolute bottom-2 left-1 h-3/5 w-auto sm:bottom-4 sm:left-[6%] sm:h-3/4 lg:left-[10%]"
+                loading="lazy"
+              />
+            </div>
+          </div>
+          <!-- controles -->
+          <button
+            id="carousel-prev"
+            type="button"
+            aria-label="Anterior"
+            class="absolute left-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-xl font-bold text-indigo-600 shadow transition hover:bg-white"
+          >&#8249;</button>
+          <button
+            id="carousel-next"
+            type="button"
+            aria-label="Siguiente"
+            class="absolute right-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-xl font-bold text-indigo-600 shadow transition hover:bg-white"
+          >&#8250;</button>
+          <div class="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 gap-2.5">
+            <button type="button" aria-label="Slide 1: restaurante" class="carousel-dot h-2.5 w-2.5 rounded-full bg-indigo-600 transition"></button>
+            <button type="button" aria-label="Slide 2: empresa de transporte" class="carousel-dot h-2.5 w-2.5 rounded-full bg-indigo-200 transition"></button>
+            <button type="button" aria-label="Slide 3: taller mecánico" class="carousel-dot h-2.5 w-2.5 rounded-full bg-indigo-200 transition"></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ¿Es para ti? -->
     <section class="rounded-3xl border border-slate-200 bg-white/80 p-8 backdrop-blur-sm sm:p-12">
       <h2 class="text-center text-3xl font-extrabold tracking-tightest text-slate-900 sm:text-4xl">
@@ -342,6 +404,49 @@
     </section>
 
   </main>
+
+  <!-- Carousel: las personas deslizan primero; el fondo les sigue 0.5s después (transition-delay) -->
+  <script>
+    (function () {
+      const bg = document.getElementById("carousel-bg");
+      const fg = document.getElementById("carousel-fg");
+      const dots = Array.from(document.querySelectorAll(".carousel-dot"));
+      const total = dots.length;
+      let index = 0;
+      let timer = null;
+
+      function render() {
+        const t = "translateX(-" + index * 100 + "%)";
+        fg.style.transform = t;
+        bg.style.transform = t;
+        dots.forEach(function (dot, i) {
+          dot.classList.toggle("bg-indigo-600", i === index);
+          dot.classList.toggle("bg-indigo-200", i !== index);
+        });
+      }
+
+      function go(i) {
+        index = (i + total) % total;
+        render();
+      }
+
+      function restart() {
+        clearInterval(timer);
+        timer = setInterval(function () { go(index + 1); }, 6500);
+      }
+
+      document.getElementById("carousel-prev").addEventListener("click", function () { go(index - 1); restart(); });
+      document.getElementById("carousel-next").addEventListener("click", function () { go(index + 1); restart(); });
+      dots.forEach(function (dot, i) {
+        dot.addEventListener("click", function () { go(i); restart(); });
+      });
+
+      const carousel = document.getElementById("carousel");
+      carousel.addEventListener("mouseenter", function () { clearInterval(timer); });
+      carousel.addEventListener("mouseleave", restart);
+      restart();
+    })();
+  </script>
 
   <!-- Modal Reservar: búsqueda de logo + partículas (https://codepen.io/matteobruni/pen/dyGprLo) -->
   <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
