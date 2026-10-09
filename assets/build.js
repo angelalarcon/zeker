@@ -57,7 +57,7 @@
 
     items.forEach(function (it) {
       const size = it.el.offsetWidth;
-      const iconPx = parseFloat(getComputedStyle(it.icon).fontSize);
+      const iconPx = it.icon.offsetWidth;
       const r = it.target.getBoundingClientRect();
       const toX = r.left - s.left + r.width / 2;
       const toY = r.top - s.top + r.height / 2;

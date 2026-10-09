@@ -2,3 +2,5 @@
 .assetsignore
 wrangler.jsonc
 node_modules
+tools
+__pycache__

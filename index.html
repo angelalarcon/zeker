@@ -3,223 +3,149 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Zeker — Tu sitio listo en una reunión</title>
+  <title>Zeker — Tu web, lista en una reunión</title>
+  <meta name="description" content="Creamos la web de tu negocio en una reunión de 30 minutos. Sin permanencia, IVA incluido." />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <script>document.documentElement.classList.add("js");</script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Josefin+Sans:wght@400;600;700&family=Josefin+Slab:ital,wght@1,600&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'system-ui', 'Segoe UI', 'sans-serif'],
-          },
-          letterSpacing: {
-            tightest: '-0.04em',
-          },
-        },
-      },
-    };
-  </script>
+  <script src="assets/tw-config.js"></script>
+  <link rel="stylesheet" href="assets/theme.css" />
   <style>
-    /* Momento 2: piezas vacías de la web que se llenan cuando llega su objeto */
-    #build .slot { border: 1px dashed #cbd5e1; background: #f8fafc; transition: background-color .45s ease, border-color .45s ease, color .45s ease; }
+    /* Parada 2: piezas vacías de la web que se llenan cuando llega su objeto */
+    #build .slot { border: 2px dashed #CDBBAA; background: #FBF6EC; transition: background-color .45s ease, border-color .45s ease, color .45s ease; }
     #build .slot .slot-content { opacity: 0; transform: translateY(4px); transition: opacity .45s ease, transform .45s ease; }
-    #build .slot.is-built { border-color: transparent; background: #f1f5f9; }
+    #build .slot.is-built { border-color: transparent; background: #F3EADB; }
     #build .slot.is-built .slot-content { opacity: 1; transform: none; }
-    #build .slot-hero.is-built { background: linear-gradient(135deg, #fff7ed, #fef3c7); }
-    #build .slot-cta { color: #fff; }
-    #build .slot-cta.is-built { background: #4f46e5; }
+    #build .slot-hero.is-built { background: linear-gradient(180deg, #B9D5EE 0%, #F3E6CC 70%, #D3E28F 70%); }
+    #build .slot-cta { color: #FBF4E4; }
+    #build .slot-cta.is-built { background: #C24F2C; }
     #build .build-lock { opacity: .35; filter: grayscale(1); transition: opacity .4s ease, filter .4s ease; }
     #build-frame.is-live .build-lock { opacity: 1; filter: none; }
-    #build .build-caret { width: 1px; height: 12px; background: #94a3b8; animation: build-blink 1s steps(1) infinite; }
+    #build .build-caret { width: 1px; height: 12px; background: #A8958C; animation: build-blink 1s steps(1) infinite; }
     #build-frame.is-live .build-caret { display: none; }
     @keyframes build-blink { 50% { opacity: 0; } }
     .build-obj { position: absolute; left: 0; top: 0; width: 56px; height: 56px; visibility: hidden; will-change: transform; }
-    .build-obj .obj-bg { position: absolute; inset: 0; border-radius: 1rem; background: #fff; border: 1px solid #e2e8f0; box-shadow: 0 10px 25px -8px rgb(15 23 42 / .25); }
-    .build-obj .obj-icon { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 32px; line-height: 1; }
-    @media (min-width: 640px) {
-      .build-obj { width: 72px; height: 72px; }
-      .build-obj .obj-icon { font-size: 40px; }
-    }
+    .build-obj .obj-bg { position: absolute; inset: 0; border-radius: 999px; background: #FBF4E4; box-shadow: 0 0 0 2px #42344A, 3px 4px 0 #42344A; }
+    .build-obj .obj-icon { position: absolute; inset: 20%; display: block; }
+    .build-obj .obj-icon svg, #build [data-target] svg { width: 100%; height: 100%; display: block; }
+    @media (min-width: 640px) { .build-obj { width: 72px; height: 72px; } }
   </style>
 </head>
-<body class="relative min-h-screen bg-white antialiased">
+<body class="relative min-h-screen font-sans antialiased">
 
-  <canvas id="field" aria-hidden="true" class="fixed inset-0 z-0 h-full w-full pointer-events-none max-sm:hidden"></canvas>
-  <div id="bg-overlay" aria-hidden="true" class="fixed inset-0 z-[2] pointer-events-none max-sm:bg-white"></div>
+  <!-- Iconos planos compartidos -->
+  <svg width="0" height="0" class="absolute" aria-hidden="true" focusable="false">
+    <symbol id="i-copa" viewBox="0 0 48 48"><path d="M13 5h22c0 13-4.5 20-11 20S13 18 13 5z" fill="#D9483B"/><path d="M15 9h18" stroke="#FBF4E4" stroke-width="3" stroke-linecap="round" opacity=".6"/><rect x="22.5" y="24" width="3" height="13" fill="#42344A"/><rect x="15" y="37" width="18" height="5" rx="2.5" fill="#42344A"/></symbol>
+    <symbol id="i-silla" viewBox="0 0 48 48"><rect x="11" y="4" width="6" height="40" rx="3" fill="#C9573A"/><rect x="11" y="24" width="26" height="6" rx="3" fill="#C9573A"/><rect x="31" y="27" width="6" height="17" rx="3" fill="#C9573A"/><rect x="11" y="9" width="15" height="5" rx="2.5" fill="#EDB84E"/><rect x="11" y="16" width="15" height="4" rx="2" fill="#EDB84E"/></symbol>
+    <symbol id="i-plato" viewBox="0 0 48 48"><circle cx="24" cy="24" r="15" fill="#FBF4E4" stroke="#E9A88A" stroke-width="3"/><circle cx="24" cy="24" r="8" fill="#F2C3A7"/><rect x="2" y="9" width="4" height="30" rx="2" fill="#5B4B66"/><rect x="42" y="9" width="4" height="30" rx="2" fill="#5B4B66"/></symbol>
+    <symbol id="i-carta" viewBox="0 0 48 48"><rect x="9" y="4" width="30" height="40" rx="4" fill="#FBF4E4" stroke="#C9573A" stroke-width="3"/><rect x="15" y="12" width="18" height="4" rx="2" fill="#42344A"/><rect x="15" y="21" width="13" height="3" rx="1.5" fill="#7A6788"/><rect x="15" y="28" width="16" height="3" rx="1.5" fill="#7A6788"/><rect x="15" y="35" width="10" height="3" rx="1.5" fill="#7A6788"/></symbol>
+    <symbol id="i-reloj" viewBox="0 0 48 48"><circle cx="24" cy="24" r="19" fill="#EDB84E"/><circle cx="24" cy="24" r="14" fill="#FBF4E4"/><path d="M24 15v10l6 4" stroke="#42344A" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 48 48"><path d="M24 45S39 30 39 19a15 15 0 0 0-30 0c0 11 15 26 15 26z" fill="#D9483B"/><circle cx="24" cy="19" r="6" fill="#FBF4E4"/></symbol>
+    <symbol id="i-estrella" viewBox="0 0 48 48"><path d="M24 4l6 12.6 13.8 1.7L33.6 28l2.7 13.7L24 34.9l-12.3 6.8L14.4 28 4.2 18.3 18 16.6z" fill="#EDB84E"/><path d="M24 4l6 12.6 13.8 1.7L33.6 28l2.7 13.7L24 34.9z" fill="#E8743B" opacity=".35"/></symbol>
+    <symbol id="i-candado" viewBox="0 0 48 48"><path d="M15 22v-7a9 9 0 0 1 17-4" stroke="#42344A" stroke-width="4.5" fill="none" stroke-linecap="round"/><rect x="9" y="21" width="30" height="23" rx="5" fill="#E8743B"/><circle cx="24" cy="31" r="3.5" fill="#FBF4E4"/><rect x="22.5" y="31" width="3" height="7" rx="1.5" fill="#FBF4E4"/></symbol>
+    <symbol id="i-moneda" viewBox="0 0 48 48"><circle cx="24" cy="24" r="19" fill="#EDB84E"/><circle cx="24" cy="24" r="14.5" fill="none" stroke="#E8743B" stroke-width="2.5"/><path d="M29.5 17.5a8.5 8.5 0 1 0 0 13M14 22h11M14 27h11" stroke="#42344A" stroke-width="3" fill="none" stroke-linecap="round"/></symbol>
+    <symbol id="i-charla" viewBox="0 0 48 48"><path d="M7 7h24a5 5 0 0 1 5 5v12a5 5 0 0 1-5 5H17l-8 7v-7H7a5 5 0 0 1-5-5V12a5 5 0 0 1 5-5z" fill="#5E8FD6"/><path d="M39 17h3a4 4 0 0 1 4 4v11a4 4 0 0 1-4 4h-2v6l-7-6h-9a4 4 0 0 1-4-4v-1h11a7 7 0 0 0 7-7z" fill="#A6CB72"/><circle cx="12" cy="18" r="2.5" fill="#FBF4E4"/><circle cx="19" cy="18" r="2.5" fill="#FBF4E4"/><circle cx="26" cy="18" r="2.5" fill="#FBF4E4"/></symbol>
+    <symbol id="i-check" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="#C24F2C"/><path d="M15 25l6 6 12-13" stroke="#FBF4E4" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </svg>
 
-  <nav id="nav-el" class="sticky top-0 z-30 border-b border-slate-200 bg-white/80 backdrop-blur">
-    <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-5">
-      <a id="nav-logo" href="index.html" class="text-xl font-bold tracking-tight text-slate-900">
-        ZE<span class="text-red-600">K</span>ER
+  <nav id="nav-el" class="sticky top-0 z-30 border-b border-slate-200 bg-paper/85 backdrop-blur">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-6">
+      <a id="nav-logo" href="index.html" class="font-display text-xl font-bold tracking-[0.18em] text-plum">
+        ZE<span class="text-indigo-600">K</span>ER
       </a>
-      <div id="nav-items" class="flex items-center gap-4 sm:gap-6">
-        <a href="precios.html" class="hidden text-sm font-semibold text-slate-600 hover:text-slate-900 sm:inline">Precios</a>
+      <div id="nav-items" class="flex items-center gap-3 sm:gap-6">
+        <a href="precios.html" class="hidden font-display text-sm font-bold uppercase tracking-[0.14em] text-slate-700 hover:text-plum sm:inline">Precios</a>
         <a
           href="https://wa.me/34676012946?text=Hola%2C%20me%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20Zeker"
           target="_blank"
           rel="noopener noreferrer"
-          class="rounded-full border border-emerald-600 px-4 py-2.5 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-50 sm:px-5"
-        >
-          WhatsApp
-        </a>
-        <a
-          href="#"
-          class="js-reservar rounded-full bg-indigo-600 text-white px-4 py-2.5 text-sm font-semibold shadow-sm hover:bg-indigo-500 transition sm:px-5"
-        >
-          Reservar
-        </a>
+          class="hidden rounded-full px-4 py-2.5 font-display text-sm font-bold uppercase tracking-[0.12em] text-emerald-700 ring-2 ring-emerald-600 transition hover:bg-emerald-50 sm:inline-flex"
+        >WhatsApp</a>
+        <a href="#" class="js-reservar rounded-full bg-indigo-600 px-4 py-2.5 font-display text-sm font-bold uppercase tracking-[0.12em] text-paper transition hover:bg-indigo-700 sm:px-5">Reservar</a>
       </div>
     </div>
   </nav>
 
-  <header id="hero-header" class="relative z-10 mx-auto max-w-4xl px-6 pt-24 pb-16 text-center sm:pt-32 sm:pb-20">
-    <p id="hero-above" class="text-base font-semibold text-indigo-600 sm:text-lg" style="will-change:transform;transition:transform 0.8s cubic-bezier(0.4,0,0.2,1);">Tu negocio digital</p>
-    <div id="hero-split" class="mt-5">
-      <div id="hero-line-top" style="will-change:transform;transition:transform 0.8s cubic-bezier(0.4,0,0.2,1);">
-        <p class="text-5xl font-extrabold leading-[1.05] tracking-tightest text-indigo-600 sm:text-7xl">Tan fácil</p>
-      </div>
-      <div id="hero-logo-slot" style="height:0;overflow:hidden;transition:height 0.8s cubic-bezier(0.4,0,0.2,1);position:relative;border-radius:1.5rem;">
-        <div id="hero-logo-particles" style="position:absolute;top:0;left:0;right:0;bottom:120px;"></div>
-        <div id="hero-logo-text" style="position:absolute;left:0;right:0;bottom:0;z-index:30;display:flex;flex-direction:column;align-items:center;padding-bottom:2.5rem;text-align:center;pointer-events:none;transition:opacity 0.3s ease;">
-          <p id="reservar-company-label" style="font-size:0.875rem;font-weight:500;color:rgb(199 210 254/0.9);"></p>
-          <p style="font-size:1.5rem;font-weight:700;letter-spacing:0.025em;color:white;">Cargando<span class="reservar-dots">...</span></p>
+  <!-- Hero: el pueblo donde vive tu negocio -->
+  <header id="hero-header" class="relative z-10 overflow-hidden" style="min-height:clamp(680px, calc(100svh - 70px), 1000px);">
+    <div class="pointer-events-none absolute inset-0 [&>svg]:h-full [&>svg]:w-full" aria-hidden="true"><!-- HERO-SVG:START --><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" class="hero-svg" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false"><defs><linearGradient id="hero-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7FAEE0"/><stop offset="0.42" stop-color="#B9D5EE"/><stop offset="0.62" stop-color="#F3E6CC"/></linearGradient></defs><rect width="1600" height="1000" fill="url(#hero-sky)"/><circle cx="1210" cy="420" r="70" fill="#FFF8EA" opacity=".9"/><circle cx="518.1" cy="91.3" r="6.3" fill="#FFF8EA"/><circle cx="1314" cy="72" r="5.9" fill="#FFF8EA"/><circle cx="60" cy="187.4" r="3.3" fill="#FFF8EA"/><circle cx="881.7" cy="60.1" r="5.8" fill="#FFF8EA"/><circle cx="1009" cy="238.2" r="3.3" fill="#FFF8EA"/><circle cx="79.3" cy="115.2" r="5.8" fill="#FFF8EA"/><circle cx="463.4" cy="89" r="3.6" fill="#FFF8EA"/><circle cx="896.4" cy="271.9" r="3.5" fill="#FFF8EA"/><circle cx="595.8" cy="226.2" r="3.3" fill="#FFF8EA"/><circle cx="990.4" cy="208.8" r="5.7" fill="#FFF8EA"/><circle cx="745" cy="354" r="4.8" fill="#FFF8EA"/><circle cx="1271" cy="277.7" r="4.2" fill="#FFF8EA"/><g fill="#FFF8EA" class="drift"><circle cx="60" cy="120" r="44.2"/><circle cx="112" cy="91.4" r="57.2"/><circle cx="179.6" cy="109.6" r="46.8"/><circle cx="226.4" cy="127.8" r="33.8"/><circle cx="21" cy="133" r="28.6"/><rect x="-7.6" y="125.2" width="267.8" height="36.4" rx="18.2"/></g><g fill="#FFF8EA" class="drift slow"><circle cx="1300" cy="90" r="51"/><circle cx="1360" cy="57" r="66"/><circle cx="1438" cy="78" r="54"/><circle cx="1492" cy="99" r="39"/><circle cx="1255" cy="105" r="33"/><rect x="1222" y="96" width="309" height="42" rx="21"/></g><g fill="#F2C3A7" class="drift slow"><circle cx="380" cy="300" r="27.2"/><circle cx="412" cy="282.4" r="35.2"/><circle cx="453.6" cy="293.6" r="28.8"/><circle cx="482.4" cy="304.8" r="20.8"/><circle cx="356" cy="308" r="17.6"/><rect x="338.4" y="303.2" width="164.8" height="22.4" rx="11.2"/></g><g fill="#FFF8EA" class="drift"><circle cx="1100" cy="270" r="30.6"/><circle cx="1136" cy="250.2" r="39.6"/><circle cx="1182.8" cy="262.8" r="32.4"/><circle cx="1215.2" cy="275.4" r="23.4"/><circle cx="1073" cy="279" r="19.8"/><rect x="1053.2" y="273.6" width="185.4" height="25.2" rx="12.6"/></g><g fill="#FFF8EA" class="drift slow"><circle cx="-40" cy="420" r="34"/><circle cx="0" cy="398" r="44"/><circle cx="52" cy="412" r="36"/><circle cx="88" cy="426" r="26"/><circle cx="-70" cy="430" r="22"/><rect x="-92" y="424" width="206" height="28" rx="14"/></g><g fill="#F2C3A7" class="drift"><circle cx="1420" cy="380" r="37.4"/><circle cx="1464" cy="355.8" r="48.4"/><circle cx="1521.2" cy="371.2" r="39.6"/><circle cx="1560.8" cy="386.6" r="28.6"/><circle cx="1387" cy="391" r="24.2"/><rect x="1362.8" y="384.4" width="226.6" height="30.8" rx="15.4"/></g><g class="hero-birds"><path d="M1240,200 q8.4,-8.4 16.8,0 q8.4,-8.4 16.8,0" fill="none" stroke="#42344A" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M1288,178.4 q6.7,-6.7 13.4,0 q6.7,-6.7 13.4,0" fill="none" stroke="#42344A" stroke-width="2.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M1324,209.6 q5.9,-5.9 11.8,0 q5.9,-5.9 11.8,0" fill="none" stroke="#42344A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></g><path d="M0,700 L0,640 L120,560 L230,600 L360,480 L470,560 L560,520 L660,600 L760,540 L880,470 L990,560 L1080,500 L1200,590 L1320,470 L1450,560 L1600,520 L1600,700 Z" fill="#B8B2DD"/><path d="M120,560 L230,600 L220,700 L136.5,700 Z" fill="#948BC4"/><path d="M120,560 L147.7,593.9 L129.2,584.6 L116.9,598.5 L104.6,586.2 L90.7,595.4 Z" fill="#F7F4FB"/><path d="M360,480 L470,560 L460,700 L376.5,700 Z" fill="#948BC4"/><path d="M360,480 L403.6,533.2 L374.5,518.7 L355.2,540.5 L335.8,521.1 L314,535.7 Z" fill="#F7F4FB"/><path d="M560,520 L660,600 L650,700 L575,700 Z" fill="#948BC4"/><path d="M560,520 L595.6,563.6 L571.9,551.7 L556,569.5 L540.2,553.7 L522.4,565.5 Z" fill="#F7F4FB"/><path d="M880,470 L990,560 L980,700 L896.5,700 Z" fill="#948BC4"/><path d="M880,470 L925.5,525.7 L895.2,510.5 L874.9,533.2 L854.7,513 L831.9,528.2 Z" fill="#F7F4FB"/><path d="M1080,500 L1200,590 L1190,700 L1098,700 Z" fill="#948BC4"/><path d="M1080,500 L1119.6,548.4 L1093.2,535.2 L1075.6,555 L1058,537.4 L1038.2,550.6 Z" fill="#F7F4FB"/><path d="M1320,470 L1450,560 L1440,700 L1339.5,700 Z" fill="#948BC4"/><path d="M1320,470 L1365.5,525.7 L1335.2,510.5 L1314.9,533.2 L1294.7,513 L1271.9,528.2 Z" fill="#F7F4FB"/><path d="M0,2000 L0,640 L15.5,637.9 L35.4,634.6 L58.9,630.7 L85.3,626.3 L113.8,621.9 L143.5,617.7 L173.8,614.1 L203.8,611.4 L232.8,609.9 L260,610 L285.9,612.1 L311.7,616.2 L337.4,621.6 L363,628.1 L388.8,635 L414.6,641.9 L440.5,648.4 L466.7,653.8 L493.2,657.9 L520,660 L547.1,660 L574.4,658.3 L601.9,655.3 L629.6,651.4 L657.5,646.9 L685.6,642.2 L713.9,637.8 L742.4,634.1 L771.1,631.3 L800,630 L829.3,630.3 L859,631.9 L889.2,634.5 L919.5,637.8 L950,641.2 L980.5,644.6 L1010.8,647.6 L1041,649.7 L1070.7,650.6 L1100,650 L1129.1,647.4 L1158.2,643 L1187.4,637.3 L1216.3,630.7 L1245,623.8 L1273.3,616.9 L1301,610.6 L1328.2,605.4 L1354.5,601.7 L1380,600 L1405.4,600.5 L1431.4,602.9 L1457.3,606.6 L1482.9,611.4 L1507.5,616.9 L1530.7,622.6 L1552.1,628.1 L1571,633.1 L1587.2,637.2 L1600,640 L1600,2000 Z" fill="#A6CB72"/><path d="M20.5,623.9 L-5.5,685.8 L20.5,685.8 Z" fill="#2F6B47"/><path d="M20.5,623.9 L46.5,685.8 L20.5,685.8 Z" fill="#4F9460"/><path d="M61.8,645.8 L43.5,689.3 L61.8,689.3 Z" fill="#2F6B47"/><path d="M61.8,645.8 L80,689.3 L61.8,689.3 Z" fill="#4F9460"/><path d="M110.4,637.2 L91.6,681.7 L110.4,681.7 Z" fill="#2F6B47"/><path d="M110.4,637.2 L129.1,681.7 L110.4,681.7 Z" fill="#4F9460"/><path d="M157.8,597.3 L132.6,657.3 L157.8,657.3 Z" fill="#2F6B47"/><path d="M157.8,597.3 L183,657.3 L157.8,657.3 Z" fill="#4F9460"/><path d="M209.3,609.2 L181.5,675.5 L209.3,675.5 Z" fill="#2F6B47"/><path d="M209.3,609.2 L237.1,675.5 L209.3,675.5 Z" fill="#4F9460"/><path d="M246.3,621.8 L222,679.6 L246.3,679.6 Z" fill="#2F6B47"/><path d="M246.3,621.8 L270.6,679.6 L246.3,679.6 Z" fill="#4F9460"/><path d="M297.6,606.3 L270.2,671.5 L297.6,671.5 Z" fill="#2F6B47"/><path d="M297.6,606.3 L325,671.5 L297.6,671.5 Z" fill="#4F9460"/><path d="M350.9,612.2 L325.7,672.1 L350.9,672.1 Z" fill="#2F6B47"/><path d="M350.9,612.2 L376.1,672.1 L350.9,672.1 Z" fill="#4F9460"/><path d="M379.2,620.4 L354.3,679.9 L379.2,679.9 Z" fill="#2F6B47"/><path d="M379.2,620.4 L404.2,679.9 L379.2,679.9 Z" fill="#4F9460"/><path d="M443.9,635.4 L423.5,683.9 L443.9,683.9 Z" fill="#2F6B47"/><path d="M443.9,635.4 L464.2,683.9 L443.9,683.9 Z" fill="#4F9460"/><path d="M477.7,638.1 L460.6,678.7 L477.7,678.7 Z" fill="#2F6B47"/><path d="M477.7,638.1 L494.8,678.7 L477.7,678.7 Z" fill="#4F9460"/><path d="M525.2,618.2 L507,661.7 L525.2,661.7 Z" fill="#2F6B47"/><path d="M525.2,618.2 L543.5,661.7 L525.2,661.7 Z" fill="#4F9460"/><path d="M563.2,638.2 L544.7,682.1 L563.2,682.1 Z" fill="#2F6B47"/><path d="M563.2,638.2 L581.6,682.1 L563.2,682.1 Z" fill="#4F9460"/><path d="M613,603.1 L585.2,669.3 L613,669.3 Z" fill="#2F6B47"/><path d="M613,603.1 L640.7,669.3 L613,669.3 Z" fill="#4F9460"/><path d="M1023.6,614.8 L999.9,671.3 L1023.6,671.3 Z" fill="#2F6B47"/><path d="M1023.6,614.8 L1047.3,671.3 L1023.6,671.3 Z" fill="#4F9460"/><path d="M1085.7,617.9 L1058,683.9 L1085.7,683.9 Z" fill="#2F6B47"/><path d="M1085.7,617.9 L1113.4,683.9 L1085.7,683.9 Z" fill="#4F9460"/><path d="M1119.6,619.4 L1098.2,670.1 L1119.6,670.1 Z" fill="#2F6B47"/><path d="M1119.6,619.4 L1140.9,670.1 L1119.6,670.1 Z" fill="#4F9460"/><path d="M1177.7,644 L1159,688.6 L1177.7,688.6 Z" fill="#2F6B47"/><path d="M1177.7,644 L1196.4,688.6 L1177.7,688.6 Z" fill="#4F9460"/><path d="M1209.5,616.9 L1189.8,663.9 L1209.5,663.9 Z" fill="#2F6B47"/><path d="M1209.5,616.9 L1229.3,663.9 L1209.5,663.9 Z" fill="#4F9460"/><path d="M1261.7,628.1 L1241.6,676 L1261.7,676 Z" fill="#2F6B47"/><path d="M1261.7,628.1 L1281.8,676 L1261.7,676 Z" fill="#4F9460"/><path d="M1298.1,619.2 L1276.6,670.2 L1298.1,670.2 Z" fill="#2F6B47"/><path d="M1298.1,619.2 L1319.5,670.2 L1298.1,670.2 Z" fill="#4F9460"/><path d="M1355.3,627.7 L1329.8,688.4 L1355.3,688.4 Z" fill="#2F6B47"/><path d="M1355.3,627.7 L1380.8,688.4 L1355.3,688.4 Z" fill="#4F9460"/><path d="M1400.3,616.7 L1375,677 L1400.3,677 Z" fill="#2F6B47"/><path d="M1400.3,616.7 L1425.6,677 L1400.3,677 Z" fill="#4F9460"/><path d="M1437.1,623.2 L1410.5,686.6 L1437.1,686.6 Z" fill="#2F6B47"/><path d="M1437.1,623.2 L1463.7,686.6 L1437.1,686.6 Z" fill="#4F9460"/><path d="M1499.5,631.4 L1477.7,683.1 L1499.5,683.1 Z" fill="#2F6B47"/><path d="M1499.5,631.4 L1521.2,683.1 L1499.5,683.1 Z" fill="#4F9460"/><path d="M1536,600.5 L1511.2,659.5 L1536,659.5 Z" fill="#2F6B47"/><path d="M1536,600.5 L1560.8,659.5 L1536,659.5 Z" fill="#4F9460"/><path d="M1575.2,612 L1555.8,658.3 L1575.2,658.3 Z" fill="#2F6B47"/><path d="M1575.2,612 L1594.7,658.3 L1575.2,658.3 Z" fill="#4F9460"/><path d="M0,2000 L0,720 L17.7,718 L40.2,715.3 L66.7,711.9 L96.5,708.2 L128.8,704.4 L162.7,700.6 L197.6,697 L232.6,693.9 L267,691.5 L300,690 L332.7,689.5 L366.7,689.9 L401.6,691 L437,692.6 L472.5,694.4 L507.8,696.2 L542.6,697.9 L576.5,699.3 L609.1,700 L640,700 L669.1,699 L696.5,697.1 L722.6,694.6 L747.8,691.8 L772.5,688.8 L797,685.8 L821.6,683.3 L846.7,681.3 L872.7,680.1 L900,680 L927.9,681.2 L955.8,683.8 L983.9,687.2 L1012.3,691.3 L1041.2,695.6 L1070.9,699.9 L1101.4,703.8 L1133,707 L1165.8,709.2 L1200,710 L1237.8,709.3 L1280,707.4 L1325.2,704.5 L1372,700.9 L1418.8,696.9 L1464,692.7 L1506.2,688.7 L1544,685 L1575.8,682.1 L1600,680 L1600,2000 Z" fill="#82B862"/><rect x="560" y="666" width="54" height="46" fill="#F6E7CB"/><path d="M555.7,666 L587,643.3 L618.3,666 Z" fill="#C9573A"/><rect x="592.4" y="666" width="21.6" height="46" fill="#000" opacity=".06"/><rect x="570.8" y="679.8" width="9.7" height="12.9" fill="#5B4B66"/><rect x="626" y="615" width="23.4" height="99" fill="#F6E7CB"/><path d="M623.3,615 L637.7,579 L652.1,615 Z" fill="#5B4B66"/><rect x="633.2" y="627.6" width="9" height="12.6" rx="4.5" fill="#5B4B66"/><rect x="670" y="638.6" width="142.5" height="87.4" fill="#F6E7CB"/><path d="M662.4,638.6 h157.7 l-13.3,-24.7 h-131.1 z" fill="#C9573A"/><rect x="758.4" y="638.6" width="54.1" height="87.4" fill="#000" opacity=".05"/><rect x="681.4" y="691" width="28.5" height="35" fill="#5B4B66"/><rect x="723.2" y="691" width="36.1" height="26.2" fill="#9CC3E8"/><rect x="770.7" y="691" width="28.5" height="35" fill="#5B4B66"/><rect x="670" y="671.8" width="17.8" height="15.2" fill="#D9483B"/><rect x="687.8" y="671.8" width="17.8" height="15.2" fill="#FBF4E4"/><rect x="705.6" y="671.8" width="17.8" height="15.2" fill="#D9483B"/><rect x="723.4" y="671.8" width="17.8" height="15.2" fill="#FBF4E4"/><rect x="741.2" y="671.8" width="17.8" height="15.2" fill="#D9483B"/><rect x="759.1" y="671.8" width="17.8" height="15.2" fill="#FBF4E4"/><rect x="776.9" y="671.8" width="17.8" height="15.2" fill="#D9483B"/><rect x="794.7" y="671.8" width="17.8" height="15.2" fill="#FBF4E4"/><circle cx="678.9" cy="687" r="8.9" fill="#D9483B"/><circle cx="696.7" cy="687" r="8.9" fill="#FBF4E4"/><circle cx="714.5" cy="687" r="8.9" fill="#D9483B"/><circle cx="732.3" cy="687" r="8.9" fill="#FBF4E4"/><circle cx="750.2" cy="687" r="8.9" fill="#D9483B"/><circle cx="768" cy="687" r="8.9" fill="#FBF4E4"/><circle cx="785.8" cy="687" r="8.9" fill="#D9483B"/><circle cx="803.6" cy="687" r="8.9" fill="#FBF4E4"/><rect x="705.6" y="645.6" width="71.2" height="13.3" rx="2.8" fill="#42344A"/><circle cx="741.2" cy="652.2" r="3.8" fill="#EDB84E"/><rect x="830" y="652.7" width="128.8" height="77.3" fill="#A9C3E0"/><rect x="824.5" y="643.5" width="139.8" height="11" fill="#5B4B66"/><rect x="915" y="652.7" width="43.8" height="77.3" fill="#000" opacity=".07"/><rect x="842.9" y="675.9" width="69.9" height="54.1" fill="#3B3550"/><rect x="846.6" y="679" width="62.6" height="4.6" fill="#5B5272"/><rect x="846.6" y="687.3" width="62.6" height="4.6" fill="#5B5272"/><rect x="846.6" y="695.6" width="62.6" height="4.6" fill="#5B5272"/><rect x="846.6" y="703.8" width="62.6" height="4.6" fill="#5B5272"/><rect x="846.6" y="712.1" width="62.6" height="4.6" fill="#5B5272"/><rect x="846.6" y="720.4" width="62.6" height="4.6" fill="#5B5272"/><rect x="922" y="683.6" width="23.9" height="20.2" fill="#9CC3E8"/><rect x="850.2" y="619.6" width="88.3" height="20.2" rx="3.7" fill="#EDB84E"/><rect x="877.8" y="627.9" width="33.1" height="4.6" rx="2.3" fill="#42344A"/><circle cx="877.8" cy="630.2" r="5.5" fill="#42344A"/><circle cx="877.8" cy="630.2" r="2.3" fill="#EDB84E"/><ellipse cx="973.5" cy="723.6" rx="12.9" ry="6.4" fill="#2E2638"/><ellipse cx="973.5" cy="714.4" rx="12.9" ry="6.4" fill="#3B3550"/><rect x="1000" y="671" width="153" height="63" fill="#EDB84E"/><path d="M994.6,671 Q1076.5,629.6 1158.4,671 Z" fill="#E8743B"/><rect x="1097.9" y="671" width="55.1" height="63" fill="#000" opacity=".07"/><rect x="1016.2" y="688.6" width="48.6" height="45.4" fill="#5B4B66"/><rect x="1077.4" y="688.6" width="48.6" height="45.4" fill="#5B4B66"/><rect x="1023.4" y="702.5" width="16.2" height="12.6" fill="#E9D3AE"/><rect x="1041.4" y="711.3" width="14.4" height="12.6" fill="#F6E7CB"/><rect x="1170" y="686" width="58" height="44" fill="#E9D3AE"/><path d="M1165.4,686 L1199,661.6 L1232.6,686 Z" fill="#5B4B66"/><rect x="1204.8" y="686" width="23.2" height="44" fill="#000" opacity=".06"/><rect x="1181.6" y="699.2" width="10.4" height="12.3" fill="#5B4B66"/><path d="M540,650 C517,690.5 522.7,740 540,740 Z" fill="#5B4B66"/><path d="M540,650 C563,690.5 557.3,740 540,740 Z" fill="#7A6788"/><path d="M1250,632 C1221.8,681.5 1228.9,742 1250,742 Z" fill="#5B4B66"/><path d="M1250,632 C1278.2,681.5 1271.1,742 1250,742 Z" fill="#7A6788"/><path d="M1275,670 C1255.5,704.2 1260.4,746 1275,746 Z" fill="#5B4B66"/><path d="M1275,670 C1294.5,704.2 1289.6,746 1275,746 Z" fill="#7A6788"/><rect x="1148" y="740.2" width="4" height="19.8" fill="#5B4B66"/><circle cx="1150" cy="727" r="22" fill="#4F9460"/><circle cx="1155.5" cy="723.7" r="15.4" fill="#82B862"/><rect x="518.2" y="742" width="3.6" height="18" fill="#5B4B66"/><circle cx="520" cy="730" r="20" fill="#4F9460"/><circle cx="525" cy="727" r="14" fill="#82B862"/><path d="M0,2000 L0,790 L14.9,788 L34,785.2 L56.6,781.8 L82,778 L109.4,774.1 L138,770.2 L167.1,766.6 L196,763.6 L223.9,761.3 L250,760 L274.8,759.8 L299.2,760.6 L323.4,762.1 L347.6,764.2 L371.9,766.6 L396.4,769 L421.3,771.3 L446.8,773.2 L473,774.5 L500,775 L528,774.6 L556.8,773.4 L586.3,771.6 L616.4,769.5 L646.9,767.2 L677.6,764.9 L708.4,762.9 L739.2,761.2 L769.8,760.2 L800,760 L830.2,760.8 L860.8,762.6 L891.6,765 L922.4,767.9 L953.1,770.9 L983.6,773.9 L1013.7,776.6 L1043.2,778.6 L1072,779.9 L1100,780 L1127,778.8 L1153.2,776.2 L1178.7,772.8 L1203.6,768.7 L1228.1,764.4 L1252.4,760.1 L1276.6,756.2 L1300.8,753 L1325.2,750.8 L1350,750 L1376.1,750.7 L1404,752.6 L1432.9,755.5 L1462,759.1 L1490.6,763.1 L1518,767.3 L1543.4,771.3 L1566,775 L1585.1,777.9 L1600,780 L1600,2000 Z" fill="#D3E28F"/><path d="M90,689.6 L46.5,793.2 L90,793.2 Z" fill="#4F9460"/><path d="M90,689.6 L133.5,793.2 L90,793.2 Z" fill="#82B862"/><path d="M180,701 L142.2,791.1 L180,791.1 Z" fill="#4F9460"/><path d="M180,701 L217.8,791.1 L180,791.1 Z" fill="#82B862"/><path d="M1420,699 L1380.5,793 L1420,793 Z" fill="#4F9460"/><path d="M1420,699 L1459.5,793 L1420,793 Z" fill="#82B862"/><path d="M1520,706.3 L1481.8,797.3 L1520,797.3 Z" fill="#4F9460"/><path d="M1520,706.3 L1558.2,797.3 L1520,797.3 Z" fill="#82B862"/><circle cx="1398.9" cy="922.8" r="3.3" fill="#F2C3A7"/><circle cx="1528.7" cy="920.5" r="4.5" fill="#FBF4E4"/><circle cx="1358.3" cy="998.6" r="5.8" fill="#FFFFFF"/><circle cx="499" cy="828.8" r="3.7" fill="#F2C3A7"/><circle cx="765.8" cy="938.4" r="5" fill="#F08A2C"/><circle cx="1521.6" cy="905.7" r="3.1" fill="#FBF4E4"/><circle cx="1213" cy="859.6" r="4" fill="#FBF4E4"/><circle cx="1113.9" cy="852.2" r="3.1" fill="#F08A2C"/><circle cx="569.1" cy="844.6" r="3.4" fill="#F2C3A7"/><circle cx="1018.3" cy="922.6" r="5.7" fill="#F08A2C"/><circle cx="1289.7" cy="963.7" r="6.4" fill="#F08A2C"/><circle cx="319.9" cy="898.6" r="5" fill="#FBF4E4"/><circle cx="1264.2" cy="894.4" r="3.1" fill="#F2C3A7"/><circle cx="715.6" cy="987.4" r="8" fill="#F2C3A7"/><circle cx="128.9" cy="820.4" r="2.8" fill="#F2C3A7"/><circle cx="327" cy="924.8" r="6.2" fill="#FBF4E4"/><circle cx="767.2" cy="930.6" r="5.9" fill="#FBF4E4"/><circle cx="1335.4" cy="824" r="2.7" fill="#F08A2C"/><circle cx="764.9" cy="835.7" r="3.9" fill="#F2C3A7"/><circle cx="138.8" cy="989.2" r="6.8" fill="#FFFFFF"/><circle cx="642.2" cy="989.4" r="6.8" fill="#F08A2C"/><circle cx="1589" cy="805.5" r="2.8" fill="#FFFFFF"/><circle cx="1290.4" cy="829.2" r="3.9" fill="#FFFFFF"/><circle cx="1051.6" cy="870.1" r="3.9" fill="#F08A2C"/><circle cx="34.2" cy="959.9" r="6.2" fill="#FBF4E4"/><circle cx="842.5" cy="986.7" r="5.4" fill="#F08A2C"/><circle cx="1321.8" cy="842.2" r="2.6" fill="#F2C3A7"/><circle cx="801.9" cy="952.7" r="4.4" fill="#FFFFFF"/><circle cx="1334.7" cy="812.2" r="3.3" fill="#FFFFFF"/><circle cx="1060" cy="963" r="5.4" fill="#F08A2C"/><circle cx="850.9" cy="904.7" r="2.6" fill="#FFFFFF"/><circle cx="1242.4" cy="921.7" r="5.7" fill="#F08A2C"/><circle cx="275.8" cy="894.7" r="4.9" fill="#FBF4E4"/><circle cx="521.6" cy="903.7" r="4.5" fill="#FBF4E4"/><circle cx="1413.2" cy="811.4" r="2" fill="#FBF4E4"/><circle cx="1235.6" cy="901.5" r="4.5" fill="#FBF4E4"/><circle cx="709.2" cy="922.5" r="4.7" fill="#F08A2C"/><circle cx="1108.4" cy="890.5" r="4.2" fill="#FFFFFF"/><circle cx="812.4" cy="849.5" r="3.5" fill="#F2C3A7"/><circle cx="1476.5" cy="978.6" r="4.2" fill="#FFFFFF"/><circle cx="219.4" cy="824.3" r="2.8" fill="#FBF4E4"/><circle cx="1073.8" cy="885.7" r="3.1" fill="#F2C3A7"/><circle cx="1254.3" cy="979.4" r="4" fill="#F2C3A7"/><circle cx="228.8" cy="976.6" r="7.7" fill="#F08A2C"/><circle cx="1194.7" cy="818.8" r="3.8" fill="#F08A2C"/><circle cx="1583.8" cy="966.5" r="3.9" fill="#FFFFFF"/><circle cx="1590.5" cy="880.8" r="3.7" fill="#F2C3A7"/><circle cx="509.6" cy="944.4" r="3" fill="#FFFFFF"/><circle cx="704.7" cy="803.6" r="2.2" fill="#F2C3A7"/><circle cx="819.6" cy="812.9" r="3.9" fill="#F08A2C"/><circle cx="1554.7" cy="821" r="2.3" fill="#FBF4E4"/><circle cx="1449.4" cy="836.3" r="3.8" fill="#FFFFFF"/><circle cx="1359.3" cy="935.2" r="6.6" fill="#FFFFFF"/><circle cx="239" cy="983.8" r="6" fill="#F2C3A7"/><circle cx="143.1" cy="811.5" r="3.2" fill="#FFFFFF"/><circle cx="1432.5" cy="853.8" r="2.1" fill="#FBF4E4"/><circle cx="1282.6" cy="816.7" r="3.7" fill="#FBF4E4"/><circle cx="423.1" cy="824.3" r="1.8" fill="#FFFFFF"/><circle cx="1482.7" cy="853.6" r="2.4" fill="#F08A2C"/><circle cx="1501" cy="993.8" r="4.7" fill="#F08A2C"/><circle cx="322.8" cy="862.4" r="3" fill="#F08A2C"/><circle cx="463.9" cy="900" r="3.1" fill="#F2C3A7"/><circle cx="1285.9" cy="998.9" r="3.7" fill="#FBF4E4"/><circle cx="1172.9" cy="910.2" r="3.3" fill="#FFFFFF"/><circle cx="393.1" cy="889.4" r="4.6" fill="#FFFFFF"/><circle cx="1050.4" cy="909.2" r="5.8" fill="#F2C3A7"/><circle cx="1100.4" cy="996.5" r="5.1" fill="#F08A2C"/><circle cx="647.5" cy="869.5" r="2.4" fill="#F08A2C"/><circle cx="22.8" cy="925.1" r="6.1" fill="#FFFFFF"/><circle cx="261.2" cy="816.9" r="3.6" fill="#F2C3A7"/><circle cx="958" cy="938.5" r="3.1" fill="#F08A2C"/><circle cx="252.1" cy="889.2" r="3.3" fill="#F2C3A7"/><circle cx="1556.2" cy="909.4" r="3.5" fill="#F2C3A7"/><circle cx="348.6" cy="836.6" r="2.7" fill="#FBF4E4"/><circle cx="759.4" cy="900.6" r="3.2" fill="#FBF4E4"/><circle cx="145.4" cy="963.4" r="3.8" fill="#FBF4E4"/><circle cx="630.4" cy="859.9" r="3.9" fill="#FBF4E4"/><circle cx="936.9" cy="905.8" r="5.2" fill="#FFFFFF"/><circle cx="1222.9" cy="944.1" r="5" fill="#F2C3A7"/><circle cx="1158.6" cy="928.6" r="3" fill="#FFFFFF"/><circle cx="1174.2" cy="962.4" r="3.7" fill="#FBF4E4"/><circle cx="1322.3" cy="916.8" r="6" fill="#F08A2C"/><circle cx="136.1" cy="808.4" r="3" fill="#FBF4E4"/><circle cx="602.6" cy="890.3" r="2.6" fill="#FBF4E4"/><circle cx="1002" cy="936.1" r="4.8" fill="#FBF4E4"/><circle cx="731.1" cy="814" r="3.8" fill="#FBF4E4"/><circle cx="1054.9" cy="813.2" r="3.3" fill="#F2C3A7"/><circle cx="1294.8" cy="969.2" r="4.2" fill="#F08A2C"/><circle cx="369.2" cy="930" r="4.6" fill="#FFFFFF"/><circle cx="122.8" cy="982.1" r="4.7" fill="#FBF4E4"/><circle cx="987.2" cy="928.6" r="3.1" fill="#F08A2C"/><circle cx="530.8" cy="930.3" r="5.5" fill="#F08A2C"/><circle cx="20" cy="812.1" r="2.2" fill="#FBF4E4"/><circle cx="1107.5" cy="935.1" r="4" fill="#F2C3A7"/><circle cx="743.5" cy="893.3" r="2.8" fill="#F08A2C"/><circle cx="498.7" cy="817.2" r="2.8" fill="#F2C3A7"/><circle cx="734.4" cy="964" r="7.4" fill="#FFFFFF"/><circle cx="1590.3" cy="877.4" r="5.2" fill="#F08A2C"/><circle cx="119.4" cy="818.1" r="3.4" fill="#F2C3A7"/><circle cx="1524.4" cy="826.5" r="3.8" fill="#F2C3A7"/><circle cx="1419" cy="940.7" r="3.8" fill="#FFFFFF"/><circle cx="630.5" cy="831.8" r="4.2" fill="#FFFFFF"/><circle cx="648.7" cy="945.4" r="4.7" fill="#FFFFFF"/><circle cx="505.7" cy="968" r="3.2" fill="#F2C3A7"/><circle cx="1342.6" cy="824" r="4" fill="#FBF4E4"/><circle cx="1442.5" cy="858" r="3.2" fill="#FFFFFF"/><circle cx="624.3" cy="974" r="3.6" fill="#FFFFFF"/><circle cx="1209.1" cy="970.9" r="4.5" fill="#FBF4E4"/><circle cx="1335.5" cy="857.1" r="4.8" fill="#F08A2C"/><circle cx="1553.7" cy="887.2" r="3.4" fill="#F2C3A7"/><circle cx="1256.2" cy="885.5" r="2.5" fill="#FFFFFF"/><circle cx="1461.5" cy="988.1" r="6" fill="#FBF4E4"/><circle cx="79.2" cy="946.5" r="4.8" fill="#F08A2C"/><circle cx="1031.2" cy="857.2" r="2.2" fill="#F08A2C"/><circle cx="273.2" cy="883" r="3.2" fill="#F2C3A7"/><circle cx="1182.5" cy="995.3" r="4.7" fill="#F08A2C"/><circle cx="481.3" cy="911.5" r="4.1" fill="#F08A2C"/><circle cx="1029.1" cy="815" r="2.8" fill="#FFFFFF"/><circle cx="880.6" cy="890.6" r="3.5" fill="#FFFFFF"/><circle cx="683.9" cy="909.6" r="3.5" fill="#F08A2C"/><circle cx="547.1" cy="818.2" r="2.2" fill="#F2C3A7"/><circle cx="1295" cy="840.4" r="2" fill="#FFFFFF"/><circle cx="612.5" cy="949.2" r="3.9" fill="#F2C3A7"/><circle cx="541.1" cy="812.4" r="2.3" fill="#F2C3A7"/><circle cx="201.4" cy="900.7" r="4.7" fill="#F08A2C"/><circle cx="148.2" cy="979.4" r="5.1" fill="#FFFFFF"/><circle cx="690.9" cy="862.4" r="4.5" fill="#FBF4E4"/><circle cx="203.6" cy="885" r="4.9" fill="#FFFFFF"/><circle cx="1549.3" cy="898" r="2.7" fill="#FFFFFF"/><circle cx="1555.6" cy="849.7" r="2.3" fill="#F08A2C"/><circle cx="243.3" cy="994.4" r="4" fill="#FFFFFF"/><circle cx="136" cy="955.4" r="3.1" fill="#F08A2C"/><circle cx="372.1" cy="984" r="6.4" fill="#F2C3A7"/><circle cx="1539.9" cy="925.3" r="4.8" fill="#FFFFFF"/><circle cx="1117.7" cy="822.4" r="1.9" fill="#F08A2C"/><circle cx="620.9" cy="844.7" r="3.6" fill="#FBF4E4"/><circle cx="860" cy="999.3" r="4.9" fill="#F2C3A7"/><circle cx="1031.3" cy="976.8" r="5.4" fill="#F08A2C"/><circle cx="875.2" cy="805.9" r="2.5" fill="#F2C3A7"/><circle cx="88.5" cy="838.8" r="4.2" fill="#FFFFFF"/><circle cx="129.7" cy="845.6" r="3.1" fill="#F2C3A7"/><circle cx="362.9" cy="806.8" r="2.3" fill="#FFFFFF"/><circle cx="579.7" cy="879.3" r="2.3" fill="#F2C3A7"/><circle cx="1182.6" cy="901" r="3.2" fill="#F08A2C"/><circle cx="498.7" cy="964" r="4.2" fill="#F08A2C"/><circle cx="424" cy="977.9" r="3.8" fill="#FFFFFF"/><circle cx="976.2" cy="979.3" r="5.5" fill="#FBF4E4"/><circle cx="1518" cy="829.3" r="2.8" fill="#F08A2C"/><circle cx="37.8" cy="919.2" r="4.3" fill="#FBF4E4"/><circle cx="294.6" cy="889.9" r="4.8" fill="#F2C3A7"/><circle cx="1172.4" cy="999.5" r="8.1" fill="#F2C3A7"/><circle cx="305.1" cy="930.5" r="4.9" fill="#FFFFFF"/><circle cx="51" cy="932.9" r="4.3" fill="#F2C3A7"/><circle cx="1576" cy="888.5" r="2.7" fill="#FBF4E4"/><circle cx="447.7" cy="870.3" r="5.1" fill="#FBF4E4"/><circle cx="897.8" cy="951.8" r="4.6" fill="#F2C3A7"/><circle cx="1315.2" cy="886.5" r="2.5" fill="#FFFFFF"/><circle cx="313.1" cy="908.3" r="4.2" fill="#F2C3A7"/><circle cx="582.8" cy="979.4" r="3.4" fill="#FFFFFF"/><circle cx="396.8" cy="925.1" r="4.3" fill="#FFFFFF"/><path d="M858.8,1069.9 L858.5,1068.3 L858.5,1066.7 L859.9,1063.4 L862.3,1058.9 L865.4,1053.7 L869.1,1047.8 L873.3,1041.4 L877.7,1034.4 L882.3,1027.1 L887,1019.3 L891.8,1011 L896.5,1002.4 L901,993.1 L905.3,983.2 L909.3,972.3 L912.7,960.2 L914.9,946.1 L915.2,929.4 L912.1,911.6 L906.1,896.3 L898.9,884.4 L891.3,875 L883.9,867.5 L876.7,861.3 L869.7,856 L863.2,851.3 L857,847.3 L851.4,843.7 L846.4,840.6 L842.1,838.1 L838.7,836.2 L836.4,835.2 L835.2,835.6 L835.2,837.8 L835.7,842.7 L835.5,849.3 L834,854.5 L832.1,857.2 L830.5,858.1 L829.7,857.4 L829.7,855.5 L830.6,852.9 L832.3,849.7 L834.5,846.1 L837.3,842.2 L840.5,838.2 L844,834 L847.7,829.7 L851.5,825.4 L855.3,820.9 L859.1,816.4 L862.8,811.7 L866.3,806.9 L869.2,802.1 L871.4,797.9 L873.1,794.1 L874.6,790.4 L876.1,786.8 L877.4,783.3 L878.7,779.8 L879.8,776.5 L880.8,773.3 L881.7,770.2 L882.4,767.2 L883.1,764.4 L883.7,761.6 L884.1,759.1 L884.4,756.7 L884.7,754.4 L884.8,752.3 L884.9,750.4 L884.8,748.6 L875.2,741.4 L873.4,742 L871.5,742.8 L869.5,743.7 L867.4,744.8 L865.2,746 L863,747.2 L860.7,748.6 L858.3,750.1 L855.8,751.7 L853.3,753.3 L850.7,755.1 L848,756.8 L845.2,758.7 L842.4,760.5 L839.5,762.4 L836.6,764.4 L833.5,766.3 L830.8,767.9 L828.2,769 L825.2,770.3 L821.6,772 L817.4,774 L812.8,776.3 L807.8,778.8 L802.6,781.5 L797.1,784.5 L791.4,787.8 L785.6,791.3 L779.7,795.3 L773.8,799.7 L767.9,804.8 L762,810.7 L756.3,817.9 L751,826.7 L746.8,837.5 L744.5,850.7 L745.3,865.4 L748.9,878.5 L753.7,889.1 L758.8,897.9 L763.9,905.5 L769,912.3 L774,918.5 L778.7,924.3 L783,929.6 L786.8,934.5 L789.9,939 L792.2,942.8 L793.5,945.7 L793.5,947.5 L792.2,947.4 L789.7,944.9 L786.8,939 L784.8,930.6 L784.2,923.6 L783.9,920 L783.2,918.6 L781.8,918.9 L779.7,920.4 L776.9,922.8 L773.4,925.8 L769.5,929.2 L765.2,932.9 L760.6,936.8 L755.8,940.8 L750.9,944.8 L745.9,948.8 L740.9,952.8 L736,956.8 L730.9,961.1 L725.5,966.1 L721.2,970.1 Z" fill="#6E6178"/><path d="M790,1020 L792,1017.2 L794.7,1013.9 L797.9,1010.1 L801.6,1005.9 L805.7,1001.2 L810,996.3 L814.5,991.1 L819.1,985.6 L823.8,980 L828.3,974.3 L832.6,968.4 L836.7,962.6 L840.4,956.8 L843.6,951.1 L846.2,945.5 L848.3,940.1 L849.6,934.9 L850,930 L849.5,925.3 L847.9,920.6 L845.6,915.9 L842.4,911.3 L838.7,906.6 L834.4,902 L829.8,897.5 L825,892.9 L820,888.4 L815,884 L810.2,879.6 L805.6,875.2 L801.3,870.9 L797.6,866.6 L794.4,862.3 L792.1,858.2 L790.5,854.1 L790,850 L790.4,846 L791.6,842 L793.4,838 L795.8,834.1 L798.8,830.2 L802.2,826.3 L806,822.5 L810.1,818.7 L814.4,815 L818.8,811.4 L823.3,807.8 L827.8,804.3 L832.2,800.8 L836.4,797.5 L840.3,794.2 L844,791 L847.2,788 L850,785 L852.5,782.1 L854.8,779.2 L857.1,776.4 L859.3,773.7 L861.3,771 L863.3,768.3 L865.2,765.8 L867,763.3 L868.8,760.9 L870.4,758.7 L871.9,756.5 L873.3,754.4 L874.7,752.5 L875.9,750.7 L877.1,749.1 L878.1,747.6 L879.1,746.2 L880,745" fill="none" stroke="#F7EEDC" stroke-width="6" stroke-dasharray="30.6 37.4" stroke-linecap="round"/><path d="M0,2000 L0,960 L17.4,958.6 L39.2,956.4 L64.8,953.7 L93.6,950.8 L125,947.8 L158.4,945 L193.2,942.6 L228.8,940.8 L264.6,939.9 L300,940 L336.4,941.5 L375.2,944.4 L415.8,948.3 L457.6,952.9 L500,957.8 L542.4,962.7 L584.2,967.2 L624.8,971 L663.6,973.7 L700,975 L734,974.9 L766.4,973.7 L797.4,971.6 L827.2,968.8 L856.2,965.6 L884.8,962.2 L913.1,958.7 L941.6,955.3 L970.5,952.4 L1000,950 L1030,947.9 L1060,945.7 L1090,943.5 L1120,941.4 L1150,939.4 L1180,937.6 L1210,936.2 L1240,935.3 L1270,934.8 L1300,935 L1331.3,936 L1364.8,937.8 L1399.5,940.3 L1434.4,943.3 L1468.8,946.6 L1501.6,949.9 L1532,953.1 L1559.2,956 L1582.2,958.3 L1600,960 L1600,2000 Z" fill="#FBF4E4"/><path d="M150,990 q-5.6,-42 2.8,-67.2" stroke="#4F9460" stroke-width="4.2" fill="none"/><circle cx="141.6" cy="917.2" r="18.2" fill="#F08A2C"/><circle cx="164" cy="920" r="16.8" fill="#E8743B"/><circle cx="152.8" cy="906" r="15.4" fill="#F08A2C"/><circle cx="152.8" cy="917.2" r="5.6" fill="#42344A"/><path d="M230,990 q-4,-30 2,-48" stroke="#4F9460" stroke-width="3" fill="none"/><circle cx="224" cy="938" r="13" fill="#F08A2C"/><circle cx="240" cy="940" r="12" fill="#E8743B"/><circle cx="232" cy="930" r="11" fill="#F08A2C"/><circle cx="232" cy="938" r="4" fill="#42344A"/><path d="M1380,990 q-4.8,-36 2.4,-57.6" stroke="#4F9460" stroke-width="3.6" fill="none"/><circle cx="1372.8" cy="927.6" r="15.6" fill="#F08A2C"/><circle cx="1392" cy="930" r="14.4" fill="#E8743B"/><circle cx="1382.4" cy="918" r="13.2" fill="#F08A2C"/><circle cx="1382.4" cy="927.6" r="4.8" fill="#42344A"/><path d="M1470,990 q-6,-45 3,-72" stroke="#4F9460" stroke-width="4.5" fill="none"/><circle cx="1461" cy="912" r="19.5" fill="#F08A2C"/><circle cx="1485" cy="915" r="18" fill="#E8743B"/><circle cx="1473" cy="900" r="16.5" fill="#F08A2C"/><circle cx="1473" cy="912" r="6" fill="#42344A"/><g class="hero-van"><animateMotion dur="14s" repeatCount="indefinite" rotate="0" path="M790,1020 L792,1017.2 L794.7,1013.9 L797.9,1010.1 L801.6,1005.9 L805.7,1001.2 L810,996.3 L814.5,991.1 L819.1,985.6 L823.8,980 L828.3,974.3 L832.6,968.4 L836.7,962.6 L840.4,956.8 L843.6,951.1 L846.2,945.5 L848.3,940.1 L849.6,934.9 L850,930 L849.5,925.3 L847.9,920.6 L845.6,915.9 L842.4,911.3 L838.7,906.6 L834.4,902 L829.8,897.5 L825,892.9 L820,888.4 L815,884 L810.2,879.6 L805.6,875.2 L801.3,870.9 L797.6,866.6 L794.4,862.3 L792.1,858.2 L790.5,854.1 L790,850 L790.4,846 L791.6,842 L793.4,838 L795.8,834.1 L798.8,830.2 L802.2,826.3 L806,822.5 L810.1,818.7 L814.4,815 L818.8,811.4 L823.3,807.8 L827.8,804.3 L832.2,800.8 L836.4,797.5 L840.3,794.2 L844,791 L847.2,788 L850,785 L852.5,782.1 L854.8,779.2 L857.1,776.4 L859.3,773.7 L861.3,771 L863.3,768.3 L865.2,765.8 L867,763.3 L868.8,760.9 L870.4,758.7 L871.9,756.5 L873.3,754.4 L874.7,752.5 L875.9,750.7 L877.1,749.1 L878.1,747.6 L879.1,746.2 L880,745" keyTimes="0;1" keyPoints="0;1" calcMode="linear"/><g><animateTransform attributeName="transform" type="scale" values="1.05;0.12" keyTimes="0;1" dur="14s" repeatCount="indefinite" calcMode="spline" keySplines="0.2 0.6 0.4 1"/><ellipse cx="0" cy="0" rx="72" ry="9" fill="#2E2638" opacity=".25"/><rect x="-60" y="-20" width="22" height="20" rx="4" fill="#2E2638"/><rect x="38" y="-20" width="22" height="20" rx="4" fill="#2E2638"/><rect x="-66" y="-118" width="132" height="102" rx="16" fill="#D9483B"/><path d="M-66,-88 v-14 a16,16 0 0 1 16,-16 h100 a16,16 0 0 1 16,16 v14 z" fill="#FBF4E4"/><rect x="-52" y="-108" width="104" height="34" rx="7" fill="#3B3550"/><rect x="-46" y="-104" width="40" height="8" rx="4" fill="#5B5272"/><rect x="-62" y="-66" width="11" height="18" rx="3" fill="#EDB84E"/><rect x="51" y="-66" width="11" height="18" rx="3" fill="#EDB84E"/><rect x="-18" y="-44" width="36" height="11" rx="2" fill="#FBF4E4"/><rect x="-70" y="-28" width="140" height="13" rx="5" fill="#E9D3AE"/><rect x="-50" y="-126" width="100" height="6" rx="3" fill="#42344A"/></g><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.06;0.9;1" dur="14s" repeatCount="indefinite"/></g></svg><!-- HERO-SVG:END --></div>
+
+    <div class="relative mx-auto max-w-4xl px-5 pt-10 text-center sm:pt-14">
+      <p id="hero-above" class="eyebrow" style="will-change:transform;transition:transform 0.8s cubic-bezier(0.4,0,0.2,1);">Webs para negocios locales</p>
+      <div id="hero-split" class="mt-5">
+        <div id="hero-line-top" style="will-change:transform;transition:transform 0.8s cubic-bezier(0.4,0,0.2,1);">
+          <h1 class="poster-title text-5xl sm:text-7xl lg:text-8xl">Tan fácil</h1>
+        </div>
+        <div id="hero-logo-slot" style="height:0;overflow:hidden;transition:height 0.8s cubic-bezier(0.4,0,0.2,1);position:relative;border-radius:1.5rem;">
+          <div id="hero-logo-particles" style="position:absolute;top:0;left:0;right:0;bottom:120px;"></div>
+          <div id="hero-logo-text" style="position:absolute;left:0;right:0;bottom:0;z-index:30;display:flex;flex-direction:column;align-items:center;padding-bottom:2.5rem;text-align:center;pointer-events:none;transition:opacity 0.3s ease;">
+            <p id="reservar-company-label" class="poster-italic" style="font-size:1rem;color:rgb(242 195 167/0.9);"></p>
+            <p class="poster-title" style="font-size:1.5rem;color:#FBF4E4;">Cargando<span class="reservar-dots">...</span></p>
+          </div>
+        </div>
+        <div id="hero-line-bottom" style="will-change:transform;transition:transform 0.8s cubic-bezier(0.4,0,0.2,1);">
+          <p class="poster-italic text-2xl text-plum-soft sm:text-3xl" aria-hidden="true">y</p>
+          <p class="poster-title text-5xl sm:text-7xl lg:text-8xl">Tan rápido</p>
         </div>
       </div>
-      <div id="hero-line-bottom" style="will-change:transform;transition:transform 0.8s cubic-bezier(0.4,0,0.2,1);">
-        <p class="text-5xl font-extrabold leading-[1.05] tracking-tightest text-slate-900 sm:text-7xl">Tan rápido</p>
+      <div id="hero-below" style="will-change:transform;transition:transform 0.8s cubic-bezier(0.4,0,0.2,1);">
+        <p class="poster-italic mt-5 text-xl text-plum sm:text-2xl">Una reunión. Tu web lista.</p>
+        <div class="mt-7 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <a href="#" class="js-reservar btn btn-primary w-full max-w-xs sm:w-auto">Reservar</a>
+          <a href="https://wa.me/34676012946?text=Hola%2C%20me%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20Zeker" target="_blank" rel="noopener noreferrer" class="btn btn-outline w-full max-w-xs sm:w-auto">WhatsApp</a>
+        </div>
       </div>
-    </div>
-    <div id="hero-below" style="will-change:transform;transition:transform 0.8s cubic-bezier(0.4,0,0.2,1);">
-      <p class="mx-auto mt-7 max-w-2xl text-xl text-slate-600 sm:text-2xl">
-        Una reunión. Tu Web lista.
-      </p>
-
-      <div class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-        <a
-          href="#"
-          class="js-reservar inline-block w-full max-w-xs rounded-full bg-indigo-600 text-white px-8 py-4 text-lg font-semibold shadow-md hover:bg-indigo-500 transition sm:w-auto"
-        >
-          Reservar
-        </a>
-        <a
-          href="https://wa.me/34676012946?text=Hola%2C%20me%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20Zeker"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-block w-full max-w-xs rounded-full border-2 border-emerald-600 bg-white px-8 py-4 text-lg font-semibold text-emerald-700 transition hover:bg-emerald-50 sm:w-auto"
-        >
-          WhatsApp
-        </a>
-      </div>
-      <p class="mt-4 text-base text-slate-600">
-        Gratis · 30 min · presencial o video
-      </p>
-      <p class="mx-auto mt-3 max-w-lg text-base text-slate-500">
-        La tecnología que acelera tu negocio.
-      </p>
     </div>
   </header>
 
-  <main id="main-content" class="relative z-10 mx-auto max-w-5xl px-6 pb-24" style="will-change:transform;transition:transform 0.8s cubic-bezier(0.4,0,0.2,1);">
+  <main id="main-content" class="relative z-10" style="will-change:transform;transition:transform 0.8s cubic-bezier(0.4,0,0.2,1);">
 
-    <!-- Nuestra promesa -->
-    <section class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      <div class="rounded-2xl border border-slate-200 bg-white/80 p-5 text-center backdrop-blur-sm">
-        <p class="text-2xl" aria-hidden="true">🔓</p>
-        <p class="mt-2 font-semibold text-slate-900">Sin permanencia</p>
-        <p class="mt-1 text-sm text-slate-600">Cancela cuando quieras</p>
+    <!-- Promesas -->
+    <section class="mx-auto max-w-5xl px-5 pt-6 sm:px-6">
+      <ul class="grid grid-cols-2 gap-x-4 gap-y-8 text-center lg:grid-cols-4">
+        <li data-reveal><svg class="mx-auto h-12 w-12" aria-hidden="true"><use href="#i-candado"/></svg><p class="poster-title mt-3 text-base">Sin permanencia</p></li>
+        <li data-reveal><svg class="mx-auto h-12 w-12" aria-hidden="true"><use href="#i-moneda"/></svg><p class="poster-title mt-3 text-base">IVA incluido</p></li>
+        <li data-reveal><svg class="mx-auto h-12 w-12" aria-hidden="true"><use href="#i-charla"/></svg><p class="poster-title mt-3 text-base">Sin tecnicismos</p></li>
+        <li data-reveal><svg class="mx-auto h-12 w-12" aria-hidden="true"><use href="#i-reloj"/></svg><p class="poster-title mt-3 text-base">30 minutos</p></li>
+      </ul>
+    </section>
+
+    <!-- El viaje -->
+    <section class="mx-auto max-w-5xl px-5 pt-24 text-center sm:px-6 sm:pt-32" data-reveal>
+      <p class="eyebrow">El viaje</p>
+      <h2 class="poster-title mt-4 text-4xl sm:text-6xl">Tres paradas</h2>
+      <p class="poster-italic mt-3 text-xl text-plum-soft sm:text-2xl">y llegas con tu web</p>
+    </section>
+
+    <!-- Parada 1: hablamos -->
+    <section class="mx-auto grid max-w-5xl items-center gap-10 px-5 py-16 sm:px-6 md:grid-cols-2 md:gap-16">
+      <div data-reveal>
+        <p class="eyebrow">Parada 1</p>
+        <h2 class="poster-title mt-3 text-5xl sm:text-6xl">Hablamos</h2>
+        <p class="mt-5 text-lg text-slate-700 sm:text-xl">Nos cuentas tu negocio. Nada más.</p>
+        <a href="#" class="js-reservar mt-6 inline-flex items-center gap-2 font-display text-base font-bold uppercase tracking-[0.12em] text-indigo-600 hover:text-indigo-700">Reservar →</a>
       </div>
-      <div class="rounded-2xl border border-slate-200 bg-white/80 p-5 text-center backdrop-blur-sm">
-        <p class="text-2xl" aria-hidden="true">💶</p>
-        <p class="mt-2 font-semibold text-slate-900">Precio claro</p>
-        <p class="mt-1 text-sm text-slate-600">IVA incluido</p>
-      </div>
-      <div class="rounded-2xl border border-slate-200 bg-white/80 p-5 text-center backdrop-blur-sm">
-        <p class="text-2xl" aria-hidden="true">🤝</p>
-        <p class="mt-2 font-semibold text-slate-900">Hablamos directamente</p>
-        <p class="mt-1 text-sm text-slate-600">Sin tecnicismos</p>
-      </div>
-      <div class="rounded-2xl border border-slate-200 bg-white/80 p-5 text-center backdrop-blur-sm">
-        <p class="text-2xl" aria-hidden="true">📱</p>
-        <p class="mt-2 font-semibold text-slate-900">Presencial o video</p>
-        <p class="mt-1 text-sm text-slate-600">30 minutos</p>
+      <div class="overflow-hidden rounded-[1.75rem] shadow-[0_24px_40px_-24px_rgb(51_40_59/.55)]" data-reveal>
+        <img src="assets/illustrations/meeting.svg" alt="Mesa de terraza con dos cafés y una tableta mostrando una web" class="h-auto w-full" loading="lazy" />
       </div>
     </section>
 
-    <!-- Así será tu reunión -->
-    <section class="mt-16 rounded-3xl border border-slate-200 bg-white/80 p-8 backdrop-blur-sm sm:p-12">
-      <h2 class="text-center text-3xl font-extrabold tracking-tightest text-slate-900 sm:text-4xl">
-        Así será tu reunión
-      </h2>
-      <p class="mx-auto mt-4 max-w-2xl text-center text-lg text-slate-600">
-        30 min. Sin compromiso.
-      </p>
-      <ol class="mx-auto mt-10 grid max-w-3xl gap-8 sm:grid-cols-3">
-        <li class="text-center">
-          <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-indigo-600 text-lg font-bold text-white">1</span>
-          <p class="mt-4 font-semibold text-slate-900">Nos cuentas tu negocio</p>
-          <p class="mt-2 text-slate-600">Qué haces y qué quieres mostrar.</p>
-        </li>
-        <li class="text-center">
-          <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-indigo-600 text-lg font-bold text-white">2</span>
-          <p class="mt-4 font-semibold text-slate-900">Construimos tu sitio</p>
-          <p class="mt-2 text-slate-600">En directo, mientras hablamos.</p>
-        </li>
-        <li class="text-center">
-          <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-indigo-600 text-lg font-bold text-white">3</span>
-          <p class="mt-4 font-semibold text-slate-900">Lo revisas y decides</p>
-          <p class="mt-2 text-slate-600">Te encaja → publicamos. Sin compromiso.</p>
-        </li>
-      </ol>
-    </section>
-
-    <!-- Paso 1 -->
-    <section class="grid items-center gap-10 py-12 sm:py-16 md:grid-cols-2 md:gap-16">
-      <div>
-        <p class="text-base font-semibold text-indigo-600">Paso 1</p>
-        <h2 class="mt-3 text-4xl font-extrabold leading-tight tracking-tightest text-slate-900 sm:text-5xl">
-          Háblanos de tu negocio.
-        </h2>
-        <p class="mt-5 text-lg text-slate-600 sm:text-xl">
-          Cuéntanos tu negocio en una reunión. Sales con tu sitio listo para publicar.
-        </p>
-        <a
-          href="#"
-          class="js-reservar mt-6 inline-flex items-center gap-1.5 text-lg font-semibold text-indigo-600 hover:text-indigo-500"
-        >
-          Reservar →
-        </a>
-      </div>
-      <div class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl">
-        <img
-          src="assets/meeting-idea-to-website.png"
-          alt="Una reunión entre dos personas en la que la idea del cliente se convierte en un sitio web en vivo"
-          class="h-auto w-full"
-          loading="lazy"
-        />
-      </div>
-    </section>
-
-    <!-- Momento 2: la construcción. Los objetos del negocio flotan y, con el scroll, encuentran su sitio en la web (assets/build.js) -->
-    <section id="build" class="relative" style="height:280vh" aria-labelledby="build-title">
+    <!-- Parada 2: construimos. Los objetos del negocio vuelan a su sitio en la web (assets/build.js) -->
+    <section id="build" class="relative mx-auto max-w-5xl px-5 sm:px-6" style="height:280vh" aria-labelledby="build-title">
       <div class="sticky top-0 flex flex-col justify-center gap-6 pt-24 pb-6 md:flex-row md:items-center md:gap-12 md:pb-0" style="height:100vh;height:100svh;">
         <div class="shrink-0 md:w-5/12">
-          <p class="text-base font-semibold text-indigo-600">Mientras hablamos</p>
-          <h2 id="build-title" class="mt-3 text-3xl font-extrabold leading-tight tracking-tightest text-slate-900 sm:text-5xl">
-            Tu negocio se convierte en tu web.
-          </h2>
-          <p class="mt-4 hidden text-lg text-slate-600 sm:block">
-            Cada cosa que nos cuentas encuentra su sitio: tu carta, tus mesas, tu horario.
-          </p>
+          <p class="eyebrow">Parada 2</p>
+          <h2 id="build-title" class="poster-title mt-3 text-4xl sm:text-5xl md:text-4xl lg:text-5xl">Construimos</h2>
+          <p class="mt-4 hidden text-lg text-slate-700 sm:block">Todo lo que nos cuentas encuentra su sitio.</p>
           <div class="mt-5 max-w-xs">
             <div class="flex items-baseline justify-between text-sm">
-              <span id="build-status" class="font-semibold text-slate-900" aria-live="polite">Nos cuentas tu negocio…</span>
-              <span class="tabular-nums text-slate-500"><span id="build-clock">0</span> / 30 min</span>
+              <span id="build-status" class="font-display font-bold uppercase tracking-[0.1em] text-plum" aria-live="polite">Nos cuentas tu negocio…</span>
+              <span class="tabular-nums text-slate-600"><span id="build-clock">0</span> / 30 min</span>
             </div>
-            <div class="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-200">
+            <div class="mt-2 h-2 overflow-hidden rounded-full bg-slate-200">
               <div id="build-bar" class="h-full w-full origin-left rounded-full bg-indigo-600" style="transform:scaleX(0)"></div>
             </div>
           </div>
@@ -227,12 +153,12 @@
 
         <div id="build-stage" class="relative flex min-h-0 flex-1 items-center">
           <!-- la web, vacía al principio -->
-          <div id="build-frame" class="relative mx-auto w-full max-w-xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
-            <div class="flex items-center gap-2 border-b border-slate-100 bg-slate-50 px-3 py-2">
-              <span class="h-2.5 w-2.5 rounded-full bg-slate-300"></span>
-              <span class="h-2.5 w-2.5 rounded-full bg-slate-300"></span>
-              <span class="h-2.5 w-2.5 rounded-full bg-slate-300"></span>
-              <div class="ml-2 flex h-6 flex-1 items-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11px] text-slate-500">
+          <div id="build-frame" class="relative mx-auto w-full max-w-xl overflow-hidden rounded-2xl bg-paper shadow-[0_0_0_2px_#42344A,8px_8px_0_#42344A]">
+            <div class="flex items-center gap-2 border-b-2 border-plum bg-cream px-3 py-2">
+              <span class="h-2.5 w-2.5 rounded-full bg-indigo-500"></span>
+              <span class="h-2.5 w-2.5 rounded-full bg-mustard"></span>
+              <span class="h-2.5 w-2.5 rounded-full bg-meadow"></span>
+              <div class="ml-2 flex h-6 flex-1 items-center gap-1 rounded-md bg-paper px-2 text-[11px] text-slate-600 ring-1 ring-slate-300">
                 <span id="build-lock" class="build-lock" aria-hidden="true">🔒</span><span id="build-url"></span><span class="build-caret"></span>
               </div>
             </div>
@@ -240,321 +166,183 @@
               <div class="flex items-center justify-between gap-2">
                 <div class="slot flex items-center gap-1.5 rounded-lg px-2 py-1">
                   <span data-target="logo" class="h-5 w-5 shrink-0"></span>
-                  <span class="slot-content text-xs font-bold text-slate-900">La Taberna de María</span>
+                  <span class="slot-content font-display text-xs font-bold uppercase tracking-[0.08em] text-plum">La Taberna</span>
                 </div>
                 <div class="slot slot-cta flex items-center gap-1 rounded-full px-3 py-1">
                   <span data-target="silla" class="h-4 w-4 shrink-0"></span>
-                  <span class="slot-content text-[11px] font-semibold">Reservar mesa</span>
+                  <span class="slot-content text-[11px] font-bold">Reservar mesa</span>
                 </div>
               </div>
               <div class="slot slot-hero flex items-center gap-3 rounded-xl p-4 sm:p-6">
                 <div class="slot-content flex-1">
-                  <p class="text-base font-extrabold leading-tight text-slate-900 sm:text-xl">Cocina casera,<br />como en casa.</p>
-                  <p class="mt-1 text-[11px] text-slate-500">En el centro · desde 1998</p>
+                  <p class="poster-title text-base sm:text-xl">Cocina casera</p>
+                  <p class="poster-italic mt-1 text-[12px] text-plum-soft">en el centro, desde 1998</p>
                 </div>
                 <span data-target="plato" class="h-14 w-14 shrink-0 sm:h-16 sm:w-16"></span>
               </div>
               <div class="grid grid-cols-3 gap-2">
                 <div class="slot rounded-lg p-2 sm:p-3">
                   <span data-target="carta" class="block h-6 w-6"></span>
-                  <div class="slot-content mt-1"><p class="text-[11px] font-bold text-slate-900">Carta</p><p class="text-[10px] text-slate-500">12 platos</p></div>
+                  <div class="slot-content mt-1"><p class="text-[11px] font-bold text-plum">Carta</p><p class="text-[10px] text-slate-600">12 platos</p></div>
                 </div>
                 <div class="slot rounded-lg p-2 sm:p-3">
                   <span data-target="reloj" class="block h-6 w-6"></span>
-                  <div class="slot-content mt-1"><p class="text-[11px] font-bold text-slate-900">Horario</p><p class="text-[10px] text-slate-500">13–16 · 20–23</p></div>
+                  <div class="slot-content mt-1"><p class="text-[11px] font-bold text-plum">Horario</p><p class="text-[10px] text-slate-600">13–16 · 20–23</p></div>
                 </div>
                 <div class="slot rounded-lg p-2 sm:p-3">
                   <span data-target="pin" class="block h-6 w-6"></span>
-                  <div class="slot-content mt-1"><p class="text-[11px] font-bold text-slate-900">Dónde</p><p class="text-[10px] text-slate-500">C/ Mayor 12</p></div>
+                  <div class="slot-content mt-1"><p class="text-[11px] font-bold text-plum">Dónde</p><p class="text-[10px] text-slate-600">C/ Mayor 12</p></div>
                 </div>
               </div>
               <div class="slot flex items-center gap-2 rounded-lg px-3 py-2">
                 <span data-target="estrella" class="h-4 w-4 shrink-0"></span>
-                <span class="slot-content text-[11px] text-slate-600"><b class="text-slate-900">4,8</b> · 230 reseñas en Google</span>
+                <span class="slot-content text-[11px] text-slate-700"><b class="text-plum">4,8</b> · 230 reseñas</span>
               </div>
             </div>
           </div>
 
-          <!-- los objetos del negocio (provisionales: se sustituirán por imágenes de Cloudflare AI) -->
+          <!-- los objetos del negocio -->
           <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-            <div class="build-obj" data-obj="logo" data-from="0.10,0.10" data-rot="-12"><span class="obj-bg"></span><span class="obj-icon">🍷</span></div>
-            <div class="build-obj" data-obj="silla" data-from="0.88,0.16" data-rot="10"><span class="obj-bg"></span><span class="obj-icon">🪑</span></div>
-            <div class="build-obj" data-obj="plato" data-from="0.52,0.40" data-rot="-6"><span class="obj-bg"></span><span class="obj-icon">🍽️</span></div>
-            <div class="build-obj" data-obj="carta" data-from="0.14,0.72" data-rot="14"><span class="obj-bg"></span><span class="obj-icon">📜</span></div>
-            <div class="build-obj" data-obj="reloj" data-from="0.86,0.62" data-rot="-10"><span class="obj-bg"></span><span class="obj-icon">🕒</span></div>
-            <div class="build-obj" data-obj="pin" data-from="0.62,0.90" data-rot="8"><span class="obj-bg"></span><span class="obj-icon">📍</span></div>
-            <div class="build-obj" data-obj="estrella" data-from="0.32,0.24" data-rot="-16"><span class="obj-bg"></span><span class="obj-icon">⭐</span></div>
+            <div class="build-obj" data-obj="logo" data-from="0.10,0.10" data-rot="-12"><span class="obj-bg"></span><span class="obj-icon"><svg><use href="#i-copa"/></svg></span></div>
+            <div class="build-obj" data-obj="silla" data-from="0.88,0.16" data-rot="10"><span class="obj-bg"></span><span class="obj-icon"><svg><use href="#i-silla"/></svg></span></div>
+            <div class="build-obj" data-obj="plato" data-from="0.52,0.40" data-rot="-6"><span class="obj-bg"></span><span class="obj-icon"><svg><use href="#i-plato"/></svg></span></div>
+            <div class="build-obj" data-obj="carta" data-from="0.14,0.72" data-rot="14"><span class="obj-bg"></span><span class="obj-icon"><svg><use href="#i-carta"/></svg></span></div>
+            <div class="build-obj" data-obj="reloj" data-from="0.86,0.62" data-rot="-10"><span class="obj-bg"></span><span class="obj-icon"><svg><use href="#i-reloj"/></svg></span></div>
+            <div class="build-obj" data-obj="pin" data-from="0.62,0.90" data-rot="8"><span class="obj-bg"></span><span class="obj-icon"><svg><use href="#i-pin"/></svg></span></div>
+            <div class="build-obj" data-obj="estrella" data-from="0.32,0.24" data-rot="-16"><span class="obj-bg"></span><span class="obj-icon"><svg><use href="#i-estrella"/></svg></span></div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Paso 2 -->
-    <section class="grid items-center gap-10 py-12 sm:py-16 md:grid-cols-2 md:gap-16">
-      <div class="order-last rounded-3xl border border-slate-200 bg-white p-8 shadow-xl md:order-first">
-        <p class="text-sm font-semibold uppercase tracking-wide text-indigo-600">Plan</p>
-        <div class="mt-3 flex items-end gap-1">
-          <span class="text-sm font-semibold text-slate-500 pb-2">desde</span>
-          <span class="text-5xl font-extrabold tracking-tightest text-slate-900">€49</span>
-          <span class="pb-1 text-slate-500">/mes</span>
-        </div>
-        <ul class="mt-6 space-y-3 text-slate-600">
-          <li class="flex items-center gap-3"><span class="text-indigo-600">✓</span> Sitio en vivo 24/7</li>
-          <li class="flex items-center gap-3"><span class="text-indigo-600">✓</span> Mantenimiento y cambios</li>
-          <li class="flex items-center gap-3"><span class="text-indigo-600">✓</span> Soporte incluido</li>
-        </ul>
-        <a
-          href="precios.html"
-          class="mt-8 flex h-12 w-full items-center justify-center rounded-full bg-indigo-600 text-base font-semibold text-white transition hover:bg-indigo-500"
-        >
-          Ver planes
-        </a>
+    <!-- Parada 3: publicamos -->
+    <section class="mx-auto grid max-w-5xl items-center gap-12 px-5 py-20 sm:px-6 md:grid-cols-2 md:gap-16">
+      <div data-reveal>
+        <p class="eyebrow">Parada 3</p>
+        <h2 class="poster-title mt-3 text-5xl sm:text-6xl">Publicamos</h2>
+        <p class="mt-5 text-lg text-slate-700 sm:text-xl">¿Te encaja? Se publica. Si no, sin compromiso.</p>
       </div>
-      <div>
-        <p class="text-base font-semibold text-indigo-600">Paso 2</p>
-        <h2 class="mt-3 text-4xl font-extrabold leading-tight tracking-tightest text-slate-900 sm:text-5xl">
-          Elige tu plan.
-        </h2>
-        <p class="mt-5 text-lg text-slate-600 sm:text-xl">
-          Elige plan y cuota. Lo cerramos en la reunión.
-        </p>
+      <div class="ticket mx-auto w-full max-w-sm" data-reveal>
+        <div class="p-7">
+          <p class="eyebrow">Tu plan</p>
+          <div class="mt-3 flex items-end gap-1">
+            <span class="pb-2 text-sm font-medium text-slate-600">desde</span>
+            <span class="poster-title text-6xl">49€</span>
+            <span class="pb-1 text-slate-600">/mes</span>
+          </div>
+        </div>
+        <div class="ticket-cut"></div>
+        <div class="p-7">
+          <ul class="space-y-3 text-slate-700">
+            <li class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>Web en vivo 24/7</li>
+            <li class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>Cambios incluidos</li>
+            <li class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>Soporte directo</li>
+          </ul>
+          <a href="precios.html" class="btn btn-primary mt-7 w-full">Ver planes</a>
+        </div>
       </div>
     </section>
 
-    <!-- Declaración: no hay tercer paso -->
-    <section class="py-20 text-center sm:py-28">
-      <h2 class="mx-auto max-w-4xl text-5xl font-extrabold leading-[1.05] tracking-tightest text-slate-900 sm:text-6xl">
-        No hay un tercer paso.
-      </h2>
-      <p class="mx-auto mt-6 max-w-2xl text-xl text-slate-600 sm:text-2xl">
-        ¿Así de fácil? Sí.<br>¿Así de rápido? También.
-      </p>
+    <!-- Y ya está -->
+    <section class="mx-auto max-w-4xl px-5 py-16 text-center sm:px-6 sm:py-24" data-reveal>
+      <h2 class="poster-title text-6xl sm:text-8xl">Y ya está.</h2>
+      <p class="poster-italic mt-5 text-xl text-plum-soft sm:text-2xl">¿Así de fácil? Sí. ¿Así de rápido? También.</p>
     </section>
 
-    <!-- Carousel: de la conversación a la web -->
-    <section class="relative left-1/2 mb-16 w-screen -translate-x-1/2" aria-label="Ejemplos: de la conversación a tu web">
-      <div id="carousel" class="relative overflow-hidden">
-        <div class="relative h-72 sm:h-96 lg:h-[30rem]">
-          <!-- capa de fondo: la web del negocio creándose -->
-          <div id="carousel-bg" class="absolute inset-0 flex will-change-transform transition-transform duration-[1100ms] ease-in-out delay-500">
-            <img src="assets/carousel/web-restaurante.svg" alt="" aria-hidden="true" class="h-full w-full shrink-0 object-cover object-[78%_50%]" loading="lazy" />
-            <img src="assets/carousel/web-transporte.svg" alt="" aria-hidden="true" class="h-full w-full shrink-0 object-cover object-[78%_50%]" loading="lazy" />
-            <img src="assets/carousel/web-taller.svg" alt="" aria-hidden="true" class="h-full w-full shrink-0 object-cover object-[78%_50%]" loading="lazy" />
-          </div>
-          <!-- capa frontal: la conversación -->
-          <div id="carousel-fg" class="absolute inset-0 flex will-change-transform transition-transform duration-[800ms] ease-in-out">
-            <div class="relative h-full w-full shrink-0">
-              <span class="absolute left-4 top-4 rounded-full bg-indigo-600 px-4 py-1.5 text-sm font-semibold text-white shadow-sm sm:left-[6%] sm:top-6 lg:left-[10%]">Restaurante</span>
-              <img
-                src="assets/carousel/personas-restaurante.svg"
-                alt="Dueña de un restaurante contando su negocio mientras un trabajador de Zeker toma nota en una tablet, con la web del restaurante creándose detrás"
-                class="absolute bottom-2 left-1 h-3/5 w-auto sm:bottom-4 sm:left-[6%] sm:h-3/4 lg:left-[10%]"
-                loading="lazy"
-              />
-            </div>
-            <div class="relative h-full w-full shrink-0">
-              <span class="absolute left-4 top-4 rounded-full bg-indigo-600 px-4 py-1.5 text-sm font-semibold text-white shadow-sm sm:left-[6%] sm:top-6 lg:left-[10%]">Empresa de transporte</span>
-              <img
-                src="assets/carousel/personas-transporte.svg"
-                alt="Dueño de una empresa de transporte contando su negocio mientras un trabajador de Zeker toma nota en una tablet, con la web de la empresa creándose detrás"
-                class="absolute bottom-2 left-1 h-3/5 w-auto sm:bottom-4 sm:left-[6%] sm:h-3/4 lg:left-[10%]"
-                loading="lazy"
-              />
-            </div>
-            <div class="relative h-full w-full shrink-0">
-              <span class="absolute left-4 top-4 rounded-full bg-indigo-600 px-4 py-1.5 text-sm font-semibold text-white shadow-sm sm:left-[6%] sm:top-6 lg:left-[10%]">Taller mecánico</span>
-              <img
-                src="assets/carousel/personas-taller.svg"
-                alt="Dueño de un taller mecánico contando su negocio mientras un trabajador de Zeker toma nota en una tablet, con la web del taller creándose detrás"
-                class="absolute bottom-2 left-1 h-3/5 w-auto sm:bottom-4 sm:left-[6%] sm:h-3/4 lg:left-[10%]"
-                loading="lazy"
-              />
-            </div>
-          </div>
-          <!-- controles -->
-          <button
-            id="carousel-prev"
-            type="button"
-            aria-label="Anterior"
-            class="absolute left-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-xl font-bold text-indigo-600 shadow transition hover:bg-white"
-          >&#8249;</button>
-          <button
-            id="carousel-next"
-            type="button"
-            aria-label="Siguiente"
-            class="absolute right-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-xl font-bold text-indigo-600 shadow transition hover:bg-white"
-          >&#8250;</button>
-          <div class="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 gap-2.5">
-            <button type="button" aria-label="Slide 1: restaurante" class="carousel-dot h-2.5 w-2.5 rounded-full bg-indigo-600 transition"></button>
-            <button type="button" aria-label="Slide 2: empresa de transporte" class="carousel-dot h-2.5 w-2.5 rounded-full bg-indigo-200 transition"></button>
-            <button type="button" aria-label="Slide 3: taller mecánico" class="carousel-dot h-2.5 w-2.5 rounded-full bg-indigo-200 transition"></button>
-          </div>
-        </div>
+    <!-- Un mundo para cada negocio -->
+    <section class="py-16 sm:py-24" aria-labelledby="mundos-title">
+      <div class="mx-auto max-w-5xl px-5 text-center sm:px-6" data-reveal>
+        <p class="eyebrow">Ejemplos</p>
+        <h2 id="mundos-title" class="poster-title mt-4 text-4xl sm:text-6xl">Un mundo para cada negocio</h2>
       </div>
+      <div class="mx-auto mt-12 flex max-w-6xl snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-6 sm:grid sm:grid-cols-3 sm:gap-7 sm:overflow-visible sm:px-6 sm:pb-0">
+        <article class="cover w-[78%] shrink-0 snap-center sm:w-auto" data-reveal>
+          <img src="assets/illustrations/cover-restaurante.svg" alt="Terraza de un restaurante con toldo de rayas, sombrillas y cipreses" loading="lazy" />
+          <div class="relative px-5 pt-8 text-center">
+            <p class="eyebrow text-[0.65rem]">Restaurante</p>
+            <h3 class="poster-title mt-3 text-3xl sm:text-2xl lg:text-4xl">La Taberna</h3>
+            <p class="poster-italic text-xl text-plum-soft">de</p>
+            <p class="poster-title text-3xl sm:text-2xl lg:text-4xl">María</p>
+          </div>
+        </article>
+        <article class="cover w-[78%] shrink-0 snap-center sm:w-auto" data-reveal>
+          <img src="assets/illustrations/cover-taller.svg" alt="Taller mecánico junto a una carretera de montaña con un coche azul" loading="lazy" />
+          <div class="relative px-5 pt-8 text-center">
+            <p class="eyebrow text-[0.65rem] !text-paper">Taller mecánico</p>
+            <h3 class="poster-title mt-3 text-3xl sm:text-2xl lg:text-4xl !text-paper">Taller</h3>
+            <p class="poster-italic text-xl text-paper">de</p>
+            <p class="poster-title text-3xl sm:text-2xl lg:text-4xl !text-paper">Martínez</p>
+          </div>
+        </article>
+        <article class="cover w-[78%] shrink-0 snap-center sm:w-auto" data-reveal>
+          <img src="assets/illustrations/cover-transporte.svg" alt="Furgoneta de reparto en una carretera junto al mar" loading="lazy" />
+          <div class="relative px-5 pt-8 text-center">
+            <p class="eyebrow text-[0.65rem]">Transporte</p>
+            <h3 class="poster-title mt-3 text-3xl sm:text-2xl lg:text-4xl">Rutas</h3>
+            <p class="poster-italic text-xl text-plum-soft">del</p>
+            <p class="poster-title text-3xl sm:text-2xl lg:text-4xl">Sur</p>
+          </div>
+        </article>
+      </div>
+      <p class="poster-italic mx-auto mt-8 max-w-xl px-5 text-center text-xl text-plum-soft" data-reveal>¿Cómo sería el tuyo?</p>
     </section>
 
     <!-- ¿Es para ti? -->
-    <section class="rounded-3xl border border-slate-200 bg-white/80 p-8 backdrop-blur-sm sm:p-12">
-      <h2 class="text-center text-3xl font-extrabold tracking-tightest text-slate-900 sm:text-4xl">
-        ¿Es para ti?
-      </h2>
-      <ul class="mx-auto mt-8 grid max-w-3xl gap-4 sm:grid-cols-2">
-        <li class="flex gap-3 rounded-2xl border border-slate-100 bg-white p-4">
-          <span class="text-indigo-600 shrink-0">✓</span>
-          <span class="text-slate-700">Negocio local que quiere estar en internet</span>
-        </li>
-        <li class="flex gap-3 rounded-2xl border border-slate-100 bg-white p-4">
-          <span class="text-indigo-600 shrink-0">✓</span>
-          <span class="text-slate-700">Clientes de boca en boca, sin presencia online</span>
-        </li>
-        <li class="flex gap-3 rounded-2xl border border-slate-100 bg-white p-4">
-          <span class="text-indigo-600 shrink-0">✓</span>
-          <span class="text-slate-700">Web cara que nunca terminó</span>
-        </li>
-        <li class="flex gap-3 rounded-2xl border border-slate-100 bg-white p-4">
-          <span class="text-indigo-600 shrink-0">✓</span>
-          <span class="text-slate-700">Quieres web, pero aún no la tienes</span>
-        </li>
+    <section class="mx-auto max-w-4xl px-5 py-16 sm:px-6" aria-labelledby="para-ti-title">
+      <h2 id="para-ti-title" class="poster-title text-center text-4xl sm:text-6xl" data-reveal>¿Es para ti?</h2>
+      <ul class="mt-10 grid gap-4 sm:grid-cols-2">
+        <li class="flex items-center gap-4 rounded-2xl bg-cream p-5" data-reveal><svg class="h-7 w-7 shrink-0" aria-hidden="true"><use href="#i-check"/></svg><span class="text-lg text-plum">Tienes un negocio local</span></li>
+        <li class="flex items-center gap-4 rounded-2xl bg-cream p-5" data-reveal><svg class="h-7 w-7 shrink-0" aria-hidden="true"><use href="#i-check"/></svg><span class="text-lg text-plum">Vives del boca a boca</span></li>
+        <li class="flex items-center gap-4 rounded-2xl bg-cream p-5" data-reveal><svg class="h-7 w-7 shrink-0" aria-hidden="true"><use href="#i-check"/></svg><span class="text-lg text-plum">Tu web nunca se terminó</span></li>
+        <li class="flex items-center gap-4 rounded-2xl bg-cream p-5" data-reveal><svg class="h-7 w-7 shrink-0" aria-hidden="true"><use href="#i-check"/></svg><span class="text-lg text-plum">Aún no tienes web</span></li>
       </ul>
-      <p class="mx-auto mt-8 max-w-2xl text-center text-lg text-slate-600">
-        Tú el negocio. Nosotros la Web.
-      </p>
+      <p class="poster-italic mt-10 text-center text-xl text-plum-soft sm:text-2xl" data-reveal>Tú, el negocio. Nosotros, la web.</p>
     </section>
 
-    <!-- FAQ -->
-    <section class="py-12 sm:py-16">
-      <h2 class="text-center text-4xl font-extrabold tracking-tightest text-slate-900 sm:text-5xl">
-        Preguntas frecuentes
-      </h2>
-      <div class="mx-auto mt-10 max-w-3xl divide-y divide-slate-200 overflow-hidden rounded-3xl border border-slate-200 bg-white/80 backdrop-blur-sm">
-        <details class="group p-6 sm:p-8" open>
-          <summary class="flex cursor-pointer items-center justify-between text-lg font-semibold text-slate-900 sm:text-xl">
-            ¿Cuánto tarda en estar listo mi sitio?
-            <span class="ml-4 text-indigo-600 transition group-open:rotate-45">+</span>
-          </summary>
-          <p class="mt-4 text-lg text-slate-600">
-            En la misma reunión. Lo construimos mientras hablamos.
-          </p>
+    <!-- Preguntas -->
+    <section class="mx-auto max-w-3xl px-5 py-16 sm:px-6" aria-labelledby="faq-title">
+      <h2 id="faq-title" class="poster-title text-center text-4xl sm:text-5xl" data-reveal>Preguntas</h2>
+      <div class="mt-10 divide-y-2 divide-dashed divide-slate-300 rounded-[1.75rem] bg-paper shadow-[0_0_0_2px_#42344A]" data-reveal>
+        <details class="group p-6 sm:p-7" open>
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-lg font-bold text-plum sm:text-xl">¿Cuánto tarda?<span class="text-2xl text-indigo-600 transition group-open:rotate-45">+</span></summary>
+          <p class="mt-3 text-lg text-slate-700">Lo que dura la reunión.</p>
         </details>
-        <details class="group p-6 sm:p-8">
-          <summary class="flex cursor-pointer items-center justify-between text-lg font-semibold text-slate-900 sm:text-xl">
-            ¿Qué tengo que aportar yo?
-            <span class="ml-4 text-indigo-600 transition group-open:rotate-45">+</span>
-          </summary>
-          <p class="mt-4 text-lg text-slate-600">
-            Tu visión del negocio. Nosotros lo llevamos online. Presencial o video.
-          </p>
+        <details class="group p-6 sm:p-7">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-lg font-bold text-plum sm:text-xl">¿Qué tengo que traer?<span class="text-2xl text-indigo-600 transition group-open:rotate-45">+</span></summary>
+          <p class="mt-3 text-lg text-slate-700">Nada obligatorio. Fotos o logo, si los tienes.</p>
         </details>
-        <details class="group p-6 sm:p-8">
-          <summary class="flex cursor-pointer items-center justify-between text-lg font-semibold text-slate-900 sm:text-xl">
-            ¿Tengo que traer textos, fotos o logo?
-            <span class="ml-4 text-indigo-600 transition group-open:rotate-45">+</span>
-          </summary>
-          <p class="mt-4 text-lg text-slate-600">
-            No es requisito. Con lo que tengas empezamos; lo demás lo vemos en la reunión.
-          </p>
+        <details class="group p-6 sm:p-7">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-lg font-bold text-plum sm:text-xl">¿Y si no me gusta?<span class="text-2xl text-indigo-600 transition group-open:rotate-45">+</span></summary>
+          <p class="mt-3 text-lg text-slate-700">No se publica. Sin compromiso.</p>
         </details>
-        <details class="group p-6 sm:p-8">
-          <summary class="flex cursor-pointer items-center justify-between text-lg font-semibold text-slate-900 sm:text-xl">
-            ¿Qué pasa si no me encaja el resultado?
-            <span class="ml-4 text-indigo-600 transition group-open:rotate-45">+</span>
-          </summary>
-          <p class="mt-4 text-lg text-slate-600">
-            Lo revisas antes de publicar. Sin compromiso hasta que decidas.
-          </p>
+        <details class="group p-6 sm:p-7">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-lg font-bold text-plum sm:text-xl">¿Cómo se paga?<span class="text-2xl text-indigo-600 transition group-open:rotate-45">+</span></summary>
+          <p class="mt-3 text-lg text-slate-700">Cuota mensual, IVA incluido. Sin permanencia. <a href="precios.html" class="font-bold text-indigo-600 hover:text-indigo-700">Ver precios →</a></p>
         </details>
-        <details class="group p-6 sm:p-8">
-          <summary class="flex cursor-pointer items-center justify-between text-lg font-semibold text-slate-900 sm:text-xl">
-            ¿Cómo funcionan los precios?
-            <span class="ml-4 text-indigo-600 transition group-open:rotate-45">+</span>
-          </summary>
-          <p class="mt-4 text-lg text-slate-600">
-            Plan mensual, IVA incluido. Sin permanencia ni alta.
-            <a href="precios.html" class="font-semibold text-indigo-600 hover:text-indigo-500">Ver precios →</a>
-          </p>
-        </details>
-        <details class="group p-6 sm:p-8">
-          <summary class="flex cursor-pointer items-center justify-between text-lg font-semibold text-slate-900 sm:text-xl">
-            ¿Qué es un dominio y cuánto cuesta?
-            <span class="ml-4 text-indigo-600 transition group-open:rotate-45">+</span>
-          </summary>
-          <p class="mt-4 text-lg text-slate-600">
-            La dirección de tu sitio (ej. tunegocio.es). ~10–15 €/año, aparte del plan. Lo gestionamos contigo si lo necesitas.
-          </p>
+        <details class="group p-6 sm:p-7">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-lg font-bold text-plum sm:text-xl">¿Y el dominio?<span class="text-2xl text-indigo-600 transition group-open:rotate-45">+</span></summary>
+          <p class="mt-3 text-lg text-slate-700">Tu dirección (tunegocio.es). Unos 10–15 €/año, aparte. Te ayudamos.</p>
         </details>
       </div>
     </section>
 
-    <!-- Cierre: CTA -->
-    <section class="mt-8 rounded-3xl border border-indigo-200 bg-indigo-50/80 backdrop-blur-sm px-6 py-16 text-center sm:py-20">
-      <h2 class="mx-auto max-w-2xl text-4xl font-extrabold tracking-tightest text-slate-900 sm:text-5xl">
-        ¿Empezamos?
-      </h2>
-      <p class="mx-auto mt-5 max-w-xl text-xl text-slate-600">
-        Reserva cita o escríbenos. Presencial o video.
-      </p>
-      <div class="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
-        <a
-          href="#"
-          class="js-reservar inline-block w-full max-w-xs rounded-full bg-indigo-600 text-white px-8 py-4 text-lg font-semibold shadow-md hover:bg-indigo-500 transition sm:w-auto"
-        >
-          Reservar
-        </a>
-        <a
-          href="https://wa.me/34676012946?text=Hola%2C%20me%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20Zeker"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-block w-full max-w-xs rounded-full border-2 border-emerald-600 bg-white px-8 py-4 text-lg font-semibold text-emerald-700 transition hover:bg-emerald-50 sm:w-auto"
-        >
-          WhatsApp
-        </a>
+    <!-- Cierre al atardecer -->
+    <section class="relative mt-10 overflow-hidden" style="min-height:clamp(520px, 70vw, 760px);" aria-labelledby="cta-title">
+      <img src="assets/illustrations/sunset.svg" alt="" aria-hidden="true" class="absolute inset-0 h-full w-full object-cover object-bottom" loading="lazy" />
+      <div class="relative mx-auto max-w-3xl px-5 pt-16 text-center sm:pt-24" data-reveal>
+        <h2 id="cta-title" class="poster-title text-6xl sm:text-8xl">¿Empezamos?</h2>
+        <p class="poster-italic mt-4 text-xl text-plum sm:text-2xl">Una reunión de 30 minutos. Gratis.</p>
+        <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <a href="#" class="js-reservar btn btn-primary w-full max-w-xs sm:w-auto">Reservar</a>
+          <a href="https://wa.me/34676012946?text=Hola%2C%20me%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20Zeker" target="_blank" rel="noopener noreferrer" class="btn btn-outline w-full max-w-xs sm:w-auto">WhatsApp</a>
+        </div>
       </div>
     </section>
-
+    <footer class="bg-plum-night px-5 py-10 text-center">
+      <p class="font-display text-lg font-bold tracking-[0.18em] text-paper">ZE<span class="text-indigo-300">K</span>ER</p>
+      <p class="poster-italic mt-2 text-peach">Tu web, lista en una reunión.</p>
+    </footer>
   </main>
-
-  <!-- Carousel: las personas deslizan primero; el fondo les sigue 0.5s después (transition-delay) -->
-  <script>
-    (function () {
-      const bg = document.getElementById("carousel-bg");
-      const fg = document.getElementById("carousel-fg");
-      const dots = Array.from(document.querySelectorAll(".carousel-dot"));
-      const total = dots.length;
-      let index = 0;
-      let timer = null;
-
-      function render() {
-        const t = "translateX(-" + index * 100 + "%)";
-        fg.style.transform = t;
-        bg.style.transform = t;
-        dots.forEach(function (dot, i) {
-          dot.classList.toggle("bg-indigo-600", i === index);
-          dot.classList.toggle("bg-indigo-200", i !== index);
-        });
-      }
-
-      function go(i) {
-        index = (i + total) % total;
-        render();
-      }
-
-      function restart() {
-        clearInterval(timer);
-        timer = setInterval(function () { go(index + 1); }, 6500);
-      }
-
-      document.getElementById("carousel-prev").addEventListener("click", function () { go(index - 1); restart(); });
-      document.getElementById("carousel-next").addEventListener("click", function () { go(index + 1); restart(); });
-      dots.forEach(function (dot, i) {
-        dot.addEventListener("click", function () { go(i); restart(); });
-      });
-
-      const carousel = document.getElementById("carousel");
-      carousel.addEventListener("mouseenter", function () { clearInterval(timer); });
-      carousel.addEventListener("mouseleave", restart);
-      restart();
-    })();
-  </script>
 
   <!-- Modal Reservar: búsqueda de logo + partículas (https://codepen.io/matteobruni/pen/dyGprLo) -->
   <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
@@ -565,90 +353,33 @@
   <script src="assets/reservar.js"></script>
   <script src="assets/build.js"></script>
 
-  <!-- Animación: campo de ruido de colores (perlin.js) -->
-  <!-- Basado en https://codepen.io/matteobruni/pen/vYLjrOg -->
-  <script src="https://cdn.jsdelivr.net/gh/josephg/noisejs@master/perlin.js"></script>
+  <!-- Aparición al hacer scroll y pausa de animaciones si se pide menos movimiento -->
   <script>
-    let noiseZ;
-    let size;
-    let columns;
-    let rows;
-    let w;
-    let h;
-    let field;
-    const canvasField = document.getElementById("field");
-    const ctxField = canvasField.getContext("2d");
-
-    function setup() {
-      size = 20;
-      noiseZ = 0;
-      reset();
-      window.addEventListener("resize", reset);
-    }
-
-    function initField() {
-      field = new Array(columns);
-      for (let x = 0; x < columns; x++) {
-        field[x] = new Array(columns);
-        for (let y = 0; y < rows; y++) {
-          field[x][y] = [0, 0];
-        }
+    (function () {
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const heroSvg = document.querySelector(".hero-svg");
+      if (reduce && heroSvg && heroSvg.pauseAnimations) {
+        heroSvg.setCurrentTime(4);
+        heroSvg.pauseAnimations();
       }
-    }
 
-    function calculateField() {
-      for (let x = 0; x < columns; x++) {
-        for (let y = 0; y < rows; y++) {
-          const angle = noise.simplex3(x / 50, y / 50, noiseZ) * Math.PI * 2;
-          const length = noise.simplex3(x / 100 + 40000, y / 100 + 40000, noiseZ);
-          field[x][y][0] = angle;
-          field[x][y][1] = length;
-        }
+      const items = document.querySelectorAll("[data-reveal]");
+      if (reduce || !("IntersectionObserver" in window)) {
+        items.forEach(function (el) { el.classList.add("is-visible"); });
+        return;
       }
-    }
-
-    function reset() {
-      const pxRatio = window.devicePixelRatio || 1;
-      w = canvasField.offsetWidth * pxRatio;
-      h = canvasField.offsetHeight * pxRatio;
-      canvasField.width = w;
-      canvasField.height = h;
-      noise.seed(Math.random());
-      columns = Math.floor(w / size) + 1;
-      rows = Math.floor(h / size) + 1;
-      initField();
-    }
-
-    function drawField(ctx) {
-      ctx.clearRect(0, 0, canvasField.width, canvasField.height);
-      for (let x = 0; x < columns; x++) {
-        for (let y = 0; y < rows; y++) {
-          const angle = field[x][y][0];
-          const length = field[x][y][1];
-          ctx.save();
-          ctx.translate(x * size, y * size);
-          ctx.rotate(angle);
-          ctx.strokeStyle = `hsla(${(angle * 180) / Math.PI}, 100%, 50%, 0.65)`;
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(0, 0);
-          ctx.lineTo(0, size * length);
-          ctx.stroke();
-          ctx.restore();
-        }
-      }
-    }
-
-    function animate() {
-      if (window.matchMedia("(max-width: 639px)").matches) return;
-      calculateField();
-      noiseZ += 0.005;
-      drawField(ctxField);
-      requestAnimationFrame(animate);
-    }
-
-    setup();
-    animate();
+      const io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-visible");
+          io.unobserve(entry.target);
+        });
+      }, { rootMargin: "0px 0px -8% 0px" });
+      items.forEach(function (el, i) {
+        el.style.transitionDelay = (i % 4) * 60 + "ms";
+        io.observe(el);
+      });
+    })();
   </script>
 
 </body>

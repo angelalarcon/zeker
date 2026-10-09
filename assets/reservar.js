@@ -22,14 +22,14 @@
     <div id="reservar-modal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="reservar-title">
       <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" data-reservar-close></div>
       <div class="relative flex min-h-full items-center justify-center p-4">
-        <div id="reservar-form-panel" class="relative p-8 sm:p-10 max-w-2xl w-full mx-auto bg-white rounded-3xl shadow-xl">
+        <div id="reservar-form-panel" class="relative p-8 sm:p-10 max-w-2xl w-full mx-auto bg-paper rounded-[1.75rem] shadow-[0_0_0_2px_#42344A,8px_8px_0_#42344A]">
           <button type="button" class="absolute right-4 top-4 rounded-full p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600" data-reservar-close aria-label="Cerrar">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
               <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
             </svg>
           </button>
-          <p class="text-sm font-semibold text-indigo-600">Reserva gratuita · 30 min</p>
-          <h2 id="reservar-title" class="mt-2 text-2xl font-extrabold tracking-tight text-slate-900">¿Cómo se llama tu negocio?</h2>
+          <p class="eyebrow">Reserva gratuita · 30 min</p>
+          <h2 id="reservar-title" class="poster-title mt-3 text-3xl">¿Cómo se llama tu negocio?</h2>
           <p class="mt-2 text-slate-600">Buscamos tu marca en internet para personalizar la experiencia.</p>
           <form id="reservar-form" class="mt-6">
             <label for="reservar-company" class="sr-only">Nombre de la empresa o negocio</label>
@@ -126,7 +126,7 @@
 
     document.body.style.overflow = "hidden";
     document.body.style.transition = `background-color ${ease}`;
-    document.body.style.backgroundColor = "#1e1b4b";
+    document.body.style.backgroundColor = "#33283B";
 
     if (fieldCanvas) { fieldCanvas.style.transition = `opacity ${ease}`; fieldCanvas.style.opacity = "0"; }
     if (bgOverlay)   { bgOverlay.style.transition   = `opacity ${ease}`; bgOverlay.style.opacity   = "0"; }
@@ -141,7 +141,7 @@
     lineTop.style.transform = "translateY(-100vh)";
 
     // Fix slot to viewport so it's always centered regardless of document flow
-    slot.style.backgroundColor = "#1e1b4b";
+    slot.style.backgroundColor = "#33283B";
     slot.style.position   = "fixed";
     slot.style.top        = `${navHeight}px`;
     slot.style.left       = "0";
