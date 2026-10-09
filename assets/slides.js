@@ -130,6 +130,17 @@
     return hi * 1.08;
   }
 
+  // Si una sección no cabe en la pantalla, su contenido se reduce lo justo (como mucho al 75 %).
+  function fit(slide) {
+    const kids = Array.from(slide.children).filter(function (c) { return c.tagName !== "SCRIPT"; });
+    kids.forEach(function (c) { c.style.zoom = ""; });
+    const over = slide.scrollHeight - slide.clientHeight;
+    if (over <= 1) return;
+    const z = Math.max(0.75, (slide.clientHeight / slide.scrollHeight) * 0.985);
+    kids.forEach(function (c) { c.style.zoom = String(z); });
+  }
+  function fitAll() { slides.forEach(fit); }
+
   // ---------- secciones ----------
   let current = 0;
   let busy = false;
@@ -264,6 +275,7 @@
     const dx = touchX - e.touches[0].clientX;
     if (Math.abs(dx) > Math.abs(dy)) return;  // gesto horizontal: sliders y carruseles internos
     // en el borde de la sección, el gesto no hace rebotar la página: cambia de sección
+    if (dy < 0 && current === 0) return;  // portada: tirar hacia abajo recarga, como siempre
     if ((dy > 0 && touchEdgeDown) || (dy < 0 && touchEdgeUp) || busy) e.preventDefault();
   }, { passive: false });
   window.addEventListener("touchend", function (e) {
@@ -305,7 +317,10 @@
   });
 
   measure();
-  window.addEventListener("resize", measure);
+  fitAll();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitAll);
+  window.addEventListener("load", fitAll);
+  window.addEventListener("resize", function () { measure(); fitAll(); });
   window.scrollTo(0, 0);
   show(0);
   reveal(slides[0]);

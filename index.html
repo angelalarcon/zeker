@@ -106,10 +106,10 @@
 
     <!-- Promesas -->
     <section class="panel" data-shape="z" data-ink="#C24F2C" aria-labelledby="promesas-title">
-      <div class="mx-auto max-w-5xl px-5 py-20 text-center sm:px-6">
+      <div class="mx-auto max-w-5xl px-5 py-8 text-center sm:px-6 sm:py-12 lg:py-20">
         <p class="eyebrow">Siempre</p>
         <h2 id="promesas-title" class="poster-title mt-4 text-4xl sm:text-6xl">Sin letra pequeña</h2>
-        <ul class="mt-14 grid grid-cols-2 gap-x-4 gap-y-12 lg:grid-cols-4">
+        <ul class="mt-8 grid grid-cols-2 gap-x-4 gap-y-8 sm:mt-14 sm:gap-y-12 lg:grid-cols-4">
           <li data-reveal><svg class="mx-auto h-16 w-16" aria-hidden="true"><use href="#i-candado"/></svg><p class="poster-title mt-4 text-lg">Sin permanencia</p></li>
           <li data-reveal><svg class="mx-auto h-16 w-16" aria-hidden="true"><use href="#i-moneda"/></svg><p class="poster-title mt-4 text-lg">IVA incluido</p></li>
           <li data-reveal><svg class="mx-auto h-16 w-16" aria-hidden="true"><use href="#i-charla"/></svg><p class="poster-title mt-4 text-lg">Sin tecnicismos</p></li>
@@ -118,65 +118,77 @@
       </div>
     </section>
 
-    <!-- Dos caminos: cada tarjeta abre una demostración a pantalla completa (assets/caminos.js) -->
+    <!-- Dos caminos: un slider en móvil y tablet, las dos a la vez en escritorio.
+         Cada tarjeta abre una demostración a pantalla completa (assets/caminos.js) -->
     <section class="panel" data-shape="k" data-ink="#42344A" aria-labelledby="caminos-title">
-      <div class="mx-auto max-w-7xl px-5 py-20 sm:px-6">
+      <div class="mx-auto max-w-7xl px-5 py-6 sm:px-6 sm:py-10 lg:py-16">
         <div class="text-center">
           <p class="eyebrow">Dos caminos</p>
-          <h2 id="caminos-title" class="poster-title mt-4 text-4xl sm:text-6xl">Nueva o mejorada</h2>
-          <p class="poster-italic mt-3 text-xl text-plum-soft sm:text-2xl">pulsa una tarjeta y míralo</p>
+          <h2 id="caminos-title" class="poster-title mt-3 text-4xl sm:mt-4 sm:text-6xl">Nueva o mejorada</h2>
+          <p class="poster-italic mt-2 text-lg text-plum-soft sm:mt-3 sm:text-2xl">desliza y pulsa una tarjeta</p>
         </div>
-        <div class="mt-12 grid grid-cols-1 items-center gap-6 lg:grid-cols-[0.8fr_1.2fr_1.2fr_0.8fr] lg:gap-8">
-          <div class="order-1 flex justify-center">
-            <img id="wheel-src" src="assets/illustrations/wheel.svg" alt="Rueda de coche: la web de un taller que vamos a crear" class="wheel-idle w-32 sm:w-40 lg:w-full lg:max-w-[230px]" />
-          </div>
-          <button type="button" class="camino-card order-2 bg-white" data-demo="nuevo" aria-haspopup="dialog">
+        <div class="mt-6 sm:mt-10" data-slider>
+          <div class="slider-track -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-3 pt-2 sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-2 lg:gap-10 lg:overflow-visible lg:px-0" data-slider-track>
+            <div class="camino-slide w-[86%] shrink-0 snap-center sm:w-[70%] lg:w-auto">
+              <div class="camino-art">
+                <img id="wheel-src" src="assets/illustrations/wheel.svg" alt="Rueda de coche: la web de un taller que vamos a crear" class="wheel-idle h-full w-auto" />
+              </div>
+              <button type="button" class="camino-card bg-white" data-demo="nuevo" aria-haspopup="dialog">
             <span class="eyebrow">Desde cero</span>
-            <span class="poster-title mt-3 block text-3xl">Creamos tu web</span>
-            <span class="mt-3 block text-lg text-slate-700">Diseño, textos y puesta en marcha.</span>
-            <span class="mt-4 block space-y-2 text-slate-700">
+            <span class="poster-title mt-2 block text-2xl sm:mt-3 sm:text-3xl">Creamos tu web</span>
+            <span class="mt-2 block text-base text-slate-700 sm:mt-3 sm:text-lg">Diseño, textos y puesta en marcha.</span>
+            <span class="mt-3 block space-y-1.5 text-sm text-slate-700 sm:mt-4 sm:space-y-2 sm:text-base">
               <span class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>Web lista en una reunión</span>
               <span class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>Reservas, pagos y formularios</span>
               <span class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>Dominio, alojamiento y cambios</span>
             </span>
             <span class="camino-go">Ver cómo →</span>
           </button>
-          <div class="old-sites order-3 lg:order-4" aria-hidden="true">
-            <img src="assets/illustrations/old-site-1.svg" alt="" />
-            <img src="assets/illustrations/old-site-2.svg" alt="" />
-            <img src="assets/illustrations/old-site-3.svg" alt="" />
-          </div>
-          <button type="button" class="camino-card order-4 bg-cream lg:order-3" data-demo="mejora" aria-haspopup="dialog">
+            </div>
+            <div class="camino-slide w-[86%] shrink-0 snap-center sm:w-[70%] lg:w-auto">
+              <div class="camino-art old-sites" aria-hidden="true">
+                <img src="assets/illustrations/old-site-1.svg" alt="" />
+                <img src="assets/illustrations/old-site-2.svg" alt="" />
+                <img src="assets/illustrations/old-site-3.svg" alt="" />
+              </div>
+              <button type="button" class="camino-card bg-cream" data-demo="mejora" aria-haspopup="dialog">
             <span class="eyebrow">Ya tienes web</span>
-            <span class="poster-title mt-3 block text-3xl">Mejoramos la tuya</span>
-            <span class="mt-3 block text-lg text-slate-700">Rediseño UI/UX sobre tu web actual.</span>
-            <span class="mt-4 block space-y-2 text-slate-700">
+            <span class="poster-title mt-2 block text-2xl sm:mt-3 sm:text-3xl">Mejoramos la tuya</span>
+            <span class="mt-2 block text-base text-slate-700 sm:mt-3 sm:text-lg">Rediseño UI/UX sobre tu web actual.</span>
+            <span class="mt-3 block space-y-1.5 text-sm text-slate-700 sm:mt-4 sm:space-y-2 sm:text-base">
               <span class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>Auditoría de usabilidad</span>
               <span class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>Nuevo diseño de interfaz</span>
               <span class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>Integrado con tus sistemas</span>
             </span>
             <span class="camino-go">Ver cómo →</span>
           </button>
+            </div>
+          </div>
+          <div class="mt-3 flex items-center justify-center gap-4 lg:hidden">
+            <button type="button" class="slider-btn" data-slider-prev aria-label="Camino anterior">‹</button>
+            <div class="flex gap-2"><button type="button" class="slider-dot" data-slider-dot aria-label="Creamos tu web"></button><button type="button" class="slider-dot" data-slider-dot aria-label="Mejoramos la tuya"></button></div>
+            <button type="button" class="slider-btn" data-slider-next aria-label="Camino siguiente">›</button>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- Cómo trabajamos + Parada 1 -->
     <section class="panel" data-shape="z" data-ink="#C24F2C" aria-labelledby="hablamos-title">
-      <div class="mx-auto max-w-5xl px-5 py-20 sm:px-6">
+      <div class="mx-auto max-w-5xl px-5 py-8 sm:px-6 sm:py-12 lg:py-20">
         <div class="text-center" data-reveal>
           <p class="eyebrow">Cómo trabajamos</p>
           <h2 class="poster-title mt-4 text-4xl sm:text-6xl">Tres paradas</h2>
           <p class="poster-italic mt-3 text-xl text-plum-soft sm:text-2xl">para webs nuevas y existentes</p>
         </div>
-        <div class="mt-14 grid grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-16">
+        <div class="mt-6 grid grid-cols-1 items-center gap-6 sm:mt-14 md:grid-cols-2 md:gap-16">
           <div data-reveal>
             <p class="eyebrow">Parada 1</p>
             <h2 id="hablamos-title" class="poster-title mt-3 text-5xl sm:text-6xl">Hablamos</h2>
             <p class="mt-5 text-lg text-slate-700 sm:text-xl">Nos cuentas tu negocio, o nos enseñas tu web.</p>
             <a href="#" class="js-reservar mt-6 inline-flex items-center gap-2 font-display text-base font-bold uppercase tracking-[0.12em] text-indigo-600 hover:text-indigo-700">Reservar →</a>
           </div>
-          <img src="assets/illustrations/meeting.svg" alt="Mesa con dos cafés y un portátil donde se ve una web a medio construir" class="w-full" loading="lazy" data-reveal />
+          <img src="assets/illustrations/meeting.svg" alt="Mesa con dos cafés y un portátil donde se ve una web a medio construir" class="mx-auto max-h-[26vh] w-auto md:max-h-none md:w-full" loading="lazy" data-reveal />
         </div>
       </div>
     </section>
@@ -267,25 +279,25 @@
 
     <!-- Parada 3: publicamos -->
     <section class="panel" data-shape="z" data-ink="#C24F2C" aria-labelledby="publicamos-title">
-      <div class="mx-auto grid max-w-5xl grid-cols-1 items-center gap-12 px-5 py-20 sm:px-6 md:grid-cols-2 md:gap-16">
+      <div class="mx-auto grid max-w-5xl grid-cols-1 items-center gap-6 px-5 py-8 sm:gap-12 sm:px-6 sm:py-12 md:grid-cols-2 md:gap-16 lg:py-20">
         <div data-reveal>
           <p class="eyebrow">Parada 3</p>
           <h2 id="publicamos-title" class="poster-title mt-3 text-5xl sm:text-6xl">Publicamos</h2>
           <p class="mt-5 text-lg text-slate-700 sm:text-xl">¿Te encaja? Se publica. Elige el plan que va con tu empresa.</p>
         </div>
-        <div class="mx-auto w-full max-w-sm" data-slider data-reveal><div class="slider-track flex snap-x snap-mandatory gap-5 overflow-x-auto pb-4 pl-1 pr-3 pt-4" data-slider-track><div class="ticket relative w-[calc(100%-0.75rem)] shrink-0 snap-center" role="group" aria-roledescription="plan" aria-label="Básico"><div class="p-7"><p class="eyebrow">Básico</p><p class="mt-1 text-sm text-slate-600">Una sola página.</p><div class="mt-3 flex items-end gap-1"><span class="pb-2 text-sm font-medium text-slate-600">desde</span><span class="poster-title text-6xl">49€</span><span class="pb-1 text-slate-600">/mes</span></div></div><div class="ticket-cut"></div><div class="p-7"><ul class="space-y-3 text-slate-700"><li class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>Una página</li><li class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>Hecha en tu reunión</li><li class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>En vivo 24/7</li><li class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>1 ronda de cambios al mes</li></ul><a href="#" class="js-reservar btn btn-primary mt-7 w-full">Reservar</a></div></div><div class="ticket relative w-[calc(100%-0.75rem)] shrink-0 snap-center !bg-cream" role="group" aria-roledescription="plan" aria-label="Profesional"><span class="absolute -top-3 right-6 rounded-full bg-indigo-600 px-3 py-1 font-display text-[0.65rem] font-bold uppercase tracking-[0.14em] text-paper">Más popular</span><div class="p-7"><p class="eyebrow">Profesional</p><p class="mt-1 text-sm text-slate-600">Varias páginas.</p><div class="mt-3 flex items-end gap-1"><span class="pb-2 text-sm font-medium text-slate-600">desde</span><span class="poster-title text-6xl">99€</span><span class="pb-1 text-slate-600">/mes</span></div></div><div class="ticket-cut"></div><div class="p-7"><ul class="space-y-3 text-slate-700"><li class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>Hasta 5 páginas</li><li class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>Mejor posición en Google</li><li class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>Formulario y estadísticas</li><li class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>Cambios ilimitados</li></ul><a href="#" class="js-reservar btn btn-primary mt-7 w-full">Reservar</a></div></div><div class="ticket relative w-[calc(100%-0.75rem)] shrink-0 snap-center" role="group" aria-roledescription="plan" aria-label="A medida"><div class="p-7"><p class="eyebrow">A medida</p><p class="mt-1 text-sm text-slate-600">Empresas y webs existentes.</p><div class="mt-3 flex items-end gap-1"><span class="pb-2 text-sm font-medium text-slate-600">desde</span><span class="poster-title text-6xl">199€</span><span class="pb-1 text-slate-600">/mes</span></div></div><div class="ticket-cut"></div><div class="p-7"><ul class="space-y-3 text-slate-700"><li class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>Rediseño UI/UX de tu web</li><li class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>Integración con tus sistemas</li><li class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>Tienda, reservas y pagos</li><li class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>Soporte dedicado</li></ul><a href="#" class="js-reservar btn btn-primary mt-7 w-full">Reservar</a></div></div></div><div class="mt-2 flex items-center justify-center gap-4"><button type="button" class="slider-btn" data-slider-prev aria-label="Plan anterior">‹</button><div class="flex gap-2"><button type="button" class="slider-dot" data-slider-dot aria-label="Ver plan Básico"></button><button type="button" class="slider-dot" data-slider-dot aria-label="Ver plan Profesional"></button><button type="button" class="slider-dot" data-slider-dot aria-label="Ver plan A medida"></button></div><button type="button" class="slider-btn" data-slider-next aria-label="Plan siguiente">›</button></div><p class="mt-4 text-center"><a href="precios.html" class="font-display text-sm font-bold uppercase tracking-[0.12em] text-indigo-600 hover:text-indigo-700">Comparar planes →</a></p></div>
+        <div class="mx-auto w-full max-w-sm" data-slider data-reveal><div class="slider-track flex snap-x snap-mandatory gap-5 overflow-x-auto pb-4 pl-1 pr-3 pt-4" data-slider-track><div class="ticket relative w-[calc(100%-0.75rem)] shrink-0 snap-center" role="group" aria-roledescription="plan" aria-label="Básico"><div class="p-5 sm:p-7"><p class="eyebrow">Básico</p><p class="mt-1 text-sm text-slate-600">Una sola página.</p><div class="mt-3 flex items-end gap-1"><span class="pb-2 text-sm font-medium text-slate-600">desde</span><span class="poster-title text-6xl">49€</span><span class="pb-1 text-slate-600">/mes</span></div></div><div class="ticket-cut"></div><div class="p-5 sm:p-7"><ul class="space-y-3 text-slate-700"><li class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>Una página</li><li class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>Hecha en tu reunión</li><li class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>En vivo 24/7</li><li class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>1 ronda de cambios al mes</li></ul><a href="#" class="js-reservar btn btn-primary mt-7 w-full">Reservar</a></div></div><div class="ticket relative w-[calc(100%-0.75rem)] shrink-0 snap-center !bg-cream" role="group" aria-roledescription="plan" aria-label="Profesional"><span class="absolute -top-3 right-6 rounded-full bg-indigo-600 px-3 py-1 font-display text-[0.65rem] font-bold uppercase tracking-[0.14em] text-paper">Más popular</span><div class="p-5 sm:p-7"><p class="eyebrow">Profesional</p><p class="mt-1 text-sm text-slate-600">Varias páginas.</p><div class="mt-3 flex items-end gap-1"><span class="pb-2 text-sm font-medium text-slate-600">desde</span><span class="poster-title text-6xl">99€</span><span class="pb-1 text-slate-600">/mes</span></div></div><div class="ticket-cut"></div><div class="p-5 sm:p-7"><ul class="space-y-3 text-slate-700"><li class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>Hasta 5 páginas</li><li class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>Mejor posición en Google</li><li class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>Formulario y estadísticas</li><li class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>Cambios ilimitados</li></ul><a href="#" class="js-reservar btn btn-primary mt-7 w-full">Reservar</a></div></div><div class="ticket relative w-[calc(100%-0.75rem)] shrink-0 snap-center" role="group" aria-roledescription="plan" aria-label="A medida"><div class="p-5 sm:p-7"><p class="eyebrow">A medida</p><p class="mt-1 text-sm text-slate-600">Empresas y webs existentes.</p><div class="mt-3 flex items-end gap-1"><span class="pb-2 text-sm font-medium text-slate-600">desde</span><span class="poster-title text-6xl">199€</span><span class="pb-1 text-slate-600">/mes</span></div></div><div class="ticket-cut"></div><div class="p-5 sm:p-7"><ul class="space-y-3 text-slate-700"><li class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>Rediseño UI/UX de tu web</li><li class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>Integración con tus sistemas</li><li class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>Tienda, reservas y pagos</li><li class="flex items-center gap-3"><svg class="h-5 w-5 shrink-0" aria-hidden="true"><use href="#i-check"/></svg>Soporte dedicado</li></ul><a href="#" class="js-reservar btn btn-primary mt-7 w-full">Reservar</a></div></div></div><div class="mt-2 flex items-center justify-center gap-4"><button type="button" class="slider-btn" data-slider-prev aria-label="Plan anterior">‹</button><div class="flex gap-2"><button type="button" class="slider-dot" data-slider-dot aria-label="Ver plan Básico"></button><button type="button" class="slider-dot" data-slider-dot aria-label="Ver plan Profesional"></button><button type="button" class="slider-dot" data-slider-dot aria-label="Ver plan A medida"></button></div><button type="button" class="slider-btn" data-slider-next aria-label="Plan siguiente">›</button></div><p class="mt-4 text-center"><a href="precios.html" class="font-display text-sm font-bold uppercase tracking-[0.12em] text-indigo-600 hover:text-indigo-700">Comparar planes →</a></p></div>
       </div>
     </section>
 
     <!-- Ejemplos -->
     <section class="panel" data-shape="k" data-ink="#42344A" aria-labelledby="mundos-title">
-      <div class="py-20">
+      <div class="py-8 sm:py-12 lg:py-16">
         <div class="mx-auto max-w-5xl px-5 text-center sm:px-6">
           <p class="eyebrow">Ejemplos</p>
           <h2 id="mundos-title" class="poster-title mt-4 text-4xl sm:text-6xl">Una web para cada empresa</h2>
           <p class="poster-italic mt-3 text-xl text-plum-soft sm:text-2xl">nuevas o rediseñadas</p>
         </div>
-        <div class="mx-auto mt-12 flex max-w-7xl snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-6 sm:grid sm:grid-cols-2 sm:gap-7 sm:overflow-visible sm:px-6 sm:pb-0 lg:grid-cols-4 lg:gap-6">
+        <div class="mx-auto mt-6 flex max-w-7xl snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-6 sm:grid sm:grid-cols-2 sm:gap-7 sm:overflow-visible sm:px-6 sm:pb-0 lg:grid-cols-4 lg:gap-6">
         <article class="ex-card w-[78%] shrink-0 snap-center sm:w-auto" data-reveal>
           <span class="ex-badge">Web nueva</span>
           <div class="ex-bar"><span class="h-2 w-2 rounded-full bg-indigo-500"></span><span class="h-2 w-2 rounded-full bg-mustard"></span><span class="h-2 w-2 rounded-full bg-meadow"></span><span class="ex-url">latabernademaria.es</span></div>
@@ -336,13 +348,13 @@
 
     <!-- ¿Es para ti? -->
     <section class="panel" data-shape="z" data-ink="#C24F2C" aria-labelledby="para-ti-title">
-      <div class="mx-auto max-w-4xl px-5 py-20 sm:px-6">
+      <div class="mx-auto max-w-4xl px-5 py-8 sm:px-6 sm:py-12 lg:py-20">
         <h2 id="para-ti-title" class="poster-title text-center text-4xl sm:text-6xl">¿Es para ti?</h2>
-        <ul class="mt-10 grid gap-4 sm:grid-cols-2">
-          <li class="flex items-center gap-4 rounded-2xl bg-cream p-5" data-reveal><svg class="h-7 w-7 shrink-0" aria-hidden="true"><use href="#i-check"/></svg><span class="text-lg text-plum">Empiezas y necesitas web</span></li>
-          <li class="flex items-center gap-4 rounded-2xl bg-cream p-5" data-reveal><svg class="h-7 w-7 shrink-0" aria-hidden="true"><use href="#i-check"/></svg><span class="text-lg text-plum">Tu web se ha quedado atrás</span></li>
-          <li class="flex items-center gap-4 rounded-2xl bg-cream p-5" data-reveal><svg class="h-7 w-7 shrink-0" aria-hidden="true"><use href="#i-check"/></svg><span class="text-lg text-plum">Tus clientes se pierden reservando o comprando</span></li>
-          <li class="flex items-center gap-4 rounded-2xl bg-cream p-5" data-reveal><svg class="h-7 w-7 shrink-0" aria-hidden="true"><use href="#i-check"/></svg><span class="text-lg text-plum">Quieres mejorar sin cambiar tus sistemas</span></li>
+        <ul class="mt-6 grid gap-3 sm:mt-10 sm:grid-cols-2 sm:gap-4">
+          <li class="flex items-center gap-4 rounded-2xl bg-cream px-5 py-3 sm:p-5" data-reveal><svg class="h-7 w-7 shrink-0" aria-hidden="true"><use href="#i-check"/></svg><span class="text-lg text-plum">Empiezas y necesitas web</span></li>
+          <li class="flex items-center gap-4 rounded-2xl bg-cream px-5 py-3 sm:p-5" data-reveal><svg class="h-7 w-7 shrink-0" aria-hidden="true"><use href="#i-check"/></svg><span class="text-lg text-plum">Tu web se ha quedado atrás</span></li>
+          <li class="flex items-center gap-4 rounded-2xl bg-cream px-5 py-3 sm:p-5" data-reveal><svg class="h-7 w-7 shrink-0" aria-hidden="true"><use href="#i-check"/></svg><span class="text-lg text-plum">Tus clientes se pierden reservando o comprando</span></li>
+          <li class="flex items-center gap-4 rounded-2xl bg-cream px-5 py-3 sm:p-5" data-reveal><svg class="h-7 w-7 shrink-0" aria-hidden="true"><use href="#i-check"/></svg><span class="text-lg text-plum">Quieres mejorar sin cambiar tus sistemas</span></li>
         </ul>
         <p class="poster-italic mt-10 text-center text-xl text-plum-soft sm:text-2xl">Tú, el negocio. Nosotros, la web.</p>
       </div>
@@ -350,30 +362,30 @@
 
     <!-- Preguntas -->
     <section class="panel" data-shape="k" data-ink="#42344A" aria-labelledby="faq-title">
-      <div class="mx-auto max-w-3xl px-5 py-20 sm:px-6">
+      <div class="mx-auto max-w-3xl px-5 py-8 sm:px-6 sm:py-12 lg:py-20">
         <h2 id="faq-title" class="poster-title text-center text-4xl sm:text-5xl">Preguntas</h2>
-      <div class="mt-10 divide-y-2 divide-dashed divide-slate-300 rounded-[1.75rem] bg-paper shadow-[0_0_0_2px_#42344A]" data-reveal>
-        <details class="group p-6 sm:p-7" open>
+      <div class="mt-6 divide-y-2 sm:mt-10 divide-dashed divide-slate-300 rounded-[1.75rem] bg-paper shadow-[0_0_0_2px_#42344A]" data-reveal>
+        <details class="group px-5 py-4 sm:p-7">
           <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-lg font-bold text-plum sm:text-xl">¿Cuánto tarda?<span class="text-2xl text-indigo-600 transition group-open:rotate-45">+</span></summary>
           <p class="mt-3 text-lg text-slate-700">Una web nueva, lo que dura la reunión. Un rediseño, depende del tamaño: te lo decimos antes de empezar.</p>
         </details>
-        <details class="group p-6 sm:p-7">
+        <details class="group px-5 py-4 sm:p-7">
           <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-lg font-bold text-plum sm:text-xl">¿Trabajáis con webs que ya existen?<span class="text-2xl text-indigo-600 transition group-open:rotate-45">+</span></summary>
           <p class="mt-3 text-lg text-slate-700">Sí. Mejoramos su diseño y usabilidad sin empezar de cero, conectados a vuestras reservas, pagos o gestor de contenidos.</p>
         </details>
-        <details class="group p-6 sm:p-7">
+        <details class="group px-5 py-4 sm:p-7">
           <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-lg font-bold text-plum sm:text-xl">¿Qué tengo que traer?<span class="text-2xl text-indigo-600 transition group-open:rotate-45">+</span></summary>
           <p class="mt-3 text-lg text-slate-700">Nada obligatorio. Fotos o logo, si los tienes.</p>
         </details>
-        <details class="group p-6 sm:p-7">
+        <details class="group px-5 py-4 sm:p-7">
           <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-lg font-bold text-plum sm:text-xl">¿Y si no me gusta?<span class="text-2xl text-indigo-600 transition group-open:rotate-45">+</span></summary>
           <p class="mt-3 text-lg text-slate-700">No se publica. Sin compromiso.</p>
         </details>
-        <details class="group p-6 sm:p-7">
+        <details class="group px-5 py-4 sm:p-7">
           <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-lg font-bold text-plum sm:text-xl">¿Cómo se paga?<span class="text-2xl text-indigo-600 transition group-open:rotate-45">+</span></summary>
           <p class="mt-3 text-lg text-slate-700">Cuota mensual, IVA incluido. Sin permanencia. <a href="precios.html" class="font-bold text-indigo-600 hover:text-indigo-700">Ver precios →</a></p>
         </details>
-        <details class="group p-6 sm:p-7">
+        <details class="group px-5 py-4 sm:p-7">
           <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-lg font-bold text-plum sm:text-xl">¿Y el dominio?<span class="text-2xl text-indigo-600 transition group-open:rotate-45">+</span></summary>
           <p class="mt-3 text-lg text-slate-700">Tu dirección (tunegocio.es). Unos 10–15 €/año, aparte. Te ayudamos.</p>
         </details>
@@ -384,7 +396,7 @@
     <!-- Cierre -->
     <section class="panel" data-shape="z" data-ink="#C24F2C" aria-labelledby="cta-title">
       <div class="flex min-h-full flex-col">
-        <div class="mx-auto flex max-w-3xl flex-1 flex-col justify-center px-5 py-20 text-center">
+        <div class="mx-auto flex max-w-3xl flex-1 flex-col justify-center px-5 py-10 text-center sm:py-20">
           <h2 id="cta-title" class="poster-title text-6xl sm:text-8xl">¿Empezamos?</h2>
           <p class="poster-italic mt-4 text-xl text-plum sm:text-2xl">Una reunión de 30 minutos. Gratis.</p>
           <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">

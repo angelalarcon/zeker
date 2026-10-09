@@ -103,7 +103,7 @@ body { background: var(--page); color: #54445A; overflow-x: clip; }
 }
 .panel > * { width: 100%; }
 /* ---------- Carrusel de secciones (assets/slides.js) ---------- */
-.slides-on, .slides-on body { height: 100%; overflow: hidden; overscroll-behavior: none; }
+.slides-on, .slides-on body { height: 100%; overflow: hidden; }
 .slides-on #main-content { position: fixed; top: var(--nav-h); left: 0; right: 0; bottom: 0; z-index: 1; pointer-events: none; }
 .slides-on #hero-header, .slides-on .panel {
   position: fixed; top: var(--nav-h); left: 0; right: 0; bottom: 0; min-height: 0;
@@ -111,6 +111,8 @@ body { background: var(--page); color: #54445A; overflow-x: clip; }
   display: flex; flex-direction: column; justify-content: flex-start;
 }
 .slides-on .panel { position: absolute; top: 0; }
+/* en la portada se deja pasar el gesto nativo de tirar para recargar */
+.slides-on #hero-header { overscroll-behavior-y: auto; }
 .slides-on #hero-header > :first-child { margin-top: auto; }
 .slides-on #hero-header > :last-child { margin-bottom: auto; }
 .slides-on .panel > * { margin-block: auto; }
@@ -138,14 +140,22 @@ body { background: var(--page); color: #54445A; overflow-x: clip; }
   display: inline-flex; margin-top: 1.4rem; font-family: "Josefin Sans", system-ui, sans-serif; font-weight: 700;
   text-transform: uppercase; letter-spacing: .12em; font-size: .85rem; color: var(--terracotta);
 }
-.old-sites { position: relative; height: 13rem; max-width: 18rem; margin: 0 auto; width: 100%; }
+.camino-slide { display: flex; flex-direction: column; gap: .75rem; }
+.camino-art { display: flex; justify-content: center; height: 6.5rem; flex: none; }
+@media (min-width: 640px) { .camino-art { height: 9rem; } }
+@media (min-width: 1024px) { .camino-art { height: 8.5rem; } }
+.camino-card { padding: 1.25rem 1.25rem 1.1rem; }
+@media (min-width: 640px) { .camino-card { padding: 1.75rem 1.75rem 1.5rem; } }
+.camino-go { margin-top: .9rem; }
+.old-sites { position: relative; max-width: 13rem; margin: 0 auto; width: 100%; }
+@media (min-width: 640px) { .old-sites { max-width: 17rem; } }
 .old-sites img {
   position: absolute; width: 78%; border-radius: .6rem; box-shadow: 0 10px 24px -10px rgb(0 0 0 / .35);
   transition: transform .4s cubic-bezier(.2,.7,.2,1);
 }
 .old-sites img:nth-child(1) { left: 0; top: 0; transform: rotate(-7deg); }
-.old-sites img:nth-child(2) { right: 0; top: 2.2rem; transform: rotate(5deg); }
-.old-sites img:nth-child(3) { left: 10%; top: 4.8rem; transform: rotate(-2deg); }
+.old-sites img:nth-child(2) { right: 0; top: 18%; transform: rotate(5deg); }
+.old-sites img:nth-child(3) { left: 10%; top: 38%; transform: rotate(-2deg); }
 .old-sites:hover img:nth-child(1) { transform: rotate(-11deg) translateX(-6px); }
 .old-sites:hover img:nth-child(2) { transform: rotate(9deg) translateX(6px); }
 
@@ -273,8 +283,10 @@ body { background: var(--page); color: #54445A; overflow-x: clip; }
   font-family: "Josefin Sans", sans-serif; font-weight: 700; font-size: .6rem; letter-spacing: .14em; text-transform: uppercase; }
 .ex-bar { display: flex; align-items: center; gap: .35rem; padding: .5rem .7rem; background: #F6E7CB; border-bottom: 2px solid #42344A; }
 .ex-url { margin-left: .4rem; flex: 1; font-size: .68rem; color: #6A5868; background: #FFF; border-radius: 99px; padding: .1rem .6rem; box-shadow: inset 0 0 0 1px #CDBBAA; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.ex-hero { padding: 1.4rem 1.2rem 1.3rem; text-align: center; }
-.ex-icon { width: 5.5rem; height: 5.5rem; margin: 0 auto .9rem; }
+.ex-hero { padding: 1rem 1rem 1.1rem; text-align: center; }
+@media (min-width: 640px) { .ex-hero { padding: 1.4rem 1.2rem 1.3rem; } }
+.ex-icon { width: 4rem; height: 4rem; margin: 0 auto .6rem; }
+@media (min-width: 640px) { .ex-icon { width: 5.5rem; height: 5.5rem; margin-bottom: .9rem; } }
 .ex-icon svg, .ex-icon img { width: 100%; height: 100%; }
 .ex-cta { display: inline-flex; margin-top: 1rem; padding: .45rem .9rem; border-radius: 99px; background: #C24F2C; color: #FFF;
   font-family: "Josefin Sans", sans-serif; font-weight: 700; font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; }
