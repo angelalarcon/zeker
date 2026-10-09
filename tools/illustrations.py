@@ -459,6 +459,48 @@ def car_side(color=BLUE_CAR, dark=BLUE_CAR_D):
             f'<rect x="80" y="-34" width="8" height="8" rx="2" fill="{MUSTARD}"/>')
 
 
+def plane():
+    """Avión de pasajeros de perfil, morro a la derecha; origen en el centro del fuselaje."""
+    win = "".join(f'<rect x="{-56 + i * 14}" y="-7" width="7" height="8" rx="3" fill="{PLUM_M}"/>' for i in range(8))
+    return (f'<path d="M-34,4 L-58,26 h14 L-2,6 z" fill="#C9C3E0"/>'
+            f'<path d="M-96,-6 Q-100,-18 -88,-18 H72 Q104,-18 112,-2 Q104,14 72,14 H-80 Q-96,14 -96,-6 z" fill="{CLOUD}"/>'
+            f'<path d="M-96,2 Q-96,14 -80,14 H72 Q104,14 112,-2 Q96,8 72,8 H-80 Q-92,8 -96,2 z" fill="{SNOW_SH}"/>'
+            f'<path d="M-80,-18 L-104,-58 h20 L-56,-18 z" fill="{RED}"/><path d="M-92,-38 l8,-20 h10 l-14,20 z" fill="{MUSTARD}"/>'
+            f'<path d="M-84,-2 h170" stroke="{RED}" stroke-width="4"/>'
+            f'<path d="M84,-12 q10,0 16,6 h-14 z" fill="#3B3550"/>' + win +
+            f'<path d="M-14,4 L16,4 L-24,30 h-14 z" fill="#E4DFF2"/>')
+
+
+def palm(x, y, h, lean=0.25, light=G_MID2, dark=G_DARK, trunk="#B98A5E", trunk_d="#9A6E48"):
+    """Palmera canaria: tronco curvo por anillos y abanico de hojas en dos tonos."""
+    o = []
+    tx, ty = x, y
+    n = 9
+    for i in range(n):
+        t = (i + 1) / n
+        nx = x + h * lean * t * t
+        ny = y - h * t
+        w = 11 - 4 * t
+        o.append(f'<path d="M{f(tx - w)},{f(ty)} L{f(nx - w + 1)},{f(ny)} L{f(nx + w - 1)},{f(ny)} L{f(tx + w)},{f(ty)} Z" fill="{trunk if i % 2 else trunk_d}"/>')
+        tx, ty = nx, ny
+    for ang, c in ((-160, dark), (-130, light), (-100, dark), (-70, light), (-40, dark), (-15, light), (10, dark), (-190, light)):
+        a = math.radians(ang)
+        ex, ey = tx + math.cos(a) * h * 0.42, ty + math.sin(a) * h * 0.28 + h * 0.12
+        mx, my = tx + math.cos(a) * h * 0.22, ty - h * 0.1 + math.sin(a) * h * 0.1
+        o.append(f'<path d="M{f(tx)},{f(ty)} Q{f(mx)},{f(my - 14)} {f(ex)},{f(ey)} Q{f(mx)},{f(my + 4)} {f(tx)},{f(ty)} Z" fill="{c}"/>')
+    o.append(f'<circle cx="{f(tx)}" cy="{f(ty + 4)}" r="5" fill="{MUSTARD_D}"/>')
+    return "".join(o)
+
+
+def cube_house(x, y, w, h, wall="#FFFDF7", side="#E6DDF0", trim=SEA):
+    """Casa encalada canaria de techo plano con puerta de color."""
+    sd = w * 0.3
+    return (f'<path d="M{f(x + w)},{f(y)} V{f(y - h)} l{f(sd)},{f(-sd * 0.25)} V{f(y - sd * 0.25)} Z" fill="{side}"/>'
+            f'<rect x="{f(x)}" y="{f(y - h)}" width="{f(w)}" height="{f(h)}" fill="{wall}"/>'
+            f'<rect x="{f(x - 2)}" y="{f(y - h - 4)}" width="{f(w + 4)}" height="5" fill="{side}"/>'
+            f'<rect x="{f(x + w * 0.4)}" y="{f(y - h * 0.5)}" width="{f(w * 0.22)}" height="{f(h * 0.5)}" rx="{f(w * 0.11)}" fill="{trim}"/>')
+
+
 # ---------- la web en construcción ----------
 
 def browser_site(x0, y0, w, h, url="tunegocio.es"):
@@ -878,6 +920,39 @@ def cover_transporte():
     return L
 
 
+def cover_aerolinea():
+    W, H = 600, 800
+    rng = random.Random(17)
+    L = Layers("cover-aerolinea", W, H)
+    b = L.layer("sky", 0)
+    b.append(sky(W, H, [(0, "#7FB2E2"), (0.45, "#BCD9EF"), (0.66, "#FBEFD8")]))
+    b.append(sun_glow(110, 330, 34, "#FFF6E2"))
+    b.append(puffs(rng, 8, (0, 30, W, 300), [CLOUD], 3, 7))
+    b.append(cloud(-80, 340, 0.85, extra=' class="drift"'))
+    b.append(cloud(470, 310, 0.75, PEACH, PEACH_SH, ' class="drift slow"'))
+    # estela y avión
+    b = L.layer("volcano", 0.15)
+    b.append(mountain(rng, (90, 520), (360, 372), (640, 520), 520, light="#C7A9C4", shadow="#9C7FA4", deep="#7E648C", snow_t=0.22))
+    b.append(mountain(rng, (-60, 520), (90, 440), (260, 520), 520, light="#B9A5D0", shadow="#8F7EB2", deep="#76689C", snow=LILAC_L, snow_sh=LILAC, snow_t=0.15))
+    b = L.layer("plane", 0.35)
+    b.append(f'<g class="fly"><path d="M-20,446 Q170,430 340,404" stroke="#FFFFFF" stroke-width="6" fill="none" stroke-linecap="round" opacity=".75"/>'
+             f'<g transform="translate(410,392) rotate(-10) scale(0.72)">{plane()}</g></g>')
+    b = L.layer("sea", 0.3)
+    b.append(f'<rect x="0" y="508" width="{W}" height="140" fill="{SEA}"/><rect x="0" y="508" width="{W}" height="7" fill="{SEA_L}"/>')
+    for i in range(13):
+        b.append(f'<rect x="{f(rng.uniform(0, 520))}" y="{524 + i * 9}" width="{f(rng.uniform(24, 80))}" height="3" rx="1.5" fill="{SEA_L if i % 3 else CLOUD}" opacity=".85"/>')
+    b.append(lit_hill([(-20, 560), (140, 520), (300, 545), (420, 530), (620, 556)], "#E3B77A", "#F2D29C", "#C9955E", rng, rim=7, folds=4,
+                      stipple=("#B07F50", 40, 1.2, 2.6)))
+    for i, (x, w, h) in enumerate(((60, 30, 22), (100, 26, 30), (140, 34, 20), (360, 30, 26), (400, 28, 20), (436, 34, 28))):
+        b.append(cube_house(x, 556 + (i % 2) * 4, w, h, trim=(SEA, RED, G_DARK)[i % 3]))
+    b = L.layer("front", 0.6)
+    b.append(lit_hill([(-20, 700), (200, 668), (420, 690), (620, 660)], "#F2DDB0", "#FBEBC8", "#E2C48E", rng, rim=6))
+    b.append(palm(70, 790, 260, 0.22))
+    b.append(palm(520, 800, 230, -0.2, G_MID, G_DARK))
+    b.append(meadow_flowers(rng, 40, (0, 700, 600, 800), colors=("#E85C8A", "#F08AB0", CREAM, MUSTARD)))
+    return L
+
+
 def sunset():
     W, H = 1600, 700
     rng = random.Random(21)
@@ -918,7 +993,7 @@ def main():
     for old in OUT.glob("*.svg"):
         old.unlink()
     manifest = {}
-    for scene in (meeting(), cover_restaurante(), cover_taller(), cover_transporte(), sunset()):
+    for scene in (meeting(), cover_restaurante(), cover_taller(), cover_transporte(), cover_aerolinea(), sunset()):
         files = scene.files()
         for name, content in files.items():
             (OUT / name).write_text(content + "\n")
