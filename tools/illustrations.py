@@ -683,7 +683,7 @@ def meeting():
     b.append(sky(W, H, [(0, "#F6E3C4"), (1, "#FBF4E4")]))
     b.append(sun_glow(470, 110, 40, PEACH, PEACH))
     b.append(cloud(30, 70, 0.8, PEACH, PEACH_SH, ' class="drift"'))
-    b.append(cloud(330, 150, 0.55, extra=' class="drift slow"'))
+    b.append(cloud(360, 52, 0.5, extra=' class="drift slow"'))
     b.append(puffs(rng, 10, (0, 20, W, 180), [PEACH, CLOUD], 3, 7))
     b = L.layer("hills", 0.2)
     b.append(mountain_range(rng, -10, 610, 270, [(130, 200), (330, 215), (520, 190)], jag=0.6))
@@ -698,17 +698,31 @@ def meeting():
         b.append(f'<path d="M{f(-240 + i * 130)},450 L{f(130 + i * 50)},300" stroke="#DDB98C" stroke-width="3"/>')
     b.append(f'<path d="M0,300 h{W} v8 h-{W} z" fill="#DDB98C"/>')
     b.append(f'<ellipse cx="330" cy="420" rx="210" ry="22" fill="{PLUM}" opacity=".12"/>')
-    # sombrilla
-    b.append(f'<rect x="296" y="96" width="8" height="250" fill="{PLUM_M}"/><rect x="296" y="96" width="3" height="250" fill="{PLUM_L}"/>')
-    b.append(f'<path d="M140,150 Q300,40 460,150 Z" fill="{ORANGE}"/>')
-    for i in range(4):
-        b.append(f'<path d="M{f(140 + i * 80)},150 Q{f(180 + i * 80)},122 {f(220 + i * 80)},150 Z" fill="{CREAM if i % 2 else POPPY}"/>')
-    b.append(f'<path d="M300,62 Q400,80 460,150 L300,150 Z" fill="#000" opacity=".08"/>')
-    # sillas
-    for x0, flip in ((120, 1), (480, -1)):
-        b.append(f'<g transform="translate({x0},0) scale({flip},1)"><rect x="0" y="270" width="14" height="110" rx="4" fill="{PLUM}"/>'
-                 f'<rect x="-10" y="330" width="70" height="12" rx="4" fill="{PLUM}"/><rect x="46" y="336" width="10" height="60" fill="{PLUM}"/>'
-                 f'<rect x="0" y="270" width="5" height="110" rx="2" fill="{PLUM_L}"/></g>')
+    # sillas de bistró a los lados de la mesa (respaldo, asiento y cuatro patas)
+    for cx in (78, 522):
+        w = 76
+        x = cx - w / 2
+        b.append(f'<rect x="{f(x + 8)}" y="250" width="6" height="150" rx="3" fill="{PLUM_M}"/>'
+                 f'<rect x="{f(x + w - 14)}" y="250" width="6" height="150" rx="3" fill="{PLUM_M}"/>'
+                 f'<rect x="{f(x)}" y="242" width="{w}" height="46" rx="12" fill="{PLUM}"/>'
+                 f'<rect x="{f(x + 10)}" y="254" width="{w - 20}" height="5" rx="2.5" fill="{PLUM_L}"/>'
+                 f'<rect x="{f(x + 10)}" y="268" width="{w - 20}" height="5" rx="2.5" fill="{PLUM_L}"/>'
+                 f'<rect x="{f(x - 6)}" y="326" width="{w + 12}" height="14" rx="5" fill="{PLUM}"/>'
+                 f'<rect x="{f(x - 6)}" y="326" width="{w + 12}" height="4" rx="2" fill="{PLUM_L}"/>'
+                 f'<rect x="{f(x - 2)}" y="338" width="7" height="74" rx="3" fill="{PLUM}"/>'
+                 f'<rect x="{f(x + w - 5)}" y="338" width="7" height="74" rx="3" fill="{PLUM}"/>'
+                 f'<ellipse cx="{f(cx)}" cy="414" rx="{f(w * 0.6)}" ry="6" fill="{PLUM}" opacity=".12"/>')
+    # sombrilla: lona con la mitad derecha en sombra (recortada a la propia lona) y faldón ondulado
+    canopy = "M136,152 Q300,36 464,152 Z"
+    cid = clip(canopy)
+    b.append(f'<rect x="296" y="100" width="8" height="246" fill="{PLUM_M}"/><rect x="296" y="100" width="3" height="246" fill="{PLUM_L}"/>')
+    b.append(f'<path d="{canopy}" fill="{ORANGE}"/>'
+             f'<g clip-path="url(#{cid})"><rect x="300" y="30" width="170" height="130" fill="#C95F2E"/>'
+             f'<path d="M136,152 Q300,36 464,152" fill="none" stroke="#F2995E" stroke-width="10" transform="translate(-4,6)"/></g>')
+    for i in range(6):
+        x0 = 136 + i * (328 / 6)
+        b.append(f'<path d="M{f(x0)},150 h{f(328 / 6)} q{f(-164 / 6)},22 {f(-328 / 6)},0 z" fill="{(ORANGE if i < 3 else "#C95F2E") if i % 2 == 0 else CREAM}"/>')
+    b.append(f'<circle cx="300" cy="94" r="7" fill="{PLUM_M}"/>')
     # mesa
     b.append(f'<rect x="290" y="300" width="20" height="120" fill="{PLUM_M}"/><ellipse cx="300" cy="420" rx="60" ry="10" fill="{PLUM_M}"/>')
     b.append(f'<ellipse cx="300" cy="306" rx="170" ry="34" fill="{WALL_SH}"/><ellipse cx="300" cy="298" rx="170" ry="32" fill="{CREAM}"/>'
