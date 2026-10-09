@@ -34,9 +34,24 @@
   function clamp(v, a, b) { return Math.min(b, Math.max(a, v)); }
   function ease(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
 
+  // En modo carrusel (assets/slides.js) la construcción se reproduce sola al entrar en la sección.
+  const PLAY_MS = 3600;
+  let playStart = null;
+  document.addEventListener("slide:enter", function (e) {
+    if (!e.detail.contains(section)) return;
+    playStart = performance.now() + 450;
+    start();
+  });
+  document.addEventListener("slide:leave", function (e) {
+    if (e.detail.contains(section)) { playStart = null; running = false; }
+  });
+
   // Progreso del scroll dentro de la sección: la construcción ocurre entre el 8% y el 85%.
   function buildProgress() {
     if (reduceMotion) return 1;
+    if (document.documentElement.classList.contains("slides-on")) {
+      return playStart === null ? 0 : clamp((performance.now() - playStart) / PLAY_MS, 0, 1);
+    }
     const r = section.getBoundingClientRect();
     const total = r.height - window.innerHeight;
     const p = total > 0 ? clamp(-r.top / total, 0, 1) : 1;
@@ -108,13 +123,17 @@
     return;
   }
 
-  new IntersectionObserver(function (entries) {
-    const visible = entries[0].isIntersecting;
-    if (visible && !running) {
+  function start() {
+    if (!running) {
       running = true;
       requestAnimationFrame(loop);
-    } else if (!visible) {
-      running = false;
     }
+  }
+
+  new IntersectionObserver(function (entries) {
+    if (document.documentElement.classList.contains("slides-on")) return;
+    const visible = entries[0].isIntersecting;
+    if (visible) start();
+    else running = false;
   }).observe(section);
 })();

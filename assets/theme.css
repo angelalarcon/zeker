@@ -102,8 +102,28 @@ body { background: var(--page); color: #54445A; overflow-x: clip; }
   display: flex; flex-direction: column; justify-content: center;
 }
 .panel > * { width: 100%; }
-/* capa fija donde se dibujan la Z y la K al pasar de una sección a otra */
-.zk-layer { position: fixed; left: 0; width: 100%; z-index: 25; pointer-events: none; opacity: 0; will-change: opacity; }
+/* ---------- Carrusel de secciones (assets/slides.js) ---------- */
+.slides-on, .slides-on body { height: 100%; overflow: hidden; overscroll-behavior: none; }
+.slides-on #main-content { position: fixed; top: var(--nav-h); left: 0; right: 0; bottom: 0; z-index: 1; pointer-events: none; }
+.slides-on #hero-header, .slides-on .panel {
+  position: fixed; top: var(--nav-h); left: 0; right: 0; bottom: 0; min-height: 0;
+  overflow-y: auto; overscroll-behavior: contain; visibility: hidden; z-index: 1;
+  display: flex; flex-direction: column; justify-content: flex-start;
+}
+.slides-on .panel { position: absolute; top: 0; }
+.slides-on #hero-header > :first-child { margin-top: auto; }
+.slides-on #hero-header > :last-child { margin-bottom: auto; }
+.slides-on .panel > * { margin-block: auto; }
+.slides-on #hero-header.is-active, .slides-on .panel.is-active { visibility: visible; z-index: 3; pointer-events: auto; }
+/* "Construimos" deja de depender del scroll: ocupa una pantalla y se reproduce sola */
+.slides-on #build { height: auto !important; }
+.slides-on #build > div { position: relative; height: calc(100vh - var(--nav-h)) !important; height: calc(100svh - var(--nav-h)) !important; padding-top: 1.5rem; }
+/* la letra que tapa y destapa cada sección */
+.zk-cover { position: fixed; top: var(--nav-h); left: 0; width: 100%; height: calc(100% - var(--nav-h)); z-index: 60; pointer-events: none; visibility: hidden; }
+.slide-dots { position: fixed; right: .9rem; top: 50%; transform: translateY(-50%); z-index: 26; display: flex; flex-direction: column; gap: .55rem; }
+.slide-dots button { width: .55rem; height: .55rem; border-radius: 99px; background: #CDBBAA; transition: height .25s ease, background-color .25s ease; }
+.slide-dots button[aria-current="true"] { height: 1.5rem; background: var(--terracotta); }
+@media (max-width: 639px) { .slide-dots { right: .35rem; gap: .45rem; } .slide-dots button { width: .4rem; height: .4rem; } .slide-dots button[aria-current="true"] { height: 1.1rem; } }
 
 /* ---------- Dos caminos ---------- */
 .wheel-idle { animation: wheel-rock 6s ease-in-out infinite; filter: drop-shadow(0 18px 18px rgb(66 52 74 / .18)); }
