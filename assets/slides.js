@@ -156,6 +156,8 @@
   }
 
   function show(i) {
+    root.classList.toggle("at-start", i === 0);
+    if (i !== 0) window.scrollTo(0, 0);
     slides.forEach(function (s, k) {
       const on = k === i;
       s.classList.toggle("is-active", on);
@@ -249,6 +251,7 @@
   window.addEventListener("wheel", function (e) {
     if (insideOverlay(e.target) || root.querySelector("#demo:not([hidden])")) return;
     const dir = e.deltaY > 0 ? 1 : -1;
+    if (current === 0 && dir < 0 && !busy) return;  // arriba del todo: el gesto es del navegador
     if (busy) { e.preventDefault(); return; }
     if (!atEdge(dir)) { wheelAcc = 0; return; }   // primero se recorre la sección por dentro
     e.preventDefault();
@@ -297,6 +300,7 @@
     if (key === "Home") { e.preventDefault(); go(0); return; }
     if (key === "End") { e.preventDefault(); go(slides.length - 1); return; }
     if (!dir) return;
+    if (current === 0 && dir < 0) return;
     if (!atEdge(dir)) {  // primero se recorre la sección por dentro
       e.preventDefault();
       const s = slides[current];

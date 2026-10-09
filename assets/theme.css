@@ -111,8 +111,12 @@ body { background: var(--page); color: #54445A; overflow-x: clip; }
   display: flex; flex-direction: column; justify-content: flex-start;
 }
 .slides-on .panel { position: absolute; top: 0; }
-/* en la portada se deja pasar el gesto nativo de tirar para recargar */
-.slides-on #hero-header { overscroll-behavior-y: auto; }
+/* En la portada el gesto hacia arriba es del navegador (tirar para recargar): la página raíz vuelve
+   a poder desplazarse (1 px de margen para que el navegador la reconozca) y el hero no tiene scroll
+   propio que se quede el gesto. */
+.slides-on #hero-header { overflow: visible; overscroll-behavior-y: auto; }
+.slides-on.at-start, .slides-on.at-start body { overflow: visible; overscroll-behavior-y: auto; }
+.slides-on.at-start body { height: auto; min-height: calc(100% + 1px); }
 .slides-on #hero-header > :first-child { margin-top: auto; }
 .slides-on #hero-header > :last-child { margin-bottom: auto; }
 .slides-on .panel > * { margin-block: auto; }
