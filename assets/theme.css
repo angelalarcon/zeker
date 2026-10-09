@@ -5,8 +5,11 @@
   --terracotta: #C24F2C;
 }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: clip; }
 body { background: var(--paper); color: #54445A; overflow-x: clip; }
+@supports not (overflow: clip) {
+  html, body { overflow-x: hidden; }
+}
 
 /* Grano de papel sobre toda la página */
 body::after {
@@ -40,6 +43,14 @@ body::after {
   text-transform: uppercase;
   letter-spacing: .22em;
   color: var(--terracotta);
+}
+
+/* En móvil, los títulos grandes se ajustan al ancho: la palabra más larga ("¿Empezamos?")
+   mide ~8,3 veces el tamaño de la fuente, así que nunca supera el ancho útil de la pantalla. */
+@media (max-width: 639px) {
+  :is(h1, h2).poster-title:not(.text-xl, .text-2xl, .text-3xl), #hero-split p.poster-title {
+    font-size: min(3rem, calc((100vw - 2.5rem) / 8.4)) !important;
+  }
 }
 
 /* Botones */
