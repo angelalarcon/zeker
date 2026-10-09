@@ -304,60 +304,159 @@ DRIFT_CSS = (
 
 # ---------- escenas ----------
 
+def browser_site(x0, y0, w, h, url="tunegocio.es"):
+    """Ventana de navegador con una web a medio construir; la tercera tarjeta queda vacía
+    para que la grúa la coloque. Devuelve (svg, (x, y, w, h) del hueco)."""
+    font = "font-family=\"'Josefin Sans', system-ui, sans-serif\" font-weight=\"700\""
+    o = [f'<rect x="{x0 + 10}" y="{y0 + 10}" width="{w}" height="{h}" rx="16" fill="{PLUM}"/>',
+         f'<rect x="{x0}" y="{y0}" width="{w}" height="{h}" rx="16" fill="{CREAM}" stroke="{PLUM}" stroke-width="4"/>',
+         f'<path d="M{x0 + 2},{y0 + 36} V{y0 + 16} a14,14 0 0 1 14,-14 h{w - 32} a14,14 0 0 1 14,14 V{y0 + 36} z" fill="#F6E7CB"/>',
+         f'<rect x="{x0}" y="{y0 + 36}" width="{w}" height="3" fill="{PLUM}"/>']
+    for i, c in enumerate((RED, MUSTARD, G_MID2)):
+        o.append(f'<circle cx="{x0 + 20 + i * 17}" cy="{y0 + 19}" r="5.5" fill="{c}"/>')
+    o.append(f'<rect x="{x0 + 76}" y="{y0 + 9}" width="{w - 96}" height="20" rx="10" fill="{CREAM}" stroke="{PLUM}" stroke-width="2"/>')
+    o.append(f'<circle cx="{x0 + 90}" cy="{y0 + 19}" r="4" fill="{G_DARK}"/>')
+    o.append(f'<text x="{x0 + 100}" y="{y0 + 24}" font-size="13" fill="{PLUM_M}" {font}>{url}</text>')
+    # cabecera de la web
+    cx0, cw = x0 + 16, w - 32
+    o.append(f'<circle cx="{cx0 + 9}" cy="{y0 + 56}" r="8" fill="{RED}"/>'
+             f'<rect x="{cx0 + 24}" y="{y0 + 52}" width="70" height="8" rx="4" fill="{PLUM}"/>'
+             f'<rect x="{x0 + w - 110}" y="{y0 + 47}" width="94" height="18" rx="9" fill="{RED}"/>'
+             f'<rect x="{x0 + w - 96}" y="{y0 + 54}" width="66" height="4" rx="2" fill="{CREAM}"/>')
+    # portada de la web: un paisaje dentro del paisaje
+    hy, hh = y0 + 76, 104
+    o.append(f'<defs><clipPath id="site-hero"><rect x="{cx0}" y="{hy}" width="{cw}" height="{hh}" rx="10"/></clipPath>'
+             f'<linearGradient id="site-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{SKY_MID}"/><stop offset="1" stop-color="{SKY_LOW}"/></linearGradient></defs>')
+    o.append(f'<g clip-path="url(#site-hero)"><rect x="{cx0}" y="{hy}" width="{cw}" height="{hh}" fill="url(#site-sky)"/>'
+             f'<circle cx="{cx0 + cw - 70}" cy="{hy + 40}" r="20" fill="{CLOUD}"/>'
+             + hill([(cx0, hy + 82), (cx0 + cw * 0.35, hy + 70), (cx0 + cw * 0.7, hy + 84), (cx0 + cw, hy + 72)], G_MID, bottom=hy + hh)
+             + f'</g>')
+    o.append(f'<text x="{cx0 + 18}" y="{hy + 38}" font-size="22" letter-spacing="1.5" fill="{PLUM}" {font}>TU NEGOCIO</text>'
+             f'<rect x="{cx0 + 18}" y="{hy + 48}" width="120" height="6" rx="3" fill="{PLUM_L}"/>'
+             f'<rect x="{cx0 + 18}" y="{hy + 62}" width="78" height="20" rx="10" fill="{RED}"/>'
+             f'<rect x="{cx0 + 32}" y="{hy + 70}" width="50" height="4" rx="2" fill="{CREAM}"/>')
+    # tarjetas: restaurante, taller y el hueco que falta
+    ty, th, gap = hy + hh + 12, h - (hy + hh + 12 - y0) - 14, 12
+    tw = (cw - 2 * gap) / 3
+    for i in range(2):
+        tx = cx0 + i * (tw + gap)
+        o.append(f'<rect x="{f(tx)}" y="{ty}" width="{f(tw)}" height="{th}" rx="8" fill="{CLOUD}" stroke="{WALL2}" stroke-width="2"/>')
+        o.append(f'<rect x="{f(tx + 12)}" y="{ty + th - 22}" width="{f(tw * 0.55)}" height="6" rx="3" fill="{PLUM}"/>'
+                 f'<rect x="{f(tx + 12)}" y="{ty + th - 12}" width="{f(tw * 0.35)}" height="4" rx="2" fill="{PLUM_L}"/>')
+        ix, iy = tx + 12, ty + 10
+        if i == 0:  # toldo de restaurante
+            o.append("".join(f'<rect x="{f(ix + k * 8)}" y="{iy}" width="8" height="10" fill="{RED if k % 2 == 0 else CREAM}"/>' for k in range(5)))
+            o.append("".join(f'<circle cx="{f(ix + 4 + k * 8)}" cy="{iy + 10}" r="4" fill="{RED if k % 2 == 0 else CREAM}"/>' for k in range(5)))
+        else:  # llave de taller
+            o.append(f'<rect x="{f(ix + 6)}" y="{iy + 6}" width="30" height="6" rx="3" fill="{BLUE_CAR}" transform="rotate(-20 {f(ix + 20)} {iy + 9})"/>'
+                     f'<circle cx="{f(ix + 6)}" cy="{iy + 14}" r="7" fill="{BLUE_CAR}"/><circle cx="{f(ix + 6)}" cy="{iy + 14}" r="3" fill="{CLOUD}"/>')
+    slot = (cx0 + 2 * (tw + gap), ty, tw, th)
+    sx, sy, sw, sh = slot
+    o.append(f'<rect x="{f(sx)}" y="{sy}" width="{f(sw)}" height="{sh}" rx="8" fill="none" stroke="{PLUM_L}" stroke-width="2" stroke-dasharray="7 6"/>')
+    return "".join(o), slot
+
+
+def transport_card(w, h):
+    """Tarjeta de transporte que baja la grúa; origen arriba a la izquierda."""
+    return (f'<rect width="{f(w)}" height="{h}" rx="8" fill="{CLOUD}" stroke="{PLUM}" stroke-width="2"/>'
+            f'<rect x="12" y="12" width="26" height="14" rx="2" fill="{ORANGE}"/><path d="M38,15 h7 l5,6 v5 h-12 z" fill="{ORANGE}"/>'
+            f'<circle cx="18" cy="27" r="4" fill="{PLUM}"/><circle cx="42" cy="27" r="4" fill="{PLUM}"/>'
+            f'<rect x="12" y="{h - 22}" width="{f(w * 0.55)}" height="6" rx="3" fill="{PLUM}"/>'
+            f'<rect x="12" y="{h - 12}" width="{f(w * 0.35)}" height="4" rx="2" fill="{PLUM_L}"/>')
+
+
+def scaffolding(x0, x1, top, base):
+    o = []
+    for x in (x0, x1):
+        o.append(f'<rect x="{x - 2}" y="{top}" width="4" height="{base - top}" fill="{PLUM_M}"/>')
+    y = base
+    while y - 50 >= top:
+        o.append(f'<path d="M{x0},{y} L{x1},{y - 50}" stroke="{PLUM_L}" stroke-width="2.5"/>')
+        o.append(f'<rect x="{x0 - 6}" y="{y - 52}" width="{x1 - x0 + 12}" height="6" rx="1" fill="{MUSTARD}"/>')
+        y -= 50
+    return "".join(o)
+
+
+def crane(mast_x, base, top, jib_left, jib_right, trolley_x):
+    o = [f'<rect x="{mast_x - 12}" y="{top}" width="24" height="{base - top}" fill="none" stroke="{ORANGE}" stroke-width="4"/>']
+    y = base
+    while y - 24 > top:
+        o.append(f'<path d="M{mast_x - 12},{y} L{mast_x + 12},{y - 24} M{mast_x + 12},{y - 24} L{mast_x - 12},{y - 48}" stroke="{ORANGE}" stroke-width="2.5"/>')
+        y -= 48
+    o.append(f'<rect x="{jib_left}" y="{top - 16}" width="{jib_right - jib_left}" height="14" fill="none" stroke="{ORANGE}" stroke-width="3.5"/>')
+    x = jib_left
+    while x + 28 <= jib_right:
+        o.append(f'<path d="M{x},{top - 2} L{x + 14},{top - 16} L{x + 28},{top - 2}" fill="none" stroke="{ORANGE}" stroke-width="2"/>')
+        x += 28
+    o.append(f'<path d="M{mast_x},{top - 16} L{mast_x},{top - 52} L{jib_left + 30},{top - 16} M{mast_x},{top - 52} L{jib_right - 10},{top - 16}" fill="none" stroke="{PLUM_M}" stroke-width="2"/>')
+    o.append(f'<rect x="{jib_right - 36}" y="{top - 2}" width="34" height="30" rx="3" fill="{PLUM_M}"/>')
+    o.append(f'<rect x="{mast_x + 12}" y="{top}" width="30" height="24" rx="4" fill="{MUSTARD}"/><rect x="{mast_x + 18}" y="{top + 5}" width="18" height="10" rx="2" fill="{SEA_L}"/>')
+    o.append(f'<rect x="{trolley_x - 10}" y="{top - 2}" width="20" height="8" rx="2" fill="{PLUM}"/>')
+    return "".join(o)
+
+
 def hero():
     W, H = 1600, 1000
     rng = random.Random(7)
     b = [sky("hero-sky", W, H, [(0, SKY_TOP), (0.42, SKY_MID), (0.62, SKY_LOW)])]
-    b.append(f'<circle cx="1210" cy="420" r="70" fill="{CLOUD}" opacity=".9"/>')
+    b.append(f'<circle cx="1260" cy="430" r="66" fill="{CLOUD}" opacity=".9"/>')
     b.append(dots(rng, 12, (0, 40, W, 380), 3, 8, [CLOUD]))
     b.append(cloud(60, 120, 1.3, CLOUD, ' class="drift"'))
     b.append(cloud(1300, 90, 1.5, CLOUD, ' class="drift slow"'))
-    b.append(cloud(380, 300, 0.8, PEACH, ' class="drift slow"'))
-    b.append(cloud(1100, 270, 0.9, CLOUD, ' class="drift"'))
-    b.append(cloud(-40, 420, 1.0, CLOUD, ' class="drift slow"'))
+    b.append(cloud(330, 330, 0.8, PEACH, ' class="drift slow"'))
+    b.append(cloud(-40, 440, 1.0, CLOUD, ' class="drift slow"'))
     b.append(cloud(1420, 380, 1.1, PEACH, ' class="drift"'))
-    b.append(birds(1240, 200, 1.2, PLUM, ' class="hero-birds"'))
-    # montañas
+    b.append(birds(1240, 220, 1.2, PLUM, ' class="hero-birds"'))
     b.append(mountains([(0, 640), (120, 560), (230, 600), (360, 480), (470, 560), (560, 520), (660, 600), (760, 540),
                         (880, 470), (990, 560), (1080, 500), (1200, 590), (1320, 470), (1450, 560), (1600, 520)],
                        700, LILAC, LILAC_D, SNOW))
-    # colinas
     b.append(hill([(0, 640), (260, 610), (520, 660), (800, 630), (1100, 650), (1380, 600), (1600, 640)], G_MID))
     for x in range(20, 1600, 46):
-        if 640 < x < 1000:
+        if 470 < x < 1130:
             continue
         b.append(conifer(x + rng.uniform(-10, 10), 680 + rng.uniform(-24, 10), rng.uniform(40, 70)))
     b.append(hill([(0, 720), (300, 690), (640, 700), (900, 680), (1200, 710), (1600, 680)], G_MID2))
-    # pueblo: los tres negocios
-    b.append(house(560, 712, 54, 46, WALL, ROOF))
-    b.append(church(626, 714, 0.9))
-    b.append(restaurant(670, 726, 0.95))
-    b.append(workshop(830, 730, 0.92))
-    b.append(warehouse(1000, 734, 0.9))
-    b.append(house(1170, 730, 58, 44, WALL2, PLUM_M))
-    b.append(cypress(540, 740, 90))
-    b.append(cypress(1250, 742, 110))
-    b.append(cypress(1275, 746, 76))
-    b.append(round_tree(1150, 760, 22))
-    b.append(round_tree(520, 760, 20))
+    # los negocios del pueblo, a los lados
+    b.append(house(170, 716, 54, 46, WALL, ROOF))
+    b.append(church(236, 718, 0.9))
+    b.append(restaurant(280, 730, 0.95))
+    b.append(cypress(460, 744, 96))
+    b.append(workshop(1170, 732, 0.92))
+    b.append(warehouse(1340, 736, 0.85))
+    b.append(cypress(1150, 748, 86))
+    b.append(round_tree(1500, 766, 22))
     b.append(hill([(0, 790), (250, 760), (500, 775), (800, 760), (1100, 780), (1350, 750), (1600, 780)], G_LIGHT))
-    for x in (90, 180, 1420, 1520):
+    for x in (90, 180, 1440, 1530):
         b.append(conifer(x, 800 + rng.uniform(-10, 10), rng.uniform(90, 130), G_DARK, G_MID2))
-    # carretera hasta el pueblo
-    b.append(flowers(rng, 160, (0, 800, W, 1000)))
-    rd, center = road([(790, 1020), (850, 930), (790, 850), (850, 785), (880, 745)], 170, 12, steps=18)
+    b.append(flowers(rng, 150, (0, 800, W, 1000)))
+    # la carretera lleva a la web
+    rd, center = road([(760, 1030), (835, 970), (790, 925), (800, 892)], 160, 44, steps=18)
     b.append(rd)
+    # la web en construcción: andamio, ventana y grúa
+    bx, by, bw, bh = 560, 626, 480, 270
+    b.append(scaffolding(522, 548, by + 40, by + bh + 4))
+    site, (sx, sy, sw, sh) = browser_site(bx, by, bw, bh)
+    b.append(site)
+    trolley = sx + sw / 2
+    b.append(crane(1100, by + bh + 4, 606, int(sx - 10), 1230, round(trolley)))
+    # la grúa baja la última pieza a su hueco
+    drop = 120
+    b.append(f'<line x1="{f(trolley)}" y1="612" x2="{f(trolley)}" y2="{f(sy - 14)}" stroke="{PLUM}" stroke-width="2">'
+             f'<animate attributeName="y2" values="{f(sy - 14 - drop)};{f(sy - 14)};{f(sy - 14)}" keyTimes="0;0.55;1" dur="7s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1;0 0 1 1"/></line>')
+    b.append(f'<g><animateTransform attributeName="transform" type="translate" values="0,{-drop};0,0;0,0" keyTimes="0;0.55;1" dur="7s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1;0 0 1 1"/>'
+             f'<path d="M{f(trolley - 14)},{f(sy)} L{f(trolley)},{f(sy - 14)} L{f(trolley + 14)},{f(sy)}" fill="none" stroke="{PLUM}" stroke-width="2"/>'
+             f'<g transform="translate({f(sx)},{f(sy)})">{transport_card(sw, sh)}</g></g>')
     # primer plano: crema del papel para fundirse con la página
     b.append(hill([(0, 960), (300, 940), (700, 975), (1000, 950), (1300, 935), (1600, 960)], CREAM))
     for x, s in ((150, 1.4), (230, 1.0), (1380, 1.2), (1470, 1.5)):
         b.append(poppy(x, 990, s))
-    # furgoneta que sube hacia el pueblo
+    # la furgoneta llega con lo que nos cuentas
     b.append(
         '<g class="hero-van">'
-        f'<animateMotion dur="14s" repeatCount="indefinite" rotate="0" path="{center}" keyTimes="0;1" keyPoints="0;1" calcMode="linear"/>'
-        '<g><animateTransform attributeName="transform" type="scale" values="1.05;0.12" keyTimes="0;1" dur="14s" repeatCount="indefinite" calcMode="spline" keySplines="0.2 0.6 0.4 1"/>'
+        f'<animateMotion dur="9s" repeatCount="indefinite" rotate="0" path="{center}" keyTimes="0;1" keyPoints="0;1" calcMode="linear"/>'
+        '<g><animateTransform attributeName="transform" type="scale" values="0.95;0.32" keyTimes="0;1" dur="9s" repeatCount="indefinite" calcMode="spline" keySplines="0.2 0.6 0.4 1"/>'
         + van_back() + '</g>'
-        '<animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.06;0.9;1" dur="14s" repeatCount="indefinite"/>'
+        '<animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.85;1" dur="9s" repeatCount="indefinite"/>'
         '</g>')
     return svg(W, H, "".join(b), cls="hero-svg",
                extra_attrs=' preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false"')
@@ -470,7 +569,7 @@ def cover_taller():
     b = [sky("ct-sky", W, H, [(0, SKY_TOP), (0.45, SKY_MID), (0.7, SKY_LOW)])]
     b.append(dots(rng, 8, (0, 30, W, 300), 3, 8, [CLOUD]))
     b.append(cloud(-80, 330, 0.85, CLOUD, ' class="drift"'))
-    b.append(cloud(480, 330, 0.75, CLOUD, ' class="drift slow"'))
+    b.append(cloud(500, 410, 0.6, CLOUD, ' class="drift slow"'))
     b.append(birds(430, 330, 0.9, PLUM))
     b.append(mountains([(0, 440), (90, 360), (180, 410), (290, 330), (390, 420), (480, 350), (600, 410)], 500, LILAC, LILAC_D, SNOW))
     b.append(hill([(0, 470), (200, 450), (400, 470), (600, 440)], G_MID))
@@ -532,7 +631,12 @@ def sunset():
     W, H = 1600, 700
     rng = random.Random(21)
     b = [sky("ss-sky", W, H, [(0, "#F6D9B8"), (0.45, "#F2B48E"), (0.75, "#E9895A")])]
-    b.append(f'<circle cx="800" cy="470" r="150" fill="#FCE3B0"/>')
+    b.append(f'<circle cx="800" cy="470" r="230" fill="#FCE3B0" opacity=".45"/>')
+    b.append(f'<rect x="610" y="330" width="380" height="250" rx="22" fill="#FCE3B0"/>'
+             f'<rect x="610" y="330" width="380" height="44" rx="22" fill="#F9D58E"/><rect x="610" y="352" width="380" height="22" fill="#F9D58E"/>'
+             '<circle cx="640" cy="352" r="7" fill="#E9895A"/><circle cx="662" cy="352" r="7" fill="#EDB84E"/><circle cx="684" cy="352" r="7" fill="#A6CB72"/>'
+             '<rect x="708" y="343" width="250" height="18" rx="9" fill="#FCE3B0"/>'
+             '<circle cx="800" cy="418" r="36" fill="#E9895A"/><path d="M783,419 l11,11 l23,-25" stroke="#FCE3B0" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round"/>')
     b.append(dots(rng, 20, (0, 30, W, 300), 4, 12, ["#F9E6CC", PEACH]))
     b.append(cloud(80, 160, 1.2, "#F9E6CC", ' class="drift"'))
     b.append(cloud(1250, 120, 1.4, "#F9E6CC", ' class="drift slow"'))
