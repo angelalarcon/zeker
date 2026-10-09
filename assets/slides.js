@@ -71,22 +71,31 @@
     fill.setAttribute("height", String(h));
   }
 
-  // La letra ocupa casi toda la pantalla con un trazo ancho, esquinas en ángulo y puntas rectas,
-  // para que se lea como Z o como K; el relleno tapa después los huecos que deja.
+  // La letra llega a los bordes de la pantalla en cualquier tamaño:
+  //  Z: barra pegada arriba de lado a lado, diagonal de la esquina superior derecha a la inferior
+  //     izquierda y barra pegada abajo de lado a lado;
+  //  K: asta pegada al borde izquierdo de arriba abajo y brazos que salen de su centro hasta las
+  //     dos esquinas derechas.
+  // Las puntas son rectas y las esquinas en ángulo, así que cada trazo termina justo en el borde.
   function letter(shape) {
     const m = Math.min(w, h);
     if (shape === "k") {
-      const x = w * 0.3, top = h * 0.07, bot = h * 0.93, tip = w * 0.9;
+      const sw = m * 0.3, x = sw / 2, my = h / 2;
+      // los brazos se alargan medio grosor más allá de la esquina para cubrirla del todo
+      function arm(cx, cy) {
+        const dx = cx - x, dy = cy - my, len = Math.hypot(dx, dy);
+        return (cx + dx / len * sw * 0.6) + " " + (cy + dy / len * sw * 0.6);
+      }
       return {
-        d: ["M" + x + " " + top + " V" + bot,
-            "M" + tip + " " + h * 0.1 + " L" + x + " " + h * 0.5 + " L" + tip + " " + h * 0.9],
-        width: m * 0.26,
+        d: ["M" + x + " 0 V" + h,
+            "M" + arm(w, 0) + " L" + x + " " + my + " L" + arm(w, h)],
+        width: sw,
       };
     }
-    const x0 = w * 0.08, x1 = w * 0.92, y0 = h * 0.16, y1 = h * 0.84;
+    const sw = m * 0.28, top = sw / 2, bot = h - sw / 2;
     return {
-      d: ["M" + x0 + " " + y0 + " H" + x1 + " L" + x0 + " " + y1 + " H" + x1, ""],
-      width: m * 0.24,
+      d: ["M0 " + top + " H" + w + " L0 " + bot + " H" + w, ""],
+      width: sw,
     };
   }
 
