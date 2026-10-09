@@ -31,26 +31,33 @@
     ["--t", "--l", "--r", "--b", "--rad"].forEach(function (k) { demo.style.setProperty(k, "0px"); });
   }
 
+  // Centro y tamaño reales (sin la inclinación de la animación de balanceo, que agranda la caja).
+  function box(el) {
+    const r = el.getBoundingClientRect();
+    const size = el.offsetWidth;
+    return { x: r.left + r.width / 2 - size / 2, y: r.top + r.height / 2 - size / 2, size: size };
+  }
+
   function flyWheel() {
     slot.innerHTML = "";
-    const from = wheelSrc.getBoundingClientRect();
-    const to = slot.getBoundingClientRect();
-    if (reduce || !from.width || !to.width) {
-      slot.innerHTML = '<img src="assets/illustrations/wheel.svg" alt="" />';
+    const from = box(wheelSrc);
+    const to = box(slot);
+    if (reduce || !from.size || !to.size) {
+      slot.innerHTML = '<img src="assets/illustrations/wheel.svg" alt="Rueda de coche" />';
       return;
     }
     wheelFly.style.transition = "none";
-    wheelFly.style.width = from.width + "px";
+    wheelFly.style.width = from.size + "px";
     wheelFly.style.opacity = "1";
-    wheelFly.style.transform = "translate(" + from.left + "px," + from.top + "px) rotate(0deg)";
+    wheelFly.style.transform = "translate(" + from.x + "px," + from.y + "px) rotate(0deg)";
     wheelFly.getBoundingClientRect();
     wheelFly.style.transition = "transform 1.1s cubic-bezier(.5,0,.2,1)";
-    const s = to.width / from.width;
-    wheelFly.style.transform = "translate(" + to.left + "px," + to.top + "px) scale(" + s + ") rotate(540deg)";
+    wheelFly.style.transform = "translate(" + to.x + "px," + to.y + "px) scale(" + to.size / from.size + ") rotate(540deg)";
     later(function () {
       slot.innerHTML = '<img src="assets/illustrations/wheel.svg" alt="Rueda de coche" />';
+      wheelFly.style.transition = "opacity .2s ease";
       wheelFly.style.opacity = "0";
-    }, 1150);
+    }, 1120);
   }
 
   function play(mode) {
@@ -58,7 +65,7 @@
     demo.classList.remove("is-built", "is-improved");
     if (mode === "nuevo") {
       later(function () { demo.classList.add("is-built"); }, 250);
-      later(flyWheel, 700);
+      later(flyWheel, 950);
     } else {
       later(function () { demo.classList.add("is-improved"); }, 1400);
     }

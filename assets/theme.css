@@ -96,17 +96,14 @@ body { background: var(--page); color: #54445A; overflow-x: clip; }
 
 /* ---------- Paneles con transición Z / K (assets/panels.js) ---------- */
 .hero-panel { min-height: calc(100vh - var(--nav-h)); min-height: calc(100svh - var(--nav-h)); }
-.panel { position: relative; background: var(--page); }
-.panels-on #hero-header { position: sticky; top: var(--nav-h); }
-.panels-on .panel {
-  position: sticky; top: var(--nav-h);
+.panel {
+  position: relative; background: var(--page);
   min-height: calc(100vh - var(--nav-h)); min-height: calc(100svh - var(--nav-h));
   display: flex; flex-direction: column; justify-content: center;
 }
-.panels-on .panel > * { width: 100%; }
-.panel-ink { position: absolute; inset: 0; z-index: 40; pointer-events: none; opacity: 0; }
-.panel-marker { height: 0; }
-.panel-dwell { height: 45vh; }
+.panel > * { width: 100%; }
+/* capa fija donde se dibujan la Z y la K al pasar de una sección a otra */
+.zk-layer { position: fixed; left: 0; width: 100%; z-index: 25; pointer-events: none; opacity: 0; will-change: opacity; }
 
 /* ---------- Dos caminos ---------- */
 .wheel-idle { animation: wheel-rock 6s ease-in-out infinite; filter: drop-shadow(0 18px 18px rgb(66 52 74 / .18)); }
