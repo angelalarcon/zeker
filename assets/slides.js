@@ -1,9 +1,10 @@
 // Carrusel de pantalla completa: el scroll no desplaza la página, solo pasa a la siguiente (o anterior)
 // sección. Cada cambio se hace con una letra de ZEKER dibujada enorme sobre la pantalla:
 // la Z (oscura, como en el logo) o la K (terracota, como en el logo), alternándose.
-//  1. el trazo grueso de la letra barre la pantalla y tapa la sección actual;
-//  2. con la pantalla cubierta se cambia de sección;
-//  3. el trazo se retira siguiendo su propio recorrido y deja ver la nueva sección.
+//  1. el trazo grueso de la letra se dibuja de borde a borde;
+//  2. la letra crece desde su centro hasta cubrir toda la pantalla;
+//  3. con la pantalla cubierta se cambia de sección;
+//  4. la letra se vuelve transparente y deja ver la nueva sección.
 // Una sección más alta que la pantalla se recorre primero por dentro; al llegar a su final,
 // el siguiente gesto cambia de sección.
 (function () {
@@ -29,10 +30,8 @@
   layer.setAttribute("class", "zk-cover");
   layer.setAttribute("aria-hidden", "true");
   layer.setAttribute("preserveAspectRatio", "none");
-  const fill = document.createElementNS(NS, "rect");
-  fill.setAttribute("x", "0");
-  fill.setAttribute("y", "0");
-  layer.appendChild(fill);
+  const group = document.createElementNS(NS, "g");
+  layer.appendChild(group);
   const strokes = [0, 1].map(function () {
     const p = document.createElementNS(NS, "path");
     p.setAttribute("fill", "none");
@@ -41,7 +40,7 @@
     p.setAttribute("stroke-linecap", "butt");
     p.setAttribute("pathLength", "1");
     p.style.strokeDasharray = "1 1";
-    layer.appendChild(p);
+    group.appendChild(p);
     return p;
   });
   document.body.appendChild(layer);
@@ -67,8 +66,6 @@
     w = window.innerWidth;
     h = window.innerHeight - navH;
     layer.setAttribute("viewBox", "0 0 " + w + " " + h);
-    fill.setAttribute("width", String(w));
-    fill.setAttribute("height", String(h));
   }
 
   // La letra llega a los bordes de la pantalla en cualquier tamaño:
@@ -86,17 +83,51 @@
         const dx = cx - x, dy = cy - my, len = Math.hypot(dx, dy);
         return (cx + dx / len * sw * 0.6) + " " + (cy + dy / len * sw * 0.6);
       }
+      const a1 = arm(w, 0).split(" ").map(Number), a2 = arm(w, h).split(" ").map(Number);
       return {
         d: ["M" + x + " 0 V" + h,
-            "M" + arm(w, 0) + " L" + x + " " + my + " L" + arm(w, h)],
+            "M" + a1.join(" ") + " L" + x + " " + my + " L" + a2.join(" ")],
         width: sw,
+        segs: [[x, 0, x, h], [x, my, a1[0], a1[1]], [x, my, a2[0], a2[1]]],
+        pivot: [x, my],
       };
     }
     const sw = m * 0.28, top = sw / 2, bot = h - sw / 2;
     return {
       d: ["M0 " + top + " H" + w + " L0 " + bot + " H" + w, ""],
       width: sw,
+      segs: [[0, top, w, top], [w, top, 0, bot], [0, bot, w, bot]],
+      pivot: [w / 2, h / 2],
     };
+  }
+
+  function segDist(px, py, s) {
+    const dx = s[2] - s[0], dy = s[3] - s[1];
+    const t = Math.max(0, Math.min(1, ((px - s[0]) * dx + (py - s[1]) * dy) / (dx * dx + dy * dy || 1)));
+    return Math.hypot(px - s[0] - t * dx, py - s[1] - t * dy);
+  }
+
+  // Cuánto hay que escalar la letra (desde su pivote) para que cubra toda la pantalla:
+  // búsqueda binaria comprobando una rejilla de puntos de la pantalla.
+  function coverScale(L) {
+    const half = L.width / 2, P = L.pivot;
+    function covers(sc) {
+      for (let i = 0; i <= 12; i++) {
+        for (let j = 0; j <= 12; j++) {
+          const qx = P[0] + (w * i / 12 - P[0]) / sc, qy = P[1] + (h * j / 12 - P[1]) / sc;
+          let d = Infinity;
+          L.segs.forEach(function (sg) { d = Math.min(d, segDist(qx, qy, sg)); });
+          if (d > half) return false;
+        }
+      }
+      return true;
+    }
+    let lo = 1, hi = 80;
+    for (let k = 0; k < 24; k++) {
+      const mid = (lo + hi) / 2;
+      if (covers(mid)) hi = mid; else lo = mid;
+    }
+    return hi * 1.08;
   }
 
   // ---------- secciones ----------
@@ -146,8 +177,6 @@
     const shape = edge % 2 === 1 ? "z" : "k";
     const color = COLORS[shape];
     const L = letter(shape);
-    fill.setAttribute("fill", color);
-    fill.style.opacity = "0";
     strokes.forEach(function (p, i) {
       p.setAttribute("d", L.d[i] || "M0 0");
       p.style.display = L.d[i] ? "" : "none";
@@ -155,30 +184,40 @@
       p.setAttribute("stroke-width", String(L.width));
       p.style.strokeDashoffset = "1";
     });
+    const big = coverScale(L);
+    const P = L.pivot;
+    function scaleTo(sc) {
+      group.setAttribute("transform", "translate(" + P[0] + " " + P[1] + ") scale(" + sc + ") translate(" + -P[0] + " " + -P[1] + ")");
+    }
+    scaleTo(1);
+    layer.style.opacity = "1";
     layer.style.visibility = "visible";
 
     const from = slides[current];
     document.dispatchEvent(new CustomEvent("slide:leave", { detail: from }));
 
-    // 1. la letra se dibuja sobre la sección actual y el relleno la acaba de tapar
-    animate(760, function (t) {
-      const e = easeInOut(Math.min(1, t / 0.8));
-      strokes.forEach(function (p) { p.style.strokeDashoffset = String(1 - e); });
-      fill.style.opacity = String(easeInOut(Math.max(0, (t - 0.72) / 0.28)));
+    // 1. la letra se dibuja sobre la sección actual
+    animate(620, function (t) {
+      strokes.forEach(function (p) { p.style.strokeDashoffset = String(1 - easeInOut(t)); });
     }).then(function () {
-      // 2. pantalla cubierta: cambio de sección
+      // 2. la letra crece desde su centro hasta cubrir toda la pantalla
+      return animate(520, function (t) {
+        const e = t * t * t;  // empieza suave y acelera
+        scaleTo(1 + (big - 1) * e);
+      });
+    }).then(function () {
+      // 3. pantalla cubierta: cambio de sección
       current = next;
       show(current);
       reveal(slides[current]);
       document.dispatchEvent(new CustomEvent("slide:enter", { detail: slides[current] }));
-      // 3. el relleno se va (la letra vuelve a verse) y la letra se retira por su recorrido
-      return animate(760, function (t) {
-        fill.style.opacity = String(1 - easeInOut(Math.min(1, t / 0.3)));
-        const e = easeInOut(Math.max(0, (t - 0.18) / 0.82));
-        strokes.forEach(function (p) { p.style.strokeDashoffset = String(-e); });
+      // 4. la letra se vuelve transparente y deja ver la nueva sección
+      return animate(480, function (t) {
+        layer.style.opacity = String(1 - easeInOut(t));
       });
     }).then(function () {
       layer.style.visibility = "hidden";
+      group.removeAttribute("transform");
       // pequeña pausa para que la inercia del trackpad no encadene otro cambio
       setTimeout(function () { busy = false; }, 280);
     });
