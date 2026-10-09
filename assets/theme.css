@@ -83,7 +83,29 @@ body::after {
   transition: transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s ease;
 }
 .cover:hover { transform: translateY(-6px) rotate(-.6deg); box-shadow: 0 32px 50px -24px rgb(51 40 59 / .6); }
-.cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.cover > .scene { border-radius: inherit; }
+
+/* Escenas en capas: todas las capas comparten caja para quedar alineadas; son algo más altas
+   que el marco para que el parallax no deje ver los bordes. */
+.scene { overflow: hidden; }
+.scene:not(.absolute) { position: relative; }
+.scene > img {
+  position: absolute; left: -3%; top: -6%; width: 106%; height: 112%;
+  max-width: none; object-fit: cover; object-position: center bottom; will-change: transform;
+}
+
+/* Slider de planes */
+.slider-track { scrollbar-width: none; }
+.slider-track::-webkit-scrollbar { display: none; }
+.slider-btn {
+  display: inline-flex; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem;
+  border-radius: 999px; background: #FBF4E4; color: var(--plum); font-size: 1.6rem; line-height: 1;
+  box-shadow: 0 0 0 2px var(--plum), 3px 3px 0 var(--plum); transition: transform .2s ease, opacity .2s ease;
+}
+.slider-btn:hover:not(:disabled) { transform: translateY(-2px); }
+.slider-btn:disabled { opacity: .35; cursor: default; }
+.slider-dot { width: .7rem; height: .7rem; border-radius: 999px; background: #CDBBAA; transition: width .25s ease, background-color .25s ease; }
+.slider-dot[aria-current="true"] { width: 1.75rem; background: var(--terracotta); }
 
 /* Billete del plan */
 .ticket {
@@ -97,6 +119,8 @@ body::after {
 }
 .ticket-cut::before { left: -13px; clip-path: inset(0 0 0 50%); }
 .ticket-cut::after { right: -13px; clip-path: inset(0 50% 0 0); }
+
+.hero-svg .layer { will-change: transform; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
