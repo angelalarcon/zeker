@@ -652,7 +652,9 @@ def hero():
     b = L.layer("sky", 0)
     b.append(sky(W, H, [(0, SKY_TOP), (0.45, SKY_MID), (0.66, SKY_LOW)]))
     b.append(sun_glow(1260, 440, 62, CLOUD))
-    b.append(puffs(rng, 14, (0, 40, W, 400), [CLOUD, "#E8F0F8"], 3, 8))
+    # puntos de nube solo a los lados: el centro queda limpio para el texto
+    b.append(puffs(rng, 7, (0, 40, 420, 400), [CLOUD, "#E8F0F8"], 3, 8))
+    b.append(puffs(rng, 7, (1180, 40, W, 400), [CLOUD, "#E8F0F8"], 3, 8))
     b.append(cloud(60, 130, 1.3, extra=' class="drift"'))
     b.append(cloud(1300, 100, 1.5, extra=' class="drift slow"'))
     b.append(cloud(320, 340, 0.8, PEACH, PEACH_SH, ' class="drift slow"'))
