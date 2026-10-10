@@ -1,8 +1,12 @@
 // Sitio estático servido por el Worker "zeker" (https://zeker.angelalarcon-aa.workers.dev)
+// worker.js atiende /api/* (reservas con Google Calendar); el resto son archivos estáticos.
 {
   "name": "zeker",
+  "main": "worker.js",
   "compatibility_date": "2026-06-01",
   "assets": {
-    "directory": "."
+    "directory": ".",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
   }
 }

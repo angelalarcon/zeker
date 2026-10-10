@@ -1,22 +1,9 @@
 (function () {
-  const CALENDLY_BASE = "https://calendly.com/angelalarcon-aa/30min";
+  const TIMEZONE = "Atlantic/Canary";
   const SIMPLE_ICONS_BASE = "https://cdn.jsdelivr.net/npm/simple-icons@11.14.0/icons";
   const MASK_SIZE = 1000;
   let particlesContainer = null;
-  let scrollGuard = null;
-
-  function startScrollGuard() {
-    if (scrollGuard) return;
-    scrollGuard = new MutationObserver(() => {
-      if (document.body.style.overflow === "hidden") document.body.style.overflow = "";
-      if (document.body.classList.contains("overflow-hidden")) document.body.classList.remove("overflow-hidden");
-    });
-    scrollGuard.observe(document.body, { attributes: true, attributeFilter: ["style", "class"] });
-  }
-
-  function stopScrollGuard() {
-    if (scrollGuard) { scrollGuard.disconnect(); scrollGuard = null; }
-  }
+  let booking = { company: "", slots: [], day: null, start: null };
 
   const modalHtml = `
     <div id="reservar-modal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="reservar-title">
@@ -53,6 +40,47 @@
         </div>
       </div>
     </div>
+
+    <div id="reservar-booking" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="reservar-booking-title">
+      <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" data-booking-close></div>
+      <div class="relative flex min-h-full items-center justify-center p-4">
+        <div class="relative p-6 sm:p-10 max-w-2xl w-full mx-auto bg-paper rounded-[1.75rem] shadow-[0_0_0_2px_#42344A,8px_8px_0_#42344A]">
+          <button type="button" class="absolute right-4 top-4 rounded-full p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600" data-booking-close aria-label="Cerrar">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </button>
+          <div id="booking-step-pick">
+            <p class="eyebrow">Reserva gratuita · 30 min</p>
+            <h2 id="reservar-booking-title" class="poster-title mt-3 text-3xl">Elige día y hora</h2>
+            <p class="mt-2 text-slate-600">Horario de Canarias. Te confirmamos la reunión por email.</p>
+            <p id="booking-loading" class="mt-6 text-slate-600">Buscando huecos libres<span class="reservar-dots">...</span></p>
+            <div id="booking-days" class="mt-6 flex gap-2 overflow-x-auto pb-2" role="listbox" aria-label="Día"></div>
+            <div id="booking-times" class="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-4" role="listbox" aria-label="Hora"></div>
+            <form id="booking-form" class="mt-6 hidden space-y-3">
+              <p id="booking-chosen" class="font-display text-sm font-bold uppercase tracking-[0.12em] text-indigo-600"></p>
+              <input name="name" type="text" required autocomplete="name" placeholder="Tu nombre" aria-label="Tu nombre"
+                class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20" />
+              <input name="email" type="email" required autocomplete="email" placeholder="Tu email" aria-label="Tu email"
+                class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20" />
+              <textarea name="message" rows="2" placeholder="¿Algo que debamos saber? (opcional)" aria-label="Mensaje"
+                class="w-full rounded-2xl border border-slate-200 px-4 py-3 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"></textarea>
+              <input name="website" type="text" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+              <button type="submit" class="w-full rounded-full bg-indigo-600 px-6 py-3.5 text-base font-semibold text-white shadow-sm transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60">
+                Solicitar reunión
+              </button>
+            </form>
+            <p id="booking-error" class="mt-3 hidden text-sm text-red-600"></p>
+          </div>
+          <div id="booking-step-done" class="hidden text-center">
+            <p class="eyebrow">Solicitud enviada</p>
+            <h2 class="poster-title mt-3 text-3xl">¡Gracias!</h2>
+            <p id="booking-done-text" class="mt-3 text-slate-700"></p>
+            <button type="button" class="btn btn-primary mt-7" data-booking-close>Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
   `;
 
   function injectModal() {
@@ -64,6 +92,9 @@
       @keyframes reservar-dots { 0%, 20% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
       .reservar-dots { animation: reservar-dots 1.4s infinite; }
       #hero-logo-particles canvas { display: block; }
+      .booking-chip { flex-shrink: 0; border-radius: 1rem; padding: .6rem .9rem; text-align: center; box-shadow: inset 0 0 0 2px #E5D8C6; background: #fff; color: #42344A; transition: background-color .2s, box-shadow .2s; }
+      .booking-chip:hover { box-shadow: inset 0 0 0 2px #C24F2C; }
+      .booking-chip[aria-selected="true"] { background: #C24F2C; color: #FBF4E4; box-shadow: none; }
     `;
     document.head.appendChild(style);
   }
@@ -114,8 +145,6 @@
 
     if (!lineTop || !lineBottom || !slot) return;
 
-    // Stop any lingering scroll guard before locking scroll
-    stopScrollGuard();
 
     // Reset text opacity from previous animation
     const logoText = document.getElementById("hero-logo-text");
@@ -624,10 +653,138 @@
     });
   }
 
-  function buildCalendlyUrl(companyName) {
-    const params = new URLSearchParams();
-    params.set("a1", companyName);
-    return `${CALENDLY_BASE}?${params.toString()}`;
+  const dayFormat = new Intl.DateTimeFormat("es-ES", { timeZone: TIMEZONE, weekday: "short", day: "numeric", month: "short" });
+  const dayKeyFormat = new Intl.DateTimeFormat("en-CA", { timeZone: TIMEZONE, year: "numeric", month: "2-digit", day: "2-digit" });
+  const timeFormat = new Intl.DateTimeFormat("es-ES", { timeZone: TIMEZONE, hour: "2-digit", minute: "2-digit" });
+  const longFormat = new Intl.DateTimeFormat("es-ES", { timeZone: TIMEZONE, weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" });
+
+  async function fetchSlots() {
+    const res = await fetch("/api/slots", { headers: { Accept: "application/json" } });
+    if (!res.ok) throw new Error("slots " + res.status);
+    return (await res.json()).slots || [];
+  }
+
+  function showBookingError(message) {
+    const el = document.getElementById("booking-error");
+    el.textContent = message;
+    el.classList.toggle("hidden", !message);
+  }
+
+  function renderDays() {
+    const days = document.getElementById("booking-days");
+    const keys = [...new Set(booking.slots.map((iso) => dayKeyFormat.format(new Date(iso))))];
+    days.innerHTML = "";
+    keys.forEach((key) => {
+      const first = booking.slots.find((iso) => dayKeyFormat.format(new Date(iso)) === key);
+      const [weekday, ...rest] = dayFormat.format(new Date(first)).replace(",", "").split(" ");
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "booking-chip";
+      chip.setAttribute("role", "option");
+      chip.setAttribute("aria-selected", String(key === booking.day));
+      chip.innerHTML = `<span class="block text-xs uppercase tracking-[0.12em]"></span><span class="block font-semibold"></span>`;
+      chip.children[0].textContent = weekday;
+      chip.children[1].textContent = rest.join(" ");
+      chip.addEventListener("click", () => { booking.day = key; booking.start = null; renderDays(); renderTimes(); });
+      days.appendChild(chip);
+    });
+  }
+
+  function renderTimes() {
+    const times = document.getElementById("booking-times");
+    const form = document.getElementById("booking-form");
+    times.innerHTML = "";
+    booking.slots
+      .filter((iso) => dayKeyFormat.format(new Date(iso)) === booking.day)
+      .forEach((iso) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "booking-chip font-semibold";
+        btn.setAttribute("role", "option");
+        btn.setAttribute("aria-selected", String(iso === booking.start));
+        btn.textContent = timeFormat.format(new Date(iso));
+        btn.addEventListener("click", () => {
+          booking.start = iso;
+          renderTimes();
+          form.querySelector('[name="name"]').focus();
+        });
+        times.appendChild(btn);
+      });
+    form.classList.toggle("hidden", !booking.start);
+    if (booking.start) document.getElementById("booking-chosen").textContent = longFormat.format(new Date(booking.start)) + " · hora canaria";
+  }
+
+  async function openBooking(company, slotsPromise) {
+    booking = { company, slots: [], day: null, start: null };
+    const modal = document.getElementById("reservar-booking");
+    document.getElementById("booking-step-pick").classList.remove("hidden");
+    document.getElementById("booking-step-done").classList.add("hidden");
+    document.getElementById("booking-form").reset();
+    document.getElementById("booking-form").classList.add("hidden");
+    document.getElementById("booking-days").innerHTML = "";
+    document.getElementById("booking-times").innerHTML = "";
+    document.getElementById("booking-loading").classList.remove("hidden");
+    showBookingError("");
+    modal.classList.remove("hidden");
+    document.body.classList.add("overflow-hidden");
+
+    try {
+      booking.slots = await slotsPromise;
+    } catch (e) {
+      console.error("Error loading slots:", e);
+      booking.slots = [];
+    }
+    document.getElementById("booking-loading").classList.add("hidden");
+    if (!booking.slots.length) {
+      showBookingError("Ahora mismo no hay huecos disponibles. Escríbenos por WhatsApp y lo cuadramos.");
+      return;
+    }
+    booking.day = dayKeyFormat.format(new Date(booking.slots[0]));
+    renderDays();
+    renderTimes();
+  }
+
+  function closeBooking() {
+    document.getElementById("reservar-booking").classList.add("hidden");
+    document.body.classList.remove("overflow-hidden");
+    document.body.style.overflow = "";
+  }
+
+  async function handleBookingSubmit(event) {
+    event.preventDefault();
+    const form = event.target;
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const data = Object.fromEntries(new FormData(form));
+    showBookingError("");
+    submitBtn.disabled = true;
+
+    try {
+      const res = await fetch("/api/request", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...data, company: booking.company, start: booking.start }),
+      });
+      const result = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        showBookingError(result.error || "No hemos podido enviar la solicitud. Inténtalo de nuevo.");
+        if (res.status === 409) {
+          booking.slots = booking.slots.filter((iso) => iso !== booking.start);
+          booking.start = null;
+          renderTimes();
+        }
+        return;
+      }
+      document.getElementById("booking-done-text").textContent =
+        `Hemos recibido tu solicitud para el ${longFormat.format(new Date(booking.start))} (hora canaria). ` +
+        `Te llegará un email a ${data.email} con el enlace de Google Meet en cuanto la confirmemos.`;
+      document.getElementById("booking-step-pick").classList.add("hidden");
+      document.getElementById("booking-step-done").classList.remove("hidden");
+    } catch (e) {
+      console.error(e);
+      showBookingError("No hemos podido enviar la solicitud. Revisa tu conexión e inténtalo de nuevo.");
+    } finally {
+      submitBtn.disabled = false;
+    }
   }
 
   async function handleSubmit(event) {
@@ -642,6 +799,7 @@
 
     error.classList.add("hidden");
     submitBtn.disabled = true;
+    const slotsPromise = fetchSlots();
 
     // Close the form modal and open the hero animation
     closeModal();
@@ -679,62 +837,13 @@
       console.error("Error resolving logo path:", e);
     }
 
-    const url = buildCalendlyUrl(resolvedName);
     const delay = logoLoaded ? 5000 : 2000;
+    await Promise.all([new Promise((resolve) => setTimeout(resolve, delay)), slotsPromise.catch(() => {})]);
 
-    let animationDone = false;
-    let calendlyReady = false;
-    let overlay = null;
-
-    const tryReveal = () => {
-      if (!animationDone || !calendlyReady) return;
-      destroyParticles();
-      animateHeroClose();
-      submitBtn.disabled = false;
-      // Show Calendly after the hero closes, then guard scroll
-      setTimeout(() => {
-        if (overlay) {
-          overlay.style.opacity = "";
-          overlay.style.pointerEvents = "";
-        }
-        document.body.style.overflow = "";
-        document.body.classList.remove("overflow-hidden");
-        startScrollGuard();
-      }, 850);
-    };
-
-    const domObserver = new MutationObserver(() => {
-      const el = document.querySelector(".calendly-overlay");
-      if (el && el !== overlay) {
-        overlay = el;
-        overlay.style.cssText += ";opacity:0!important;pointer-events:none!important;transition:none!important;";
-      }
-    });
-    domObserver.observe(document.body, { childList: true, subtree: false });
-
-    const onCalendlyMessage = (e) => {
-      if (e.data?.event === "calendly.event_type_viewed" || e.data?.event === "calendly.profile_page_viewed") {
-        window.removeEventListener("message", onCalendlyMessage);
-        domObserver.disconnect();
-        calendlyReady = true;
-        tryReveal();
-      }
-    };
-    window.addEventListener("message", onCalendlyMessage);
-
-    window.setTimeout(() => {
-      window.removeEventListener("message", onCalendlyMessage);
-      domObserver.disconnect();
-      calendlyReady = true;
-      tryReveal();
-    }, delay + 1000);
-
-    Calendly.initPopupWidget({ url });
-
-    window.setTimeout(() => {
-      animationDone = true;
-      tryReveal();
-    }, delay);
+    destroyParticles();
+    animateHeroClose();
+    submitBtn.disabled = false;
+    setTimeout(() => openBooking(resolvedName, slotsPromise), 850);
   }
 
   function bindEvents() {
@@ -742,12 +851,17 @@
       el.addEventListener("click", closeModal);
     });
 
+    document.querySelectorAll("[data-booking-close]").forEach((el) => {
+      el.addEventListener("click", closeBooking);
+    });
+
     document.getElementById("reservar-form").addEventListener("submit", handleSubmit);
+    document.getElementById("booking-form").addEventListener("submit", handleBookingSubmit);
 
     document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && !getModal().classList.contains("hidden")) {
-        closeModal();
-      }
+      if (event.key !== "Escape") return;
+      if (!getModal().classList.contains("hidden")) closeModal();
+      if (!document.getElementById("reservar-booking").classList.contains("hidden")) closeBooking();
     });
 
     document.querySelectorAll(".js-reservar").forEach((trigger) => {
@@ -755,15 +869,6 @@
         event.preventDefault();
         openModal();
       });
-    });
-
-    // Restore scroll when Calendly popup is closed
-    window.addEventListener("message", (e) => {
-      if (e.data?.event === "calendly.popup_closed") {
-        document.body.style.overflow = "";
-        document.body.classList.remove("overflow-hidden");
-        setTimeout(stopScrollGuard, 300);
-      }
     });
   }
 
